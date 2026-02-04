@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Output &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Recipes" href="../recipes.html" />
+    <link rel="prev" title="Logging" href="logging.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../concepts.html">Concepts</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rng.html">Random Number Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#folder-structure">Folder Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#further-output-information">Further output information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../concepts.html">Concepts</a></li>
+      <li class="breadcrumb-item active">Output</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/concepts/output.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="output">
+<span id="concepts-output"></span><h1>Output<a class="headerlink" href="#output" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#folder-structure" id="id1">Folder Structure</a></p></li>
+<li><p><a class="reference internal" href="#further-output-information" id="id2">Further output information</a></p></li>
+</ul>
+</nav>
+<p>The following is considered output</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>applied settings</p></li>
+<li><p>excel and pickle files with data</p></li>
+<li><p>log files (from logger framework and slurm)</p></li>
+<li><p>figures</p></li>
+<li><p>slurm batch files</p></li>
+</ul>
+</div></blockquote>
+<section id="folder-structure">
+<span id="concepts-output-structure"></span><h2><a class="toc-backref" href="#contents" role="doc-backlink">Folder Structure</a><a class="headerlink" href="#folder-structure" title="Link to this heading"></a></h2>
+<p>Output files are stored according to the following structure:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Output folder (&lt;AHOI_MAIN__OUTPUT_PATH&gt;)</dt><dd><ul>
+<li><dl class="simple">
+<dt>Project name (&lt;AHID_MAIN__PROJECT&gt; is usually part of &lt;AHID_MAIN__OUTPUT_PATH&gt;)</dt><dd><ul>
+<li><dl class="simple">
+<dt>Task (&lt;AHID_MAIN__TASK&gt;)</dt><dd><ul>
+<li><dl class="simple">
+<dt>Run ID</dt><dd><ul>
+<li><p>Subfolder conf|slurm|log|output</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The output folder and subfolders are defined in section <a class="reference internal" href="settings/settings_doc.html#main"><span class="std std-ref">settings [main]</span></a>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>main<span class="o">]</span>
+<span class="c1"># Used as target for output files (specified excluding task but including project):</span>
+<span class="nv">output_path</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s2">&quot;@format ~/AHID/{this.main.project}&quot;</span>
+<span class="nv">project</span><span class="o">=</span><span class="s2">&quot;Project&quot;</span>
+<span class="nv">task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Task&quot;</span>
+<span class="nv">runid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">77</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To define <strong>different output folders e.g. for local execution and cluster runs</strong>, one can use the <code class="docutils literal notranslate"><span class="pre">dynaconf_include</span> <span class="pre">=</span>
+<span class="pre">[&quot;settings_local.toml&quot;]</span></code> directive. This way all other custom settings can be synchronised between local and cluster
+runs by synchronizing <code class="docutils literal notranslate"><span class="pre">AHOI_SETTINGS_FILE_FOR_DYNACONF</span></code> (usually <code class="docutils literal notranslate"><span class="pre">settings.toml</span></code>) alone.
+The file <code class="docutils literal notranslate"><span class="pre">settings_local.toml</span></code> may look like this:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>main<span class="o">]</span>
+<span class="nv">output_path</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s2">&quot;@format ~/ahois/{this.main.project}&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For aggregated results, the folder is created according to the pattern
+<code class="docutils literal notranslate"><span class="pre">&lt;max(runIDs)&gt;-&lt;min(runs)&gt;</span></code>.</p>
+</div>
+</section>
+<section id="further-output-information">
+<h2><a class="toc-backref" href="#contents" role="doc-backlink">Further output information</a><a class="headerlink" href="#further-output-information" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="configuration.html#concepts-config-conserve"><span class="std std-ref">Conserving Scenario Settings</span></a></p></li>
+<li><p><a class="reference internal" href="logging.html#concepts-logging"><span class="std std-ref">Logging</span></a></p></li>
+<li><p><a class="reference internal" href="../recipes/analysis.html#recipes-analysis"><span class="std std-ref">Analysis</span></a></p></li>
+<li><p><a class="reference internal" href="../recipes/slurmClusterRuns.html#recipes-slurmclusterruns"><span class="std std-ref">SLURM-managed Cluster Runs</span></a></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="logging.html" class="btn btn-neutral float-left" title="Logging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../recipes.html" class="btn btn-neutral float-right" title="Recipes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

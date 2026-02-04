@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>interventions.Subsidy &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">interventions.Subsidy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for interventions.Subsidy</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the data structures for subsidies applicable to heating systems.</span>
+
+<span class="sd">This module uses Python&#39;s `dataclasses` to create a representation </span>
+<span class="sd">for various subsidies. It includes a base `Subsidy` class that</span>
+<span class="sd">defines the common attributes, such as the subsidy amount and any application</span>
+<span class="sd">conditions.</span>
+
+<span class="sd">Several specific subclasses are defined for different types of subsidies. </span>
+<span class="sd">These objects are used throughout the model to calculate the final, </span>
+<span class="sd">subsidized price of a new heating system.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sören Lohr</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+
+
+<div class="viewcode-block" id="Subsidy">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A dataclass representing a generic subsidy for a heating system.</span>
+
+<span class="sd">    This class serves as the primary data structure for all subsidies. It holds</span>
+<span class="sd">    information about the subsidy&#39;s name, amount, and the system(s) it applies</span>
+<span class="sd">    to. It also supports conditional application, allowing a subsidy to be</span>
+<span class="sd">    contingent on specific properties of the agent or the heating system itself.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The full name of the subsidy.</span>
+<span class="sd">    abbr : str</span>
+<span class="sd">        A short abbreviation for the subsidy.</span>
+<span class="sd">    subsidy : float</span>
+<span class="sd">        The subsidy amount, typically as a decimal fraction of the total cost</span>
+<span class="sd">        (e.g., 0.3 for 30%).</span>
+<span class="sd">    heating_system : str or tuple[str, ...]</span>
+<span class="sd">        The name(s) of the heating system classes this subsidy can apply to.</span>
+<span class="sd">    condition : Callable[[Any], bool], optional</span>
+<span class="sd">        A callable (e.g., a lambda function) that returns True if the subsidy</span>
+<span class="sd">        conditions are met, by default None.</span>
+<span class="sd">    target : str, optional</span>
+<span class="sd">        Specifies whether the `condition` should be applied to the &#39;System&#39; or</span>
+<span class="sd">        the &#39;Agent&#39;, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Subsidy.check_condition">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy.check_condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if the conditions for this subsidy are met.</span>
+
+<span class="sd">        This method evaluates the `condition` function against the specified</span>
+<span class="sd">        `target` (either the heating system or the agent). If no condition is</span>
+<span class="sd">        defined, it automatically returns True.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : Heating_system</span>
+<span class="sd">            The heating system being considered for the subsidy.</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent applying for the subsidy.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the subsidy is applicable, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;System&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;Agent&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Subsidy_district">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_district">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_district</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for district heating connections.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;District&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DSTR&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_network_district&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">district</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Subsidy_heat_pump">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_heat_pump">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_heat_pump</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for air-source heat pumps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heat_pump&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;HTPMP&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_heat_pump&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">heat_pump</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Subsidy_heat_pump_brine">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_heat_pump_brine">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_heat_pump_brine</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for heat pump-based </span>
+<span class="sd">    local cold network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heat_pump_brine&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;HTPMPBR&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">heat_pump_brine</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Subsidy_pellet">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_pellet">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_pellet</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for pellet heating.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Pellet&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PLLT&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_pellet&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">pellet</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Subsidy_network_local">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_network_local">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_network_local</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for local hot network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Hot_network&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;HTNTWRK&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_network_local&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> 
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">network_local_hot</span><span class="p">)</span> </div>
+
+
+<div class="viewcode-block" id="Subsidy_GP_Joule">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_GP_Joule">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_GP_Joule</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy specifically for local hot network</span>
+<span class="sd">    provided by GP Joule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GP_Joule&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GPJL&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Heating_system_GP_Joule&quot;</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> 
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">GP_Joule</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Subsidy_climate_speed">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_climate_speed">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_climate_speed</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A bonus subsidy for replacing an oil or gas heating system.</span>
+
+<span class="sd">    This subsidy acts as a bonus for houseowners who switch from a fossil-fuel</span>
+<span class="sd">    system (oil or gas) to a renewable alternative.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Climate_speed&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CLMSPD&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_pellet&quot;</span>
+        <span class="p">)</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">,</span> <span class="s2">&quot;Heating_system_gas&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Agent&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">climate_speed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Subsidy_income">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_income">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_income</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subsidy for low-income households.</span>
+
+<span class="sd">    This subsidy can be applied to any heating system but is conditional on the</span>
+<span class="sd">    agent&#39;s annual income being below a specific threshold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Income&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INC&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_pellet&quot;</span>
+        <span class="p">)</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="mi">52</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">income</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">low_income_threshold</span>
+    <span class="p">)</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Agent&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">income</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Subsidy_efficiency">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Subsidy.Subsidy_efficiency">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subsidy_efficiency</span><span class="p">(</span><span class="n">Subsidy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A bonus subsidy for highly efficient heat pump systems.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Efficiency&quot;</span>
+    <span class="n">abbr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EFF&quot;</span>
+    <span class="n">subsidy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="n">heating_system</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span>
+        <span class="p">)</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the subsidy amount from the global settings file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">subsidies</span><span class="o">.</span><span class="n">efficiency</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

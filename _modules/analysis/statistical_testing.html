@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>analysis.statistical_testing &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">analysis.statistical_testing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for analysis.statistical_testing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Performs a Mann-Whitney U statistical test to compare model outputs.</span>
+
+<span class="sd">This script is designed to assess the statistical significance of differences</span>
+<span class="sd">in simulation outputs between two experimental scenarios (e.g., a baseline vs.</span>
+<span class="sd">a policy intervention). It locates and loads pickled model DataFrames based on</span>
+<span class="sd">a naming convention that includes the scenario, run ID, and an experiment prefix.</span>
+
+<span class="sd">The script specifically extracts data on installation obstacles encountered </span>
+<span class="sd">by agents for various heating systems. </span>
+<span class="sd">It aggregates this data across multiple simulation seeds</span>
+<span class="sd">for each of the two scenarios being compared. Finally, it performs a</span>
+<span class="sd">non-parametric Mann-Whitney U test on the collected samples for each obstacle</span>
+<span class="sd">and prints the p-values to the console.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">mannwhitneyu</span>
+<span class="kn">from</span> <span class="nn">helpers.utils</span> <span class="kn">import</span> <span class="n">load_class</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span><span class="p">,</span> <span class="n">get_output_path</span>
+
+
+<div class="viewcode-block" id="perform_obstacle_significance_test">
+<a class="viewcode-back" href="../../application/api/analysis.html#analysis.statistical_testing.perform_obstacle_significance_test">[docs]</a>
+<span class="k">def</span> <span class="nf">perform_obstacle_significance_test</span><span class="p">(</span><span class="n">scenarios</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
+                                       <span class="n">run_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
+                                       <span class="n">scenario1_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                                       <span class="n">scenario2_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compares obstacle data between two scenarios using the Mann-Whitney U test.</span>
+
+<span class="sd">    This function handles the process of finding data, aggregating it, and</span>
+<span class="sd">    running statistical tests.</span>
+
+<span class="sd">    The workflow is as follows:</span>
+<span class="sd">    1.  **Data Aggregation**: It iterates through the specified scenarios and</span>
+<span class="sd">        run IDs, searching for output pickle files matching `scenario1_prefix`</span>
+<span class="sd">        and `scenario2_prefix`. For each file found (representing one seed),</span>
+<span class="sd">        it extracts the &#39;Obstacles&#39; dictionary from the last time step. The</span>
+<span class="sd">        obstacle values are collected into two main groups corresponding to the</span>
+<span class="sd">        two prefixes.</span>
+<span class="sd">    2.  **Statistical Testing**: After gathering data from all seeds, it</span>
+<span class="sd">        iterates through each heating system and obstacle type. For each</span>
+<span class="sd">        obstacle, it compares the sample of values from the first scenario</span>
+<span class="sd">        against the sample from the second.</span>
+<span class="sd">    3.  **Output**: A two-sided Mann-Whitney U test is performed. The resulting</span>
+<span class="sd">        p-value is printed to the console, along with an interpretation of</span>
+<span class="sd">        whether the difference is significant at the p &lt; 0.05 level.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scenarios : list</span>
+<span class="sd">        A list of scenario class name strings to analyse.</span>
+<span class="sd">    run_ids : list</span>
+<span class="sd">        A list of integer run IDs to include in the analysis.</span>
+<span class="sd">    scenario1_prefix : str</span>
+<span class="sd">        The file prefix for the first group, typically the baseline or</span>
+<span class="sd">        control group (e.g., &#39;DEZ_Baseline&#39;).</span>
+<span class="sd">    scenario2_prefix : str</span>
+<span class="sd">        The file prefix for the second group, typically the treatment or</span>
+<span class="sd">        campaign group (e.g., &#39;DEZ_Beraterkampagne&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This nested dictionary will hold the raw data from each seed, ready for testing.</span>
+    <span class="n">data_for_test</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">scenario1_prefix</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="n">scenario2_prefix</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Searching for pickle files... ---&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">files_prefix</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">run_ids</span><span class="p">,</span> <span class="p">[</span><span class="n">scenario1_prefix</span><span class="p">,</span> <span class="n">scenario2_prefix</span><span class="p">]):</span>
+        <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">load_class</span><span class="p">(</span><span class="s2">&quot;Scenario&quot;</span><span class="p">,</span> <span class="n">scenario</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">pickle_path</span> <span class="o">=</span> <span class="n">get_output_path</span><span class="p">(</span><span class="n">runid</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;pickles&#39;</span><span class="p">)</span>
+        
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pickle_path</span><span class="si">}</span><span class="s2">/model_df_</span><span class="si">{</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">_*.pkl&quot;</span>
+        <span class="n">model_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: No files found for pattern: </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> seed(s) for prefix &#39;</span><span class="si">{</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">model_files</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                <span class="n">obstacles_for_run</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Obstacles&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obstacles_for_run</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="k">for</span> <span class="n">hs_option</span><span class="p">,</span> <span class="n">obstacles</span> <span class="ow">in</span> <span class="n">obstacles_for_run</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">hs_option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">files_prefix</span><span class="p">]:</span>
+                        <span class="n">data_for_test</span><span class="p">[</span><span class="n">files_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    
+                    <span class="k">for</span> <span class="n">obstacle_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obstacles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">obstacle_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">files_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">]:</span>
+                            <span class="n">data_for_test</span><span class="p">[</span><span class="n">files_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">][</span><span class="n">obstacle_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">data_for_test</span><span class="p">[</span><span class="n">files_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">][</span><span class="n">obstacle_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1">#Perform the statistical tests and print the results ---</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STATISTICAL SIGNIFICANCE ANALYSIS: &#39;</span><span class="si">{</span><span class="n">scenario1_prefix</span><span class="si">}</span><span class="s2">&#39; vs &#39;</span><span class="si">{</span><span class="n">scenario2_prefix</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+
+    <span class="n">key_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Deciding&quot;</span><span class="p">:</span> <span class="s2">&quot;Deciding&quot;</span><span class="p">,</span> <span class="s2">&quot;Knowledge&quot;</span><span class="p">:</span> <span class="s2">&quot;Knowing&quot;</span><span class="p">,</span> <span class="s2">&quot;Affordability&quot;</span><span class="p">:</span> <span class="s2">&quot;Can afford&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Riskiness&quot;</span><span class="p">:</span> <span class="s2">&quot;Accepted&quot;</span><span class="p">,</span> <span class="s2">&quot;Evaluation&quot;</span><span class="p">:</span> <span class="s2">&quot;Like&quot;</span><span class="p">,</span> <span class="s2">&quot;Feasibility&quot;</span><span class="p">:</span> <span class="s2">&quot;Installed&quot;</span>
+    <span class="p">}</span>
+
+    <span class="n">all_hs_options</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario1_prefix</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario2_prefix</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">hs_option</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_hs_options</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Heating System: </span><span class="si">{</span><span class="n">hs_option</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hs_option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario1_prefix</span><span class="p">]</span> <span class="ow">or</span> <span class="n">hs_option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario2_prefix</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Skipping: Data on </span><span class="si">{</span><span class="n">hs_option</span><span class="si">}</span><span class="s2"> not available for both scenarios.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">group1_obstacles</span> <span class="o">=</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario1_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">]</span>
+        <span class="n">group2_obstacles</span> <span class="o">=</span> <span class="n">data_for_test</span><span class="p">[</span><span class="n">scenario2_prefix</span><span class="p">][</span><span class="n">hs_option</span><span class="p">]</span>
+        <span class="n">all_obstacle_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group1_obstacles</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">group2_obstacles</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">obstacle_key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_obstacle_keys</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">obstacle_key</span> <span class="o">==</span> <span class="s2">&quot;Triggered&quot;</span><span class="p">:</span> <span class="k">continue</span>
+
+            <span class="n">sample1</span> <span class="o">=</span> <span class="n">group1_obstacles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obstacle_key</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">sample2</span> <span class="o">=</span> <span class="n">group2_obstacles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obstacle_key</span><span class="p">,</span> <span class="p">[])</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sample1</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">sample2</span><span class="p">:</span> <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">sample1</span><span class="p">,</span> <span class="n">sample2</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">)</span>
+                <span class="c1"># Significance strings without the translation function</span>
+                <span class="n">significance</span> <span class="o">=</span> <span class="s2">&quot;Significant&quot;</span> <span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="k">else</span> <span class="s2">&quot;Not Significant&quot;</span>
+                <span class="n">obstacle_name</span> <span class="o">=</span> <span class="n">key_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obstacle_key</span><span class="p">,</span> <span class="n">obstacle_key</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Obstacle: </span><span class="si">{</span><span class="n">obstacle_name</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> | p-value: </span><span class="si">{</span><span class="n">p_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">significance</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">obstacle_name</span> <span class="o">=</span> <span class="n">key_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obstacle_key</span><span class="p">,</span> <span class="n">obstacle_key</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Obstacle: </span><span class="si">{</span><span class="n">obstacle_name</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> | p-value: N/A (samples are identical)&quot;</span><span class="p">)</span></div>
+
+                
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># --- Configuration ---</span>
+    <span class="n">SCENARIOS_TO_ANALYZE</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Scenario_mix_pellet_heat_pump&quot;</span><span class="p">]</span>
+    <span class="n">RUN_IDS_TO_ANALYZE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">BASELINE_SCENARIO_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;DEZ_Baseline&quot;</span>
+    <span class="n">CAMPAIGN_SCENARIO_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;DEZ_Beraterkampagne&quot;</span>
+
+    <span class="c1"># --- Run Analysis ---</span>
+    <span class="n">perform_obstacle_significance_test</span><span class="p">(</span>
+        <span class="n">scenarios</span><span class="o">=</span><span class="n">SCENARIOS_TO_ANALYZE</span><span class="p">,</span>
+        <span class="n">run_ids</span><span class="o">=</span><span class="n">RUN_IDS_TO_ANALYZE</span><span class="p">,</span>
+        <span class="n">scenario1_prefix</span><span class="o">=</span><span class="n">BASELINE_SCENARIO_PREFIX</span><span class="p">,</span>
+        <span class="n">scenario2_prefix</span><span class="o">=</span><span class="n">CAMPAIGN_SCENARIO_PREFIX</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

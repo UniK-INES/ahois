@@ -1,0 +1,877 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="agents.base package" href="agents.base.html" />
+    <link rel="prev" title="Run module" href="Run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">agents package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.EnergyAdvisor">agents.EnergyAdvisor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agents-house-module">agents.House module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agents-houseowner-module">agents.Houseowner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.Plumber">agents.Plumber module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">agents package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/agents.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agents-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">agents package</a><a class="headerlink" href="#agents-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Subpackages</a><a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agents.base.html">agents.base package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agents.base.html#module-agents.base.Intermediary">agents.base.Intermediary module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary"><code class="docutils literal notranslate"><span class="pre">Intermediary</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.step"><code class="docutils literal notranslate"><span class="pre">Intermediary.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.work"><code class="docutils literal notranslate"><span class="pre">Intermediary.work()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.training"><code class="docutils literal notranslate"><span class="pre">Intermediary.training()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.update_attributes"><code class="docutils literal notranslate"><span class="pre">Intermediary.update_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.begin_jobs"><code class="docutils literal notranslate"><span class="pre">Intermediary.begin_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.check_job_completion"><code class="docutils literal notranslate"><span class="pre">Intermediary.check_job_completion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.evaluate_system"><code class="docutils literal notranslate"><span class="pre">Intermediary.evaluate_system()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.share_rating"><code class="docutils literal notranslate"><span class="pre">Intermediary.share_rating()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.share_knowledge"><code class="docutils literal notranslate"><span class="pre">Intermediary.share_knowledge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_heating"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_heating()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_trigger"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_trigger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_stage_dynamics"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_stage_dynamics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_class"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_system_age"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_system_age()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_opinion"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_opinion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_satisfied_ratio"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_satisfied_ratio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_preferences"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_attributes"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_comprehensive_metrics"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_comprehensive_metrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_emissions"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_emissions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_energy_demand"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_energy_demand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary.get_obstacles"><code class="docutils literal notranslate"><span class="pre">Intermediary.get_obstacles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.base.html#module-agents.base.Job">agents.base.Job module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html#agents.base.Job.IService"><code class="docutils literal notranslate"><span class="pre">IService</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html#agents.base.Job.Job"><code class="docutils literal notranslate"><span class="pre">Job</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Job.Job.job_id"><code class="docutils literal notranslate"><span class="pre">Job.job_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Job.Job.customer"><code class="docutils literal notranslate"><span class="pre">Job.customer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Job.Job.service"><code class="docutils literal notranslate"><span class="pre">Job.service</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Job.Job.duration"><code class="docutils literal notranslate"><span class="pre">Job.duration</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.base.html#module-agents.base.Service">agents.base.Service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html#agents.base.Service.Service"><code class="docutils literal notranslate"><span class="pre">Service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Service.Service.queue_job"><code class="docutils literal notranslate"><span class="pre">Service.queue_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Service.Service.generate_id"><code class="docutils literal notranslate"><span class="pre">Service.generate_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Service.Service.begin_job"><code class="docutils literal notranslate"><span class="pre">Service.begin_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Service.Service.complete_job"><code class="docutils literal notranslate"><span class="pre">Service.complete_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.base.html#agents.base.Service.Service.save_queue_length"><code class="docutils literal notranslate"><span class="pre">Service.save_queue_length()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html#agents.base.Service.ConsultationService"><code class="docutils literal notranslate"><span class="pre">ConsultationService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.base.html#module-agents.base">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#agents-package" id="id1">agents package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#subpackages" id="id2">Subpackages</a></p></li>
+<li><p><a class="reference internal" href="#module-agents.EnergyAdvisor" id="id3">agents.EnergyAdvisor module</a></p></li>
+<li><p><a class="reference internal" href="#agents-house-module" id="id4">agents.House module</a></p></li>
+<li><p><a class="reference internal" href="#agents-houseowner-module" id="id5">agents.Houseowner module</a></p></li>
+<li><p><a class="reference internal" href="#module-agents.Plumber" id="id6">agents.Plumber module</a></p></li>
+<li><p><a class="reference internal" href="#module-agents" id="id7">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+</section>
+<section id="module-agents.EnergyAdvisor">
+<span id="agents-energyadvisor-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">agents.EnergyAdvisor module</a><a class="headerlink" href="#module-agents.EnergyAdvisor" title="Link to this heading"></a></h2>
+<p>This module provides the implementation for the EnergyAdvisor, an intermediary 
+agent that consults Houseowners on heating systems, subsidies, and financing. 
+It includes the <cite>EnergyAdvisor</cite> class itself and the <cite>ConsultationServiceEnergyAdvisor</cite> 
+class, which handles the logic of performing a consultation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sören Lohr</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ConsultationServiceEnergyAdvisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermediary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#ConsultationServiceEnergyAdvisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agents.base.html#agents.base.Service.ConsultationService" title="agents.base.Service.ConsultationService"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConsultationService</span></code></a></p>
+<p>A specialized consultation service provided by an EnergyAdvisor.</p>
+<p>This service handles the process of a consultation job. When a job is 
+completed, it evaluates heating systems based on the houseowner’s specific
+situation, applies relevant subsidies, filters for feasibility and 
+affordability, and provides a tailored recommendation.</p>
+<p>Initializes the consultation service for an EnergyAdvisor.
+Sets the job length specific to energy advisors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intermediary</strong><span class="classifier">EnergyAdvisor, optional</span></dt><dd><p>The EnergyAdvisor agent providing this service. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor.begin_job">
+<span class="sig-name descname"><span class="pre">begin_job</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#ConsultationServiceEnergyAdvisor.begin_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor.begin_job" title="Link to this definition"></a></dt>
+<dd><p>Begins a consultation job by adding it to active jobs 
+and removes it from the job queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor.complete_job">
+<span class="sig-name descname"><span class="pre">complete_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#ConsultationServiceEnergyAdvisor.complete_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.ConsultationServiceEnergyAdvisor.complete_job" title="Link to this definition"></a></dt>
+<dd><p>Completes a consultation job and provides advice to the houseowner.</p>
+<p>This method performs the core logic of the consultation. It assesses
+heating systems known to the advisor, calculates house-specific costs,
+applies subsidies, and filters the options based on the customer’s
+budget. The most suitable options are then presented to the houseowner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The consultation job to be completed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">EnergyAdvisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_preferences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_hs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_subsidies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary" title="agents.base.Intermediary.Intermediary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intermediary</span></code></a></p>
+<p>An intermediary agent providing expert advice on heating systems.</p>
+<p>The EnergyAdvisor specializes in knowledge about heating technologies and
+financial subsidies. It consults houseowners to help them find the most
+suitable and cost-effective heating solutions based on their specific
+needs and financial situation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>known_hs</strong><span class="classifier">list</span></dt><dd><p>A list of <cite>Heating_system</cite> objects the advisor is knowledgeable about.</p>
+</dd>
+<dt><strong>heating_preferences</strong><span class="classifier">Heating_preferences</span></dt><dd><p>The preferences used by the advisor to evaluate heating systems.</p>
+</dd>
+<dt><strong>known_subsidies</strong><span class="classifier">list</span></dt><dd><p>A list of <cite>Subsidy</cite> objects the advisor is aware of.</p>
+</dd>
+<dt><strong>infeasible</strong><span class="classifier">list</span></dt><dd><p>A list of heating system names considered infeasible by this advisor.</p>
+</dd>
+<dt><strong>perceived_uncertainty</strong><span class="classifier">dict</span></dt><dd><p>A mapping of heating system names to perceived uncertainty values.</p>
+</dd>
+<dt><strong>known_subsidies_by_hs</strong><span class="classifier">dict</span></dt><dd><p>A dictionary organizing known subsidies by the heating systems they apply to.</p>
+</dd>
+<dt><strong>Services</strong><span class="classifier">list</span></dt><dd><p>A list of services offered by the advisor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes an EnergyAdvisor agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>unique_id</strong><span class="classifier">int</span></dt><dd><p>The unique identifier for the agent.</p>
+</dd>
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main MESA model instance.</p>
+</dd>
+<dt><strong>heating_preferences</strong><span class="classifier">Heating_preferences, optional</span></dt><dd><p>The agent’s preferences for evaluating heating systems.</p>
+</dd>
+<dt><strong>known_hs</strong><span class="classifier">list, optional</span></dt><dd><p>A list of known heating systems.</p>
+</dd>
+<dt><strong>known_subsidies</strong><span class="classifier">list, optional</span></dt><dd><p>A list of known subsidies.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.evaluate_system">
+<span class="sig-name descname"><span class="pre">evaluate_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.evaluate_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.evaluate_system" title="Link to this definition"></a></dt>
+<dd><p>Evaluates a heating system based on the advisor’s preferences.</p>
+<p>This method extends the base <cite>evaluate_system</cite> from the <cite>Intermediary</cite>
+class. It can be modified to include advisor-specific evaluation criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system</strong><span class="classifier">Heating_system</span></dt><dd><p>The heating system to be evaluated.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The calculated rating for the system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.share_knowledge">
+<span class="sig-name descname"><span class="pre">share_knowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.share_knowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.share_knowledge" title="Link to this definition"></a></dt>
+<dd><p>Shares detailed, house-specific knowledge about heating systems.</p>
+<p>The advisor calculates house-specific parameters for its known
+systems and updates the houseowner’s knowledge base. New systems are
+added, and existing ones are updated with the advisor’s expert data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The houseowner agent to share knowledge with.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.share_rating">
+<span class="sig-name descname"><span class="pre">share_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systems_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.share_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.share_rating" title="Link to this definition"></a></dt>
+<dd><p>Shares the advisor’s ratings of heating systems with a houseowner.</p>
+<p>This method updates the houseowner’s <cite>neighbours_opinions</cite> for each
+system, effectively influencing the houseowner’s perception of those systems.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The houseowner to share ratings with.</p>
+</dd>
+<dt><strong>systems_list</strong><span class="classifier">list</span></dt><dd><p>The list of <cite>Heating_system</cite> objects whose ratings are to be shared.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.get_milieu">
+<span class="sig-name descname"><span class="pre">get_milieu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.get_milieu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.get_milieu" title="Link to this definition"></a></dt>
+<dd><p>Returns the agent’s type for the data collector.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.get_opex">
+<span class="sig-name descname"><span class="pre">get_opex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.get_opex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.get_opex" title="Link to this definition"></a></dt>
+<dd><p>Returns None, as advisors do not have operational expenses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.EnergyAdvisor.EnergyAdvisor.get_house_area">
+<span class="sig-name descname"><span class="pre">get_house_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/EnergyAdvisor.html#EnergyAdvisor.get_house_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.EnergyAdvisor.EnergyAdvisor.get_house_area" title="Link to this definition"></a></dt>
+<dd><p>Returns None, as advisors are not associated with a house.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="agents-house-module">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">agents.House module</a><a class="headerlink" href="#agents-house-module" title="Link to this heading"></a></h2>
+</section>
+<section id="agents-houseowner-module">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">agents.Houseowner module</a><a class="headerlink" href="#agents-houseowner-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-agents.Plumber">
+<span id="agents-plumber-module"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">agents.Plumber module</a><a class="headerlink" href="#module-agents.Plumber" title="Link to this heading"></a></h2>
+<p>Defines the Plumber agent and its consultation and installation services.</p>
+<p>This module contains the <cite>Plumber</cite> class, an intermediary agent responsible for 
+consulting houseowners about heating system options and installing new systems. 
+It includes two service classes, <cite>ConsultationServicePlumber</cite> and 
+<cite>InstallationServicePlumber</cite>, which manage the respective job queues and the 
+logic for these tasks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.Plumber.ConsultationServicePlumber">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ConsultationServicePlumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermediary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#ConsultationServicePlumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.ConsultationServicePlumber" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agents.base.html#agents.base.Service.Service" title="agents.base.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<p>A service for handling heating system consultations by a Plumber.</p>
+<p>When a consultation job is completed, this service triggers the Plumber’s 
+<cite>consultation</cite> method, where the Plumber shares knowledge, provides 
+recommendations, or performs a feasibility check on a desired heating system.</p>
+<p>Initializes the consultation service for a Plumber.
+Sets plumber-specific default job duration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.ConsultationServicePlumber.begin_job">
+<span class="sig-name descname"><span class="pre">begin_job</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#ConsultationServicePlumber.begin_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.ConsultationServicePlumber.begin_job" title="Link to this definition"></a></dt>
+<dd><p>Begins a consultation job.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.ConsultationServicePlumber.complete_job">
+<span class="sig-name descname"><span class="pre">complete_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#ConsultationServicePlumber.complete_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.ConsultationServicePlumber.complete_job" title="Link to this definition"></a></dt>
+<dd><p>Completes a consultation job by calling the Plumber’s <cite>consultation</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The consultation job to be completed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.Plumber.InstallationServicePlumber">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">InstallationServicePlumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermediary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#InstallationServicePlumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.InstallationServicePlumber" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agents.base.html#agents.base.Service.Service" title="agents.base.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<p>A service for managing and executing heating system installations.</p>
+<p>This service manages the queue for installation jobs. It has a custom 
+<cite>queue_job</cite> method to handle variable installation times. When a job is 
+completed, it triggers the Plumber’s <cite>installation</cite> method to finalise the 
+process in the simulation.</p>
+<p>Initializes the installation service for a Plumber.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.InstallationServicePlumber.queue_job">
+<span class="sig-name descname"><span class="pre">queue_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">installation_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#InstallationServicePlumber.queue_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.InstallationServicePlumber.queue_job" title="Link to this definition"></a></dt>
+<dd><p>Adds an installation job to the queue with a specific duration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>houseowner</strong><span class="classifier">Houseowner</span></dt><dd><p>The customer for whom the installation will be performed.</p>
+</dd>
+<dt><strong>installation_time</strong><span class="classifier">int</span></dt><dd><p>The specific time required for this type of heating system installation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.InstallationServicePlumber.begin_job">
+<span class="sig-name descname"><span class="pre">begin_job</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#InstallationServicePlumber.begin_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.InstallationServicePlumber.begin_job" title="Link to this definition"></a></dt>
+<dd><p>Begins an installation job.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.InstallationServicePlumber.complete_job">
+<span class="sig-name descname"><span class="pre">complete_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#InstallationServicePlumber.complete_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.InstallationServicePlumber.complete_job" title="Link to this definition"></a></dt>
+<dd><p>Completes an installation job by calling the Plumber’s <cite>installation</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The installation job to be completed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Plumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_preferences</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standard</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_heating</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cognitive_resource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspiration_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitable_hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hs_budget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_breakpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satisfaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_trigger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completed_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_concurrent_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_jobs_counter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_subsidies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agents.base.html#agents.base.Intermediary.Intermediary" title="agents.base.Intermediary.Intermediary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intermediary</span></code></a></p>
+<p>An intermediary agent who consults on and installs heating systems.</p>
+<p>The Plumber agent models a trade professional who interacts directly with 
+Houseowners. Plumbers have their own knowledge base of heating systems, which 
+can be expanded through <cite>training</cite>. They provide consultations to help 
+Houseowners choose a system and are responsible for the entire installation 
+process, from feasibility checks to final implementation.</p>
+<p>Initializes a Plumber agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>unique_id</strong><span class="classifier">int</span></dt><dd><p>The unique identifier for the agent.</p>
+</dd>
+<dt><strong>model</strong><span class="classifier">mesa.Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+<dt><strong>heating_preferences</strong><span class="classifier">Heating_preferences</span></dt><dd><p>The agent’s preferences for evaluating heating systems.</p>
+</dd>
+<dt><strong>known_hs</strong><span class="classifier">list</span></dt><dd><p>A list of known <cite>Heating_system</cite> objects.</p>
+</dd>
+<dt><strong>known_subsidies</strong><span class="classifier">list</span></dt><dd><p>A list of known <cite>Subsidy</cite> objects.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Many parameters are inherited from the Houseowner class for data 
+collector compatibility and may not be directly used in the Plumber’s logic.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.suboptimality">
+<span class="sig-name descname"><span class="pre">suboptimality</span></span><a class="headerlink" href="#agents.Plumber.Plumber.suboptimality" title="Link to this definition"></a></dt>
+<dd><p>Plumber specific parameters below</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.check_job_completion">
+<span class="sig-name descname"><span class="pre">check_job_completion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.check_job_completion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.check_job_completion" title="Link to this definition"></a></dt>
+<dd><p>Checks for and finalises any jobs scheduled for completion at the current step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>steps</strong><span class="classifier">int</span></dt><dd><p>The current simulation step.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.estimate_queue_time">
+<span class="sig-name descname"><span class="pre">estimate_queue_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.estimate_queue_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.estimate_queue_time" title="Link to this definition"></a></dt>
+<dd><p>Estimates the total waiting time for a given service queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>q_type</strong><span class="classifier">str</span></dt><dd><p>The name of the service queue (‘Consultation’ or ‘Installation’).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The estimated total duration in steps for all jobs in the queue.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.training">
+<span class="sig-name descname"><span class="pre">training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.training" title="Link to this definition"></a></dt>
+<dd><p>Expands the Plumber’s knowledge by learning about a new heating system.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.consultation">
+<span class="sig-name descname"><span class="pre">consultation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.consultation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.consultation" title="Link to this definition"></a></dt>
+<dd><p>Performs a consultation for a houseowner.</p>
+<p>This method has two main paths:
+1. If the houseowner has no desired system, the Plumber shares knowledge</p>
+<blockquote>
+<div><p>about various systems and provides a recommendation.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>If the houseowner has a desired system, the Plumber checks its 
+feasibility, verifies the houseowner’s ability to afford it (including 
+subsidies and loans), updates the final costs, and, if successful, 
+queues an installation job.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The consultation job containing the customer information.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.recommend">
+<span class="sig-name descname"><span class="pre">recommend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.recommend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.recommend" title="Link to this definition"></a></dt>
+<dd><p>Recommends the best-rated heating system to a houseowner.</p>
+<p>The recommendation is based on the Plumber’s own evaluation of the 
+systems they know.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The houseowner to whom the recommendation is given.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.installation">
+<span class="sig-name descname"><span class="pre">installation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.installation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.installation" title="Link to this definition"></a></dt>
+<dd><p>Performs the installation of a new heating system for a client.</p>
+<p>This method is called when an installation job is completed. It finalises
+the installation, updates the model’s state (e.g., counters), and 
+deducts the cost from the houseowner’s budget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The installation job containing the customer information.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.generate_system">
+<span class="sig-name descname"><span class="pre">generate_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variant</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.generate_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.generate_system" title="Link to this definition"></a></dt>
+<dd><p>Creates an instance of a heating system from its class name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>variant</strong><span class="classifier">str</span></dt><dd><p>The class name of the heating system to create.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Heating_system</dt><dd><p>An instance of the specified heating system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.install_system">
+<span class="sig-name descname"><span class="pre">install_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.install_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.install_system" title="Link to this definition"></a></dt>
+<dd><p>Replaces the agent’s old heating system with a new one.</p>
+<p>This is the core logic for the installation, where the houseowner’s 
+<cite>current_heating</cite> is updated, along with all relevant 
+financial and environmental metrics in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The houseowner receiving the new system.</p>
+</dd>
+<dt><strong>heating</strong><span class="classifier">str</span></dt><dd><p>The class name of the heating system to install.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.evaluate_system">
+<span class="sig-name descname"><span class="pre">evaluate_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.evaluate_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.evaluate_system" title="Link to this definition"></a></dt>
+<dd><p>Rates a heating system based on the Plumber’s own preferences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system</strong><span class="classifier">Heating_system</span></dt><dd><p>The heating system to evaluate.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.share_systems">
+<span class="sig-name descname"><span class="pre">share_systems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.share_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.share_systems" title="Link to this definition"></a></dt>
+<dd><p>Shares knowledge of other clients’ systems with a houseowner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to share information with.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.share_rating">
+<span class="sig-name descname"><span class="pre">share_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.share_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.share_rating" title="Link to this definition"></a></dt>
+<dd><p>Shares the Plumber’s ratings of known systems with a houseowner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to share ratings with.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.share_knowledge">
+<span class="sig-name descname"><span class="pre">share_knowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.share_knowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.share_knowledge" title="Link to this definition"></a></dt>
+<dd><p>Shares attribute knowledge about systems with a houseowner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to share knowledge with.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.modify_agent_income">
+<span class="sig-name descname"><span class="pre">modify_agent_income</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.modify_agent_income"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.modify_agent_income" title="Link to this definition"></a></dt>
+<dd><p>Adjusts a houseowner’s weekly net income after a new system is installed.</p>
+<p>The income is modified based on the difference in weekly running costs 
+(fuel and opex) between the old and new heating systems.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent whose income is being modified.</p>
+</dd>
+<dt><strong>old_system</strong><span class="classifier">Heating_system</span></dt><dd><p>The previously installed heating system.</p>
+</dd>
+<dt><strong>new_system</strong><span class="classifier">Heating_system</span></dt><dd><p>The newly installed heating system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.check_affordability">
+<span class="sig-name descname"><span class="pre">check_affordability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.check_affordability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.check_affordability" title="Link to this definition"></a></dt>
+<dd><p>Verifies if a houseowner can afford a new heating system.</p>
+<p>Checks both the upfront installation cost against the agent’s budget 
+(including loans) and the ongoing running costs against the agent’s income.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent whose affordability is being checked.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>True if the agent can afford the system, False otherwise.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.organize_subsidies">
+<span class="sig-name descname"><span class="pre">organize_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.organize_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.organize_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Structures known subsidies into a dictionary for easy lookup.
+Sorts subsidies by the type of heating system they are applied to.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.apply_subsidies">
+<span class="sig-name descname"><span class="pre">apply_subsidies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.apply_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.apply_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Applies relevant subsidies to a heating system for a given agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>hs</strong><span class="classifier">Heating_system</span></dt><dd><p>The heating system to which subsidies will be applied.</p>
+</dd>
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent for whom the subsidy conditions are checked.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_heating">
+<span class="sig-name descname"><span class="pre">get_heating</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_heating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_heating" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_trigger">
+<span class="sig-name descname"><span class="pre">get_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_trigger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_stage_dynamics">
+<span class="sig-name descname"><span class="pre">get_stage_dynamics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_stage_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_stage_dynamics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_class">
+<span class="sig-name descname"><span class="pre">get_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_system_age">
+<span class="sig-name descname"><span class="pre">get_system_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_system_age"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_system_age" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_satisfied_ratio">
+<span class="sig-name descname"><span class="pre">get_satisfied_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_satisfied_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_satisfied_ratio" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_milieu">
+<span class="sig-name descname"><span class="pre">get_milieu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_milieu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_milieu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_opex">
+<span class="sig-name descname"><span class="pre">get_opex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_opex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_opex" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_preferences">
+<span class="sig-name descname"><span class="pre">get_preferences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_preferences" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_heating_system_evaluation">
+<span class="sig-name descname"><span class="pre">get_heating_system_evaluation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_heating_system_evaluation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_heating_system_evaluation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_comprehensive_metrics">
+<span class="sig-name descname"><span class="pre">get_comprehensive_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_comprehensive_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_comprehensive_metrics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.Plumber.Plumber.get_house_area">
+<span class="sig-name descname"><span class="pre">get_house_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/Plumber.html#Plumber.get_house_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.Plumber.Plumber.get_house_area" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agents">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-agents" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Run.html" class="btn btn-neutral float-left" title="Run module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agents.base.html" class="btn btn-neutral float-right" title="agents.base package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

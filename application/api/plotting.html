@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plotting package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="server package" href="server.html" />
+    <link rel="prev" title="interventions package" href="interventions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">plotting package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-plotting.Heatmaps">plotting.Heatmaps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plotting-scenario-comparator-module">plotting.Scenario_comparator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-plotting.plot_preferences_means">plotting.plot_preferences_means module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plotting-slide-maker-module">plotting.slide_maker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">plotting package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/plotting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plotting-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">plotting package</a><a class="headerlink" href="#plotting-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#plotting-package" id="id1">plotting package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-plotting.Heatmaps" id="id2">plotting.Heatmaps module</a></p></li>
+<li><p><a class="reference internal" href="#plotting-scenario-comparator-module" id="id3">plotting.Scenario_comparator module</a></p></li>
+<li><p><a class="reference internal" href="#module-plotting.plot_preferences_means" id="id4">plotting.plot_preferences_means module</a></p></li>
+<li><p><a class="reference internal" href="#plotting-slide-maker-module" id="id5">plotting.slide_maker module</a></p></li>
+<li><p><a class="reference internal" href="#module-plotting" id="id6">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-plotting.Heatmaps">
+<span id="plotting-heatmaps-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">plotting.Heatmaps module</a><a class="headerlink" href="#module-plotting.Heatmaps" title="Link to this heading"></a></h2>
+<p>Generates heatmaps from a grid of simulation output files.</p>
+<p>This script is a post-processing tool designed to visualise the results of a
+parameter sweep across a two-dimensional parameter space (e.g., varying the
+number of plumbers vs. energy advisors). It operates by scanning a directory
+of pickle files, where the filename of each file encodes the coordinates of
+that simulation run within the parameter grid.</p>
+<p>The script performs two distinct analyses in sequence:
+1.  <strong>Replacements Analysis</strong>: It processes <cite>model_df</cite> pickle files, extracts the</p>
+<blockquote>
+<div><p>total number of heating system replacements at specific time intervals
+(0, 5, 10, 15, and 20 years), and assembles this data into a matrix.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><strong>Heat Pump Adoption Analysis</strong>: It processes <cite>agent_df</cite> pickle files, counts
+the number of agents who have adopted a <cite>Heating_system_heat_pump</cite> at the
+same time intervals, and assembles this data into a matrix.</p></li>
+</ol>
+<p>For each analysis and time interval, it generates a heatmap image visualizing
+the results across the parameter space and saves the underlying data matrix as
+a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="plotting-scenario-comparator-module">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">plotting.Scenario_comparator module</a><a class="headerlink" href="#plotting-scenario-comparator-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-plotting.plot_preferences_means">
+<span id="plotting-plot-preferences-means-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">plotting.plot_preferences_means module</a><a class="headerlink" href="#module-plotting.plot_preferences_means" title="Link to this heading"></a></h2>
+<p>Visualises the mean preference values of different agent milieus.</p>
+<p>This script reads the <cite>milieu_parameters.csv</cite> input file, which contains the
+alpha and beta shape parameters that define agent preferences for various
+heating system attributes (e.g., cost, emissions). It calculates the mean
+preference value for each attribute and milieu from these parameters.</p>
+<p>The script then generates and saves two distinct bar plots to visualize these
+preferences, allowing for easy comparison:
+1.  A plot grouped by milieu, showing the different attribute preferences for each.
+2.  A plot grouped by attribute, showing how different milieus value each one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="plotting-slide-maker-module">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">plotting.slide_maker module</a><a class="headerlink" href="#plotting-slide-maker-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-plotting">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-plotting" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interventions.html" class="btn btn-neutral float-left" title="interventions package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="server.html" class="btn btn-neutral float-right" title="server package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

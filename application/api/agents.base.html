@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents.base package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="analysis package" href="analysis.html" />
+    <link rel="prev" title="agents package" href="agents.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="agents.html">agents package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="agents.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.html#module-agents.EnergyAdvisor">agents.EnergyAdvisor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.html#agents-house-module">agents.House module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.html#agents-houseowner-module">agents.Houseowner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.html#module-agents.Plumber">agents.Plumber module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agents.html#module-agents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">agents.base package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.base.Intermediary">agents.base.Intermediary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.base.Job">agents.base.Job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.base.Service">agents.base.Service module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-agents.base">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+          <li class="breadcrumb-item"><a href="agents.html">agents package</a></li>
+      <li class="breadcrumb-item active">agents.base package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/agents.base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agents-base-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">agents.base package</a><a class="headerlink" href="#agents-base-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#agents-base-package" id="id1">agents.base package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-agents.base.Intermediary" id="id2">agents.base.Intermediary module</a></p></li>
+<li><p><a class="reference internal" href="#module-agents.base.Job" id="id3">agents.base.Job module</a></p></li>
+<li><p><a class="reference internal" href="#module-agents.base.Service" id="id4">agents.base.Service module</a></p></li>
+<li><p><a class="reference internal" href="#module-agents.base" id="id5">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-agents.base.Intermediary">
+<span id="agents-base-intermediary-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">agents.base.Intermediary module</a><a class="headerlink" href="#module-agents.base.Intermediary" title="Link to this heading"></a></h2>
+<p>Superclass for any intermediary in the model (i.e. Plumber, EnergyAdvisor (EA)), 
+but not for Houseowner
+Contains common methods to ensure basic functionality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sören Lohr</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Intermediary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_preferences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_hs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completed_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_concurrent_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_jobs_counter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hs_evaluation_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hs_evaluation_params_rescale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></p>
+<p>A base class for intermediary agents like Plumbers and Energy Advisors.</p>
+<p>This  class provides common functionality for agents that interact with 
+Houseowners to provide services. It manages the lifecycle of jobs (queuing, 
+starting, and completing), evaluates heating systems based on a set of 
+preferences, and shares knowledge and ratings with other agents.</p>
+<p>Initialises an intermediary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>unique_id: int</strong></dt><dd><p>ID of the intermediary.</p>
+</dd>
+<dt><strong>model: MESA Model</strong></dt><dd><p>An instance of MESA Model to contain the intermediary.</p>
+</dd>
+<dt><strong>heating_preferences: Heating_preferences</strong></dt><dd><p>Class containing weights for heating attribute evaluation.</p>
+</dd>
+<dt><strong>known_hs: list</strong></dt><dd><p>A list of heating systems the agent has learned about 
+through information gathering or social interactions.</p>
+</dd>
+<dt><strong>active_jobs: dict</strong></dt><dd><p>Contains jobs that intermediary does.</p>
+</dd>
+<dt><strong>completed_jobs: dict</strong></dt><dd><p>Contains completed jobs for data gathering.</p>
+</dd>
+<dt><strong>max_concurrent_jobs: int</strong></dt><dd><p>Maximum number fo jobs the intermediary can do at the same time.</p>
+</dd>
+<dt><strong>active_jobs_counter: int</strong></dt><dd><p>Counts the number of jobs done currently.</p>
+</dd>
+<dt><strong>hs_evaluation_params: list</strong></dt><dd><p>List of heating attributes to be considered during evaluation.</p>
+</dd>
+<dt><strong>hs_evaluation_params_rescale: list</strong></dt><dd><p>List of heating attributes to be considered during evaluation,
+rescaled if less or more attributes are needed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.step" title="Link to this definition"></a></dt>
+<dd><p>Performs the common step for any intermediary.</p>
+<p>Ensures that new subclasses perform basic actions without errors.
+Should be overridden in each subclass to include specific actions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.work">
+<span class="sig-name descname"><span class="pre">work</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.work"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.work" title="Link to this definition"></a></dt>
+<dd><p>Two actions:
+1. Transfers some jobs from service.job_queue to self.active_jobs.
+2. Performs service-specific job. This happens only for jobs 
+assigned for the current step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.training">
+<span class="sig-name descname"><span class="pre">training</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.training" title="Link to this definition"></a></dt>
+<dd><p>Plumber/EA compatibility method
+Plumbers have their own training, while EA use this</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.update_attributes">
+<span class="sig-name descname"><span class="pre">update_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.update_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.update_attributes" title="Link to this definition"></a></dt>
+<dd><p>Updates data tables for known technologies when 
+dynamics values of the attributes are used.
+Synchronises own parameter table with that of the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.begin_jobs">
+<span class="sig-name descname"><span class="pre">begin_jobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.begin_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.begin_jobs" title="Link to this definition"></a></dt>
+<dd><p>Transfers some jobs from service.job_queue to self.active_jobs.
+Job completion is set to a step in the future.
+Number of jobs transfered depends on self.max_concurrent_jobs.
+Orders the service to begin the jobs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>steps: int</strong></dt><dd><p>ID of the step to set the job duration.
+Normally, the current step.</p>
+</dd>
+<dt><strong>service: Service</strong></dt><dd><p>Service to begin the job.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.check_job_completion">
+<span class="sig-name descname"><span class="pre">check_job_completion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.check_job_completion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.check_job_completion" title="Link to this definition"></a></dt>
+<dd><p>Checks the self.active_jobs for jobs that should be finished
+at the given step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>steps: int</strong></dt><dd><p>Step ID to check the job completion.
+Normally, the current step.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.evaluate_system">
+<span class="sig-name descname"><span class="pre">evaluate_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.evaluate_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.evaluate_system" title="Link to this definition"></a></dt>
+<dd><p>Creates a heating system rating using heating system’s parameters 
+and agent’s preferences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system: Heating_system</strong></dt><dd><p>The Heating_system object to be evaluated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.share_rating">
+<span class="sig-name descname"><span class="pre">share_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.share_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.share_rating" title="Link to this definition"></a></dt>
+<dd><p>The intermediary shares the ratings of his known HS with a client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent: Houseowner</strong></dt><dd><p>A houseowner to share the ratings of known HS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.share_knowledge">
+<span class="sig-name descname"><span class="pre">share_knowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.share_knowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.share_knowledge" title="Link to this definition"></a></dt>
+<dd><p>The intermediary shares the knowledge 
+about their known heating systems with an agent.
+It also influences agent’s opinion on other known systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>counterpart: Houseowner</strong></dt><dd><p>A houseowner to share the knowledge about known HS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_heating">
+<span class="sig-name descname"><span class="pre">get_heating</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_heating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_heating" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_trigger">
+<span class="sig-name descname"><span class="pre">get_trigger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_trigger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_stage_dynamics">
+<span class="sig-name descname"><span class="pre">get_stage_dynamics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_stage_dynamics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_stage_dynamics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_class">
+<span class="sig-name descname"><span class="pre">get_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_system_age">
+<span class="sig-name descname"><span class="pre">get_system_age</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_system_age"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_system_age" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_opinion">
+<span class="sig-name descname"><span class="pre">get_opinion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_opinion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_opinion" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_satisfied_ratio">
+<span class="sig-name descname"><span class="pre">get_satisfied_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_satisfied_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_satisfied_ratio" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_preferences">
+<span class="sig-name descname"><span class="pre">get_preferences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_preferences" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_comprehensive_metrics">
+<span class="sig-name descname"><span class="pre">get_comprehensive_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_comprehensive_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_comprehensive_metrics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_emissions">
+<span class="sig-name descname"><span class="pre">get_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_emissions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_energy_demand">
+<span class="sig-name descname"><span class="pre">get_energy_demand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_energy_demand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_energy_demand" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Intermediary.Intermediary.get_obstacles">
+<span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Intermediary.html#Intermediary.get_obstacles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Intermediary.Intermediary.get_obstacles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agents.base.Job">
+<span id="agents-base-job-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">agents.base.Job module</a><a class="headerlink" href="#module-agents.base.Job" title="Link to this heading"></a></h2>
+<p>A module for defining job and service data structures.</p>
+<p>This module provides the <cite>Job</cite> dataclass, which encapsulates all necessary 
+information for a task to be performed by an intermediary agent for a 
+houseowner. It also includes the <cite>IService</cite> interface for type hinting services.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sören Lohr</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.base.Job.IService">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">IService</span></span><a class="reference internal" href="../../_modules/agents/base/Job.html#IService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Job.IService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an interface for services offered by intermediary agents.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.base.Job.Job">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">customer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agents.base.Job.IService" title="agents.base.Job.IService"><span class="pre">IService</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Job.html#Job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Job.Job" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A data class representing a job to be performed by an intermediary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job_id</strong><span class="classifier">str</span></dt><dd><p>A unique identifier for the job.</p>
+</dd>
+<dt><strong>customer</strong><span class="classifier">Agent</span></dt><dd><p>The agent (typically a Houseowner) who requested the job.</p>
+</dd>
+<dt><strong>service</strong><span class="classifier">IService</span></dt><dd><p>The service that is performing the job.</p>
+</dd>
+<dt><strong>duration</strong><span class="classifier">int, optional</span></dt><dd><p>The time (in simulation steps) required to complete the job.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agents.base.Job.Job.job_id">
+<span class="sig-name descname"><span class="pre">job_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#agents.base.Job.Job.job_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agents.base.Job.Job.customer">
+<span class="sig-name descname"><span class="pre">customer</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Agent</span></span><a class="headerlink" href="#agents.base.Job.Job.customer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agents.base.Job.Job.service">
+<span class="sig-name descname"><span class="pre">service</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agents.base.Job.IService" title="agents.base.Job.IService"><span class="pre">IService</span></a></span><a class="headerlink" href="#agents.base.Job.Job.service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agents.base.Job.Job.duration">
+<span class="sig-name descname"><span class="pre">duration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#agents.base.Job.Job.duration" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agents.base.Service">
+<span id="agents-base-service-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">agents.base.Service module</a><a class="headerlink" href="#module-agents.base.Service" title="Link to this heading"></a></h2>
+<p>Defines base classes for services provided by intermediary agents.</p>
+<p>This module contains the abstract <cite>Service</cite> class, which provides a template 
+for services like consultations or installations. It manages a job queue and 
+handles the basic job lifecycle. It also includes a concrete <cite>ConsultationService</cite>
+class that inherits from <cite>Service</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sören Lohr</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.base.Service.Service">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermediary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_queue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">deque</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#agents.base.Job.IService" title="agents.base.Job.IService"><code class="xref py py-class docutils literal notranslate"><span class="pre">IService</span></code></a></p>
+<p>An abstract base class for services offered by intermediary agents.</p>
+<p>This class manages a queue of jobs, generates unique job IDs, and defines
+the interface for beginning, completing, and logging jobs. Subclasses
+must implement the <cite>begin_job</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intermediary</strong><span class="classifier">Intermediary</span></dt><dd><p>The intermediary agent providing the service.</p>
+</dd>
+<dt><strong>duration</strong><span class="classifier">int</span></dt><dd><p>The default time in steps required to complete a job for this service.</p>
+</dd>
+<dt><strong>job_counter</strong><span class="classifier">int</span></dt><dd><p>A counter for the number of jobs queued for this service.</p>
+</dd>
+<dt><strong>job_queue</strong><span class="classifier">deque</span></dt><dd><p>A queue of <cite>Job</cite> objects waiting to be processed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes a Service instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intermediary</strong><span class="classifier">Intermediary, optional</span></dt><dd><p>The intermediary agent providing the service.</p>
+</dd>
+<dt><strong>job_queue</strong><span class="classifier">deque, optional</span></dt><dd><p>An initial queue of jobs. Defaults to an empty deque.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Service.Service.queue_job">
+<span class="sig-name descname"><span class="pre">queue_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service.queue_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service.queue_job" title="Link to this definition"></a></dt>
+<dd><p>Adds a new job to the service’s queue for a given houseowner.</p>
+<p>Also prevents duplicate jobs from the same houseowner from being 
+added to the queue. It creates a <cite>Job</cite> object and appends to the
+job queue of the Service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>houseowner</strong><span class="classifier">Houseowner</span></dt><dd><p>The houseowner agent requesting the service.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Service.Service.generate_id">
+<span class="sig-name descname"><span class="pre">generate_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service.generate_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service.generate_id" title="Link to this definition"></a></dt>
+<dd><p>Generates a unique ID for a new job.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>str</dt><dd><p>The formatted job ID, combining the intermediary ID, service name,
+and job counter.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Service.Service.begin_job">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">begin_job</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service.begin_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service.begin_job" title="Link to this definition"></a></dt>
+<dd><p>An abstract method to begin processing a job.</p>
+<p>Subclasses must implement this method to define the specific actions 
+taken when a job starts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Service.Service.complete_job">
+<span class="sig-name descname"><span class="pre">complete_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service.complete_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service.complete_job" title="Link to this definition"></a></dt>
+<dd><p>Finalizes a job and logs its completion.</p>
+<p>Records the details of the completed job in the model’s datacollector
+for later analysis. Usually supplemented by complete_job
+of a specific intermediary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>job</strong><span class="classifier">Job</span></dt><dd><p>The job that has been completed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agents.base.Service.Service.save_queue_length">
+<span class="sig-name descname"><span class="pre">save_queue_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#Service.save_queue_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.Service.save_queue_length" title="Link to this definition"></a></dt>
+<dd><p>Saves the current length of the job queue to the datacollector.</p>
+<p>This method is used for data collection at each simulation step to 
+track the workload of services.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agents.base.Service.ConsultationService">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ConsultationService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intermediary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_queue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">deque</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/agents/base/Service.html#ConsultationService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agents.base.Service.ConsultationService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#agents.base.Service.Service" title="agents.base.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<p>A concrete implementation of a consultation service.</p>
+<p>This class serves as a specific type of <cite>Service</cite> for consultations. 
+It can be further subclassed or overridden to specify durations and behaviors 
+for different intermediary types (e.g., Plumber, EnergyAdvisor).</p>
+<p>Initializes a Service instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intermediary</strong><span class="classifier">Intermediary, optional</span></dt><dd><p>The intermediary agent providing the service.</p>
+</dd>
+<dt><strong>job_queue</strong><span class="classifier">deque, optional</span></dt><dd><p>An initial queue of jobs. Defaults to an empty deque.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-agents.base">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-agents.base" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agents.html" class="btn btn-neutral float-left" title="agents package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="analysis.html" class="btn btn-neutral float-right" title="analysis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

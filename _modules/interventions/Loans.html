@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>interventions.Loans &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">interventions.Loans</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for interventions.Loans</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provides a class to model and calculate loan conditions for financing.</span>
+
+<span class="sd">This module contains the `Loan` class, which is used to determine the terms of</span>
+<span class="sd">a loan for purchasing a heating system. </span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;waermer.intervention.loan&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Loan">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Loans.Loan">[docs]</a>
+<span class="k">class</span> <span class="nc">Loan</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a loan for purchasing a heating system.</span>
+<span class="sd">    This class encapsulates the logic for determining the terms of a loan.</span>
+<span class="sd">    When an instance is created, it automatically calculates the loan amount,</span>
+<span class="sd">    which is the lesser of the required amount (system price minus available</span>
+<span class="sd">    funds) and the maximum affordable amount (based on income). It then</span>
+<span class="sd">    computes the total repayment and monthly payment based on the loan term</span>
+<span class="sd">    and interest rate using standard financial formulas.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weekly_income : float</span>
+<span class="sd">        The borrower&#39;s weekly net income in EUR.</span>
+<span class="sd">    system_price : float</span>
+<span class="sd">        The total price of the heating system in EUR.</span>
+<span class="sd">    funds : float</span>
+<span class="sd">        The amount of personal funds the borrower has available to put towards</span>
+<span class="sd">        the purchase.</span>
+<span class="sd">    interest : float, optional</span>
+<span class="sd">        The annual interest rate as a decimal (e.g., 0.0221 for 2.21%), by</span>
+<span class="sd">        default 0.0221.</span>
+<span class="sd">    years : int, optional</span>
+<span class="sd">        The loan term in years, by default 10.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    interest : float</span>
+<span class="sd">        The annual interest rate.</span>
+<span class="sd">    years : int</span>
+<span class="sd">        The loan term in years.</span>
+<span class="sd">    loan_amount : float</span>
+<span class="sd">        The calculated principal amount of the loan in EUR.</span>
+<span class="sd">    total_repayment : float</span>
+<span class="sd">        The total amount that will be paid back over the life of the loan.</span>
+<span class="sd">    monthly_payment : float</span>
+<span class="sd">        The calculated monthly payment amount in EUR.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weekly_income</span><span class="p">,</span> <span class="n">system_price</span><span class="p">,</span> <span class="n">funds</span><span class="p">,</span> <span class="n">interest</span><span class="o">=</span><span class="mf">0.0221</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a Loan instance and calculates its terms.</span>
+
+<span class="sd">        The constructor determines the affordable loan amount based on income,</span>
+<span class="sd">        calculates the required loan (price minus funds), and takes the</span>
+<span class="sd">        minimum of the two as the principal. It then computes the total and</span>
+<span class="sd">        monthly repayments.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        weekly_income : float</span>
+<span class="sd">            The borrower&#39;s weekly net income in EUR.</span>
+<span class="sd">        system_price : float</span>
+<span class="sd">            The total price of the heating system in EUR.</span>
+<span class="sd">        funds : float</span>
+<span class="sd">            The amount of personal funds the borrower has available.</span>
+<span class="sd">        interest : float, optional</span>
+<span class="sd">            The annual interest rate, by default 0.0221.</span>
+<span class="sd">        years : int, optional</span>
+<span class="sd">            The loan term in years, by default 10.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interest</span> <span class="o">=</span> <span class="n">interest</span>  <span class="c1"># Annual interest rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">years</span> <span class="o">=</span> <span class="n">years</span>  <span class="c1"># Loan term in years</span>
+        
+        <span class="c1"># Step 1: Convert weekly net income to annual net income</span>
+        <span class="n">monthly_net_income</span> <span class="o">=</span> <span class="n">weekly_income</span> <span class="o">*</span> <span class="mi">4</span>
+
+        <span class="c1"># Step 2: Calculate the maximum affordable loan amount based on LTI ratio (LTV 100%)</span>
+        <span class="n">ltv_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#Maximum possible loan share from the price</span>
+        <span class="n">lti_multiplier</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">#Yearly income x lti</span>
+        <span class="n">affordable_loan_amount</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">ltv_ratio</span><span class="o">*</span><span class="n">system_price</span><span class="p">),</span> <span class="p">(</span><span class="n">monthly_net_income</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">lti_multiplier</span><span class="p">))</span>
+
+        <span class="c1"># Step 3: Calculate the required loan amount</span>
+        <span class="n">required_loan_amount</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">system_price</span> <span class="o">-</span> <span class="n">funds</span><span class="p">)</span>
+
+        <span class="c1"># Step 4: Use the required loan amount if it&#39;s within the affordable limit; otherwise, use the maximum affordable amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loan_amount</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">required_loan_amount</span><span class="p">,</span> <span class="n">affordable_loan_amount</span><span class="p">))</span>
+
+        <span class="c1"># Step 5: Calculate the monthly interest rate and total number of payments</span>
+        <span class="n">monthly_interest</span> <span class="o">=</span> <span class="n">interest</span> <span class="o">/</span> <span class="mi">12</span>
+        <span class="n">total_payments</span> <span class="o">=</span> <span class="n">years</span> <span class="o">*</span> <span class="mi">12</span>
+
+        <span class="c1"># Step 6: Calculate the total repayment amount with monthly compound interest</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_repayment</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loan_amount</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">monthly_interest</span><span class="p">)</span> <span class="o">**</span> <span class="n">total_payments</span><span class="p">))</span>
+
+        <span class="c1"># Step 7: Calculate monthly payment using the amortization formula</span>
+        <span class="n">payment</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loan_amount</span> <span class="o">*</span> <span class="p">(</span><span class="n">monthly_interest</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">monthly_interest</span><span class="p">)</span> <span class="o">**</span> <span class="n">total_payments</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">monthly_interest</span><span class="p">)</span> <span class="o">**</span> <span class="n">total_payments</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_payment</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">payment</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_payment</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Negative monthly payment!&quot;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Loan.log_details">
+<a class="viewcode-back" href="../../application/api/interventions.html#interventions.Loans.Loan.log_details">[docs]</a>
+    <span class="k">def</span> <span class="nf">log_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required loan amount: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">required_loan_amount</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Monthly net income: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monthly_net_income</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Affordable loan amount: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">affordable_loan_amount</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loan amount: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loan_amount</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;System costs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">system_price</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Funds: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">funds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

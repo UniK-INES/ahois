@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=088b4015" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=db78e746"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="tests package" href="application/api/tests.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">Application</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gitlab-repository">GitLab Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#publish-code-and-doc">Publish code and doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#style-guide-for-code">Style Guide for Code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documenting-code">Documenting code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string-formatting">String formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linting">Linting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-guide">Documentation Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-documentation">Building documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#localisation">Localisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#futurewarning">FutureWarning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynaconf-tweaks">Dynaconf Tweaks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-environment-using-pipenv">Virtual environment using pipenv</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Development</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/development.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="development">
+<span id="id1"></span><h1>Development<a class="headerlink" href="#development" title="Link to this heading"></a></h1>
+<section id="gitlab-repository">
+<h2>GitLab Repository<a class="headerlink" href="#gitlab-repository" title="Link to this heading"></a></h2>
+<ul>
+<li><p>We use the following branches</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>main (released code - only this is allowed for final project simulations)</p></li>
+<li><p>&lt;developers’s initials&gt;_feature_&lt;feature title&gt; for feature branches</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Versions that are used to produce final product simulations are tagged accordingly (&lt;project-name&gt;_&lt;project.version&gt;)</p></li>
+<li><p>For critical submissions a code review is required using merge request</p></li>
+<li><p>Commit message respect <a class="reference external" href="https://initialcommit.com/blog/git-commit-messages-best-practices">best practises</a>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Keep it short (less than 150 characters total)</p></li>
+<li><p>Use the imperative mood</p></li>
+<li><p>Add a title</p></li>
+<li><p>Add a body (optional)</p></li>
+</ul>
+<div class="admonition-example-for-a-git-commit-message admonition">
+<p class="admonition-title">Example for a git commit message</p>
+<p>Add Agent property spruceness</p>
+<p>Needed to calculate heat demand</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>Submissions to devel need to pass all tests</p></li>
+</ul>
+</section>
+<section id="publish-code-and-doc">
+<h2>Publish code and doc<a class="headerlink" href="#publish-code-and-doc" title="Link to this heading"></a></h2>
+<p>There is a <a class="reference external" href="https://github.com/UniK-INES/ahois">public gitlab repository</a>. To publish the latest code to the
+public repository, proceed as follows:</p>
+<ol class="arabic" start="0">
+<li><p>Setup your local repository (required once):</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">public_origin</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">UniK</span><span class="o">-</span><span class="n">INES</span><span class="o">/</span><span class="n">ahois</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Merge the code to publish into branch <cite>public_main</cite>, e.g.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">public_main</span>
+<span class="n">git</span> <span class="n">merge</span> <span class="o">--</span><span class="n">squash</span> <span class="o">-</span><span class="n">s</span> <span class="n">ort</span> <span class="o">-</span><span class="n">Xtheirs</span> <span class="n">main</span> <span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">unrelated</span><span class="o">-</span><span class="n">histories</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;merge feature xy&quot;</span>
+</pre></div>
+</div>
+<p>Merge strategy “theirs” is unproblematic because there should be no
+development in <cite>public_main</cite>.</p>
+</div></blockquote>
+</li>
+<li><p>Push <cite>public_main</cite> to the public repository:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">public_origin</span> <span class="n">public_main</span><span class="p">:</span><span class="n">main</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>Documentation is compiled as github action and will be available at
+<a class="reference external" href="https://unik-ines.github.io/ahois/index.html">https://unik-ines.github.io/ahois/index.html</a>.</p>
+</section>
+<section id="style-guide-for-code">
+<h2>Style Guide for Code<a class="headerlink" href="#style-guide-for-code" title="Link to this heading"></a></h2>
+<ul>
+<li><p>The main programming language is python</p></li>
+<li><p>Code respects PEP 8 (<a class="reference external" href="https://peps.python.org/pep-0008/">https://peps.python.org/pep-0008/</a>)</p></li>
+<li><p>PEP 8-check is part of code reviews and is recommended to be executed automatically via pre-commit:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://pypi.org/project/ruff">Ruff</a> is used to automatically format python code,
+<a class="reference external" href="https://github.com/codespell-project/codespell">codespell</a> to detect typos. Ruff and codespell are called by
+<a class="reference external" href="https://pre-commit.com/">pre-commit</a> before any commit. In case the code needs to be reformatted, according
+files need to be staged and the commit process is repeated. Requirements to use pre-commit:</p>
+<ul>
+<li><p>pre-commit installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span> <span class="n">install</span>
+</pre></div>
+</div>
+</li>
+<li><p><cite>.pre-commit-config.yaml</cite> present in project root (given)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><cite>codespell:ignore-begin</cite> / <cite>codespell:ignore-end</cite> are not yet supported in the latest
+version of <cite>codespell</cite>, but will be in future (code blocks surrounded
+like this will be ignored).</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>TODO-Marker should only be used for urgent tasks, further hints/tasks in the Code are marked by NOTE</p></li>
+<li><p>Methods and functions which are only called from within their own module are marked private (leading “_”)</p></li>
+<li><dl class="simple">
+<dt>Method and function parameters which do not have a definite default value are assigned <cite>None</cite> as default value.</dt><dd><p>Especially for boolean variables <cite>None</cite> should be checked for and an exception be raised accordingly.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="documenting-code">
+<h3>Documenting code<a class="headerlink" href="#documenting-code" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Docstrings in <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard">numpy format</a>
+Also <a class="reference external" href="https://pandas.pydata.org/docs/development/contributing_docstring.html">https://pandas.pydata.org/docs/development/contributing_docstring.html</a> contains a good overview.</p></li>
+<li><p>The header of each module shall contain a summary line, extended summary, optionally example(s),
+and author information. The initial author should be given as first one, subsequent editors following.
+In case the current maintainer is not the initial author, <cite>(maintainer)</cite> should be added the the corresponding
+author in the listing. An example header looks like this:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Evaluation figures for energy demand.</span>
+
+<span class="sd">There are basically four groups:</span>
+
+<span class="sd">* single buildings energy demand</span>
+<span class="sd">* total energy demand</span>
+<span class="sd">* average energy demand per building</span>
+<span class="sd">* average specific energy demand per building</span>
+<span class="sd">* weighted average specific energy demand per building (considering scaling factor)</span>
+
+<span class="sd">With data presentation per:</span>
+
+<span class="sd">- owner type</span>
+<span class="sd">- building class</span>
+<span class="sd">- combinations of owner type and building class</span>
+
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    plot_total_energy_demand(</span>
+<span class="sd">        fstring=&quot;GT in @fargs[&#39;gts&#39;] and BAK in @fargs[&#39;baks&#39;]&quot;,</span>
+<span class="sd">        fargs=immutabledict({&quot;gts&quot;: GT_RB, &quot;baks&quot;: BAC_RB}),</span>
+<span class="sd">        desc=_(&quot; (WG)&quot;),</span>
+<span class="sd">    )</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;Ivan.Digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In case function authorship differs from the authors given in the model header, authors should be
+given in the function docstring as follows (note the indentation of the line after <cite>:Authors:</cite>; also,
+the <cite>Notes</cite> section is required as authors to not render correctly directly below <cite>Parameters</cite> or <cite>Returns</cite>):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Notes</span>
+<span class="o">-----</span>
+
+<span class="p">:</span><span class="n">Authors</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">Ivan</span> <span class="n">Digel</span> <span class="o">&lt;</span><span class="n">Ivan</span><span class="o">.</span><span class="n">Digel</span><span class="nd">@uni</span><span class="o">-</span><span class="n">kassel</span><span class="o">.</span><span class="n">de</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Members starting with an underscore (_) will not be included in the docs.</p></li>
+<li><p>Often it is a good idea to list settings parameters that are considered in a function:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Other</span> <span class="n">Parameters</span>
+<span class="o">----------------</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">project</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">project</span> <span class="n">name</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Links to other functions:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:func:`rng_milieu_init`
+
+:func:`~src.modules.RNG.rng_milieu_init` (shows only last part)
+
+:func:`pandas:pandas.pivot_table` (external libraries defined in conf.py - currently pandas and numpy)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Math equations (formula needs to be intended relative to .. math::):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">math</span><span class="p">::</span>
+<span class="n">p_</span><span class="p">{</span><span class="n">i</span><span class="p">}</span> <span class="o">=</span> \\<span class="n">frac</span><span class="p">{</span>\\<span class="n">sum_n</span> <span class="n">ix</span><span class="p">}{</span><span class="n">x</span><span class="o">^</span><span class="mi">2</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Inline math</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:math:`x_{i,n}`
+</pre></div>
+</div>
+</section>
+<section id="string-formatting">
+<h3>String formatting<a class="headerlink" href="#string-formatting" title="Link to this heading"></a></h3>
+<p>The use of <a class="reference external" href="https://realpython.com/python-f-strings/">f-strings</a> has precedence over <cite>format()</cite> and the modulo operator.
+F-strings are <a class="reference external" href="https://realpython.com/python-string-formatting/">easier to read and perform better</a>.
+Exceptions apply when lazy evaluation of strings is required. F-Strings also allow format specifiers as 2nd argument
+after a “:” within the curly brackets.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Number of retrieved rows (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mz_df</span><span class="p">)</span><span class="si">}</span><span class="s2">) for BC=</span><span class="si">{</span><span class="n">gtvalue</span><span class="si">}</span><span class="s2">, OT=</span><span class="si">{</span><span class="n">otvalue</span><span class="si">}</span><span class="s2"> and &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;BAC=</span><span class="si">{</span><span class="n">bakvalue</span><span class="si">}</span><span class="s2"> deviates from requested number (</span><span class="si">{</span><span class="n">samplesize</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2">) by more than 1!&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing">
+<span id="dev-testing"></span><h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>We use <a class="reference external" href="https://docs.pytest.org/en/7.1.x/contents.html">pytest</a> to conduct unit tests:</p>
+<blockquote>
+<div><blockquote>
+<div><p>cd ahois-pro/src</p>
+</div></blockquote>
+<p>pytest</p>
+</div></blockquote>
+<p>There are some tags assigned to tests to filter executed test methods.</p>
+<p>To omit tests which usually take a <strong>long time</strong>, use</p>
+<blockquote>
+<div><blockquote>
+<div><p>cd ahois-pro/src</p>
+</div></blockquote>
+<p>pytest -m “not long”</p>
+</div></blockquote>
+<p>To execute a specific test method:</p>
+<blockquote>
+<div><blockquote>
+<div><p>cd ahois-pro/src</p>
+</div></blockquote>
+<p>pytest tests/test_energy_advisor.py::ConsultationServiceEnergyAdvisorTest::test_job_completion</p>
+</div></blockquote>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To continue with tests that failed last time, type <cite>pytest –ff</cite></p>
+</div>
+</section>
+<section id="linting">
+<h2>Linting<a class="headerlink" href="#linting" title="Link to this heading"></a></h2>
+<p>AHOIS uses <a class="reference external" href="https://pypi.org/project/ruff/">ruff</a> as linting and formatting tool. There are plugins for common IDEs
+to help with issues while coding:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.astral.sh/ruff/editors/setup/#pycharm">PyCharm</a></p></li>
+<li><p><a class="reference external" href="https://docs.astral.sh/ruff/editors/setup/#vs-code">VS Code</a></p></li>
+</ul>
+<p>Specific rules can be looked up by their code at <a class="reference external" href="https://docs.astral.sh/ruff/rules/">https://docs.astral.sh/ruff/rules/</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>During a transition period when ruff rules have not yet been implemented fully
+it might be tedious to comply when committing code changes. Therefore, the <cite>pre-commit</cite>
+tool is currently configured for a reduced set of rules (<cite>ruff_temp.toml</cite>).
+However, the ruff tools in e.g. PyCharm should already consider the full set of rules
+aimed for AHOIS (<cite>ruff.toml</cite>).</p>
+</div>
+<p>Further, AHOIS uses <a class="reference external" href="https://github.com/codespell-project/codespell">codespell</a>
+to check for typos. It may be necessary to add exceptions to the file <cite>.codespellignore</cite>.</p>
+</section>
+<section id="documentation-guide">
+<h2>Documentation Guide<a class="headerlink" href="#documentation-guide" title="Link to this heading"></a></h2>
+<p>AHOIS uses sphinx to document concepts, modules, use instructions, API and so on.</p>
+<ul class="simple">
+<li><p>Resources:</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a></p></li>
+<li><p><a class="reference external" href="https://docutils.sourceforge.io/docs/ref/rst/directives.html">reStructuredText Directives</a></p></li>
+<li><p><a class="reference external" href="https://docutils.sourceforge.io/docs/user/rst/quickref.html">Quick reStructuredText</a></p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>Internal links:</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>target:</dt><dd><p>.. _my-reference-label:</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>source</dt><dd><p>:ref:`my-reference-label`
+:ref:`Link title &lt;label-name&gt;`</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>automatically created chapter links (source):</dt><dd><p>:ref:`application/api/cluster:cluster.merge\\_output\\_from\\_parallel\\_runs module`
+(Note the double backslashes!)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Heading hierarchy:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#########</span>
+<span class="mi">1</span><span class="n">st</span> <span class="n">level</span>
+<span class="c1">#########</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*********</span>
+<span class="mi">2</span><span class="n">nd</span> <span class="n">level</span>
+<span class="o">*********</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span><span class="n">rd</span> <span class="n">level</span>
+<span class="o">=========</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span><span class="n">th</span> <span class="n">level</span>
+<span class="o">---------</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span><span class="n">th</span> <span class="n">level</span>
+<span class="o">^^^^^^^^^</span>
+</pre></div>
+</div>
+</li>
+<li><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span><span class="n">th</span> <span class="n">level</span>
+<span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span><span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+<section id="building-documentation">
+<h3>Building documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h3>
+<p>Make sure to have doc dependencies installed:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span><span class="p">[</span><span class="n">docs</span><span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Alternatively:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements_pages</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ul>
+<li><p>Docs for new modules can be generated by</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Windows</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois-pro&gt;<span class="se">\d</span>oc&gt;
+sphinx-apidoc.exe<span class="w"> </span>-o<span class="w"> </span>.<span class="se">\s</span>ource<span class="se">\a</span>pplication<span class="se">\a</span>pi<span class="se">\ </span>..<span class="se">\s</span>cr<span class="se">\ </span>--templatedir<span class="w"> </span>.<span class="se">\s</span>ource<span class="se">\_</span>templates
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Linux</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois-pro&gt;<span class="se">\d</span>oc&gt;
+sphinx-apidoc<span class="w"> </span>-o<span class="w"> </span>./source/application/api/<span class="w"> </span>../src/<span class="w"> </span>--templatedir<span class="w"> </span>./source/_templates
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To update existing modules, delete according <cite>.rst</cite> files, call above command
+and execute the python script <cite>convert.py</cite> in folder <cite>api</cite> to remove
+unnecessary files and add a ToC to module files.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>HTML pages</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Windows</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make.bat<span class="w"> </span>html
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Linux</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make<span class="w"> </span>html
+</pre></div>
+</div>
+</div>
+<p>To remove the build in order to generate it anew, type:</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Windows</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make.bat<span class="w"> </span>clean
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Linux</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make<span class="w"> </span>clean
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Docx document</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">Windows</span><a class="headerlink" href="#id10" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make.bat<span class="w"> </span>docx
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">Linux</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>ahois&gt;/doc
+make<span class="w"> </span>docx
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="localisation">
+<h2>Localisation<a class="headerlink" href="#localisation" title="Link to this heading"></a></h2>
+<p>We apply python’s <a class="reference external" href="https://docs.python.org/3/library/gettext.html">gettext feature</a>, mainly for figure labels.</p>
+<p>Dynamic texts using variables are coded as follows:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Gebäudetyp </span><span class="si">{0}</span><span class="s2">, Baualtersklasse </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">GT</span><span class="p">,</span> <span class="n">BAK</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Singular/plural:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ngettext</span><span class="p">(</span><span class="s1">&#39;I possess </span><span class="si">{0}</span><span class="s1"> laptop&#39;</span><span class="p">,</span><span class="s1">&#39;I possess </span><span class="si">{0}</span><span class="s1"> laptops&#39;</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>To create and maintain translation files, please see <a class="reference internal" href="application/recipes/analysis.html#recipes-analysis-figurelabels"><span class="std std-ref">Figure labels</span></a>.</p>
+</section>
+<section id="futurewarning">
+<h2>FutureWarning<a class="headerlink" href="#futurewarning" title="Link to this heading"></a></h2>
+<p>To detect the origin of a <cite>FutureWarning</cite> set parameters as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>settings.debug.output_warnings_as_errors = true</cite></p></li>
+<li><p><cite>settings.debug.warningsforerrors = “FutureWarning”</cite></p></li>
+</ul>
+</div></blockquote>
+<p>Then, warnings are converted to errors and the printed stacktrace helps to identify the origin of the error.
+Note that the responsible code in <cite>warnings_custom.py</cite> is not imported in all modules by default.</p>
+</section>
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="application/concepts/logging.html#concepts-logging-implementation"><span class="std std-ref">Implementation</span></a>.</p>
+</section>
+<section id="dynaconf-tweaks">
+<h2>Dynaconf Tweaks<a class="headerlink" href="#dynaconf-tweaks" title="Link to this heading"></a></h2>
+<p>At least in its versions before 4.0.0 dynaconf used to perform recursive evaluations every time a setting is requested.
+This leads to significant performance issues. Also conversions from upper to lower case of settings names where performed
+very often and found to take much time. Since version 4.0.0 is expected not before the end of 2024 a special version
+containing these tweaks was developed:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>prevent <cite>find_the_correct_casing</cite> after initialisation (<cite>boxing.py</cite>)</p></li>
+<li><p>prevent recursive evaluation after initialisation (<cite>boxing.py</cite>)</p></li>
+</ul>
+</div></blockquote>
+<p>Since after initialisation these processes are found not to be required for AHID to function properly,
+after initialisation a property in dynaconf (evaluate in AHIDConfig) is set to prevent not required processing.</p>
+<p>It is now important to stick to lower case setting names and not relying on combined terms for settings after
+initialisation (e.g. changing a part of the output path). That’s why some adjustments in tests were needed (e.g.
+explicitly reloading settings for some tests).</p>
+<p>The tweaked version of dynaconf can be applied as follows.
+The recommended way is to setup a virtual environment in order to be able to switch to the original version in case of
+unforeseen issues. Several options exist:</p>
+<section id="virtual-environment-using-pipenv">
+<h3>Virtual environment using pipenv<a class="headerlink" href="#virtual-environment-using-pipenv" title="Link to this heading"></a></h3>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pipenv</span>
+<span class="n">cd</span> <span class="o">&lt;</span><span class="n">AHOIS</span> <span class="n">project</span> <span class="nb">dir</span><span class="o">&gt;/</span><span class="n">env</span><span class="o">/</span><span class="n">main</span>
+<span class="n">pipenv</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>After setting up, these steps are required to run AHID:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">AHOIS</span> <span class="n">project</span> <span class="nb">dir</span><span class="o">&gt;/</span><span class="n">env</span><span class="o">/</span><span class="n">main</span>
+<span class="n">pipenv</span> <span class="n">shell</span>
+<span class="n">cd</span> <span class="o">../../</span><span class="n">src</span>
+<span class="n">python</span> <span class="o">./</span><span class="n">run</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="application/api/tests.html" class="btn btn-neutral float-left" title="tests package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

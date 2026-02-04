@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>helpers package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="interventions package" href="interventions.html" />
+    <link rel="prev" title="experiments package" href="experiments.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">helpers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers.config">helpers.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers.i18n">helpers.i18n module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers.information">helpers.information module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers.utils">helpers.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers.warnings_custom">helpers.warnings_custom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-helpers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">helpers package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/helpers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="helpers-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">helpers package</a><a class="headerlink" href="#helpers-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#helpers-package" id="id1">helpers package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-helpers.config" id="id2">helpers.config module</a></p></li>
+<li><p><a class="reference internal" href="#module-helpers.i18n" id="id3">helpers.i18n module</a></p></li>
+<li><p><a class="reference internal" href="#module-helpers.information" id="id4">helpers.information module</a></p></li>
+<li><p><a class="reference internal" href="#module-helpers.utils" id="id5">helpers.utils module</a></p></li>
+<li><p><a class="reference internal" href="#module-helpers.warnings_custom" id="id6">helpers.warnings_custom module</a></p></li>
+<li><p><a class="reference internal" href="#module-helpers" id="id7">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-helpers.config">
+<span id="helpers-config-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">helpers.config module</a><a class="headerlink" href="#module-helpers.config" title="Link to this heading"></a></h2>
+<p>Core configuration management for the project.</p>
+<p>This module centralises all configuration handling using the Dynaconf library.
+It loads settings from multiple sources, including default TOML files, local
+overrides, and secrets. It also provides a custom loader to import specific
+experimental scenarios from an Excel file based on a configuration ID.</p>
+<p>Furthermore, it includes utility functions for:
+- Saving the current configuration state to a file for reproducibility.
+- Setting up a flexible logging system based on an external config file.
+- Generating standardised, run-specific output paths for both local and</p>
+<blockquote>
+<div><p>remote (cluster) environments.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.settings_loader">
+<span class="sig-name descname"><span class="pre">settings_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#settings_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.settings_loader" title="Link to this definition"></a></dt>
+<dd><p>This function serves as a custom loader for Dynaconf. It reads a specified
+Excel file, finds the row matching the given <cite>config_id</cite>, and updates the
+<cite>settings</cite> object with the values from that row. String values containing
+the specified delimiter are automatically split into lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>settings: Dynaconf</strong></dt><dd><p>The Dynaconf settings object to be updated.</p>
+</dd>
+<dt><strong>filename: str</strong></dt><dd><p>The path to the Excel scenario file.</p>
+</dd>
+<dt><strong>config_id: int</strong></dt><dd><p>The ID of the configuration row to load from the Excel file.</p>
+</dd>
+<dt><strong>delimiter: str, optional</strong></dt><dd><p>The delimiter used to split string values into lists, by default “,”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.load_config_for_id">
+<span class="sig-name descname"><span class="pre">load_config_for_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#load_config_for_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.load_config_for_id" title="Link to this definition"></a></dt>
+<dd><p>Loads a specific scenario configuration from the project’s Excel file.
+This is a convenience wrapper around <cite>settings_loader</cite> that uses the
+scenario file path defined in the global settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>config_id</strong><span class="classifier">int</span></dt><dd><p>The ID of the configuration to load.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.output_conf">
+<span class="sig-name descname"><span class="pre">output_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_to_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#output_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.output_conf" title="Link to this definition"></a></dt>
+<dd><p>Writes the current settings configuration and history to files.
+This function serialises the state of a Dynaconf settings object to disk,
+creating two files: one with the current configuration (including Git repo
+info) and another with the full settings history (how values were loaded
+and merged).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>settings_to_output</strong><span class="classifier">Dynaconf, optional</span></dt><dd><p>The settings object to output. If None, the global <cite>settings</cite>
+object is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>settings.output.output_settings_path</strong><span class="classifier">str</span></dt><dd><p>The subfolder within the run’s output path to save the files.</p>
+</dd>
+<dt><strong>settings.output.output_settings_filename</strong><span class="classifier">str</span></dt><dd><p>The filename for the current settings dump.</p>
+</dd>
+<dt><strong>settings.output.output_settingshistory_filename</strong><span class="classifier">str</span></dt><dd><p>The filename for the settings history dump.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The ‘other parameters’ are taken from the global
+settings object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.stop_dynaconf_evaluation">
+<span class="sig-name descname"><span class="pre">stop_dynaconf_evaluation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#stop_dynaconf_evaluation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.stop_dynaconf_evaluation" title="Link to this definition"></a></dt>
+<dd><p>Disables Dynaconf’s deep evaluation feature.
+This function is a performance optimisation. It disables the deep
+evaluation of settings values in Dynaconf after all necessary
+configurations have been loaded, which can prevent costly re-evaluations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.config_logging">
+<span class="sig-name descname"><span class="pre">config_logging</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#config_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.config_logging" title="Link to this definition"></a></dt>
+<dd><p>Configures the project’s logging system from a file.
+This function initialises the Python logging framework using a configuration
+file specified in the settings. It dynamically re-routes file handlers to
+write logs to run-specific files, ensuring that logs from different runs
+and modules are kept separate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.get_output_path">
+<span class="sig-name descname"><span class="pre">get_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">createfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#get_output_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.get_output_path" title="Link to this definition"></a></dt>
+<dd><p>Defines the output path for output data, logging, settings storage, slurm files.
+If not existing, the folder is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>runid: int or string</strong></dt><dd><p>the run ID the output data is associated with. To refer to “RS” runs, the runid
+may be a string such as “RS0912”.</p>
+</dd>
+<dt><strong>subfolder: str</strong></dt><dd><p>last part of the output folder</p>
+</dd>
+<dt><strong>createfolder: bool</strong></dt><dd><p>If True, the folder will be created if non-existent</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The absolute path to the designated output directory.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>- settings.main.runid</strong></dt><dd></dd>
+<dt><strong>- settings.main.task</strong></dt><dd></dd>
+<dt><strong>- settings.main.output_path</strong></dt><dd></dd>
+<dt><strong>- settings.main.output_path_custom</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.config.get_cluster_output_path">
+<span class="sig-name descname"><span class="pre">get_cluster_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/config.html#get_cluster_output_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.config.get_cluster_output_path" title="Link to this definition"></a></dt>
+<dd><p>Returns the output folder of output data, logging, settings storage, slurm files
+on the cluster</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>runid: int</strong></dt><dd><p>the run ID the output data is associated with</p>
+</dd>
+<dt><strong>subfolder: str</strong></dt><dd><p>last part of the output folder</p>
+</dd>
+<dt><strong>createfolder: bool</strong></dt><dd><p>If True, the folder will be created if non-existent</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str:</dt><dd><p>cluster output path</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>- settings.slurm.target_cluster_mainpath</strong></dt><dd></dd>
+<dt><strong>- settings.main.project,</strong></dt><dd></dd>
+<dt><strong>- settings.main.task</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-helpers.i18n">
+<span id="helpers-i18n-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">helpers.i18n module</a><a class="headerlink" href="#module-helpers.i18n" title="Link to this heading"></a></h2>
+<p>Handles localisation for the project.</p>
+<p>This module sets up the translation framework using Python’s built-in <cite>gettext</cite>
+library. It locates the translation files, configures the desired language based
+on the global settings (<cite>settings.eval.language</cite>), and provides a translation
+function, conventionally named <cite>_</cite>. This function can be imported and used
+throughout the project to mark strings for translation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="module-helpers.information">
+<span id="helpers-information-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">helpers.information module</a><a class="headerlink" href="#module-helpers.information" title="Link to this heading"></a></h2>
+<p>Provides functions to retrieve project and system information.</p>
+<p>This module contains utility functions for gathering metadata about the
+project’s version and the runtime environment. It can retrieve the current
+Git version (either from a tag or commit hash) and monitor the process’s
+peak memory usage in a platform-independent manner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.information.get_git_version">
+<span class="sig-name descname"><span class="pre">get_git_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/information.html#get_git_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.information.get_git_version" title="Link to this definition"></a></dt>
+<dd><p>Retrieves current version from tag or commit identifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>str</dt><dd><p>current version</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.information.get_peak_memory_use">
+<span class="sig-name descname"><span class="pre">get_peak_memory_use</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/information.html#get_peak_memory_use"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.information.get_peak_memory_use" title="Link to this definition"></a></dt>
+<dd><p>Return the peak memory usage of the current process in bytes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>int: Peak memory usage in bytes</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-helpers.utils">
+<span id="helpers-utils-module"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">helpers.utils module</a><a class="headerlink" href="#module-helpers.utils" title="Link to this heading"></a></h2>
+<p>A collection of miscellaneous utility functions for the project.</p>
+<p>This module provides various helper functions that support different parts of
+the application. Responsibilities include dynamically loading classes,
+generating standardized filenames for output data and images, converting
+data formats, and implementing specific model-related calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.utils.load_class">
+<span class="sig-name descname"><span class="pre">load_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/utils.html#load_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.utils.load_class" title="Link to this definition"></a></dt>
+<dd><p>This function imports a module by its string name and then retrieves a
+class from that module, also by its string name. This allows for flexible
+instantiation of objects based on configuration settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>module_name</strong><span class="classifier">str</span></dt><dd><p>The name of the module to import.</p>
+</dd>
+<dt><strong>class_name</strong><span class="classifier">str</span></dt><dd><p>The name of the class to retrieve from the module.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>class</dt><dd><p>The requested class object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.utils.get_file_name">
+<span class="sig-name descname"><span class="pre">get_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/helpers/utils.html#get_file_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.utils.get_file_name" title="Link to this definition"></a></dt>
+<dd><p>This function creates a unique filename based on the project’s
+configuration settings. The name can be a simple run ID or a more
+descriptive name including the scenario ID and random seeds, depending
+on the <cite>settings.output.simplenames</cite> flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>run_id</strong><span class="classifier">int, optional</span></dt><dd><p>The ID of the run. If not provided, the <cite>run_id</cite> from the global
+settings is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The generated filename without an extension.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.utils.get_images_name">
+<span class="sig-name descname"><span class="pre">get_images_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">milieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/helpers/utils.html#get_images_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.utils.get_images_name" title="Link to this definition"></a></dt>
+<dd><p>Creates a unique name for an image based on the current run ID, file
+prefix, and scenario ID from the global settings. An optional ‘milieu’
+string can be included to further specify the image content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>milieu</strong><span class="classifier">str, optional</span></dt><dd><p>A string identifier to append to the image name, by default None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The generated image name without an extension.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.utils.pickle_to_hdf5">
+<span class="sig-name descname"><span class="pre">pickle_to_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resulttype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/utils.html#pickle_to_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.utils.pickle_to_hdf5" title="Link to this definition"></a></dt>
+<dd><p>This function scans output directories for pickled pandas DataFrames based
+on a set of scenarios, run IDs, and file prefixes defined in the global
+settings. It reads each pickle file and stores its contents in a single
+HDF5 file, which is more efficient for querying and analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>resulttype</strong><span class="classifier">str, optional</span></dt><dd><p>A string that is part of the pickle filename to identify the type
+of result to process (e.g., ‘model’ or ‘agent’), by default “model”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.utils.influence_by_relative_agreement">
+<span class="sig-name descname"><span class="pre">influence_by_relative_agreement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/utils.html#influence_by_relative_agreement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.utils.influence_by_relative_agreement" title="Link to this definition"></a></dt>
+<dd><p>This function models knowledge exchange between two houseowners related to a single system type. 
+It updates the parameters (opinion and uncertainty) of a <cite>target_system</cite> based on
+the parameters of a <cite>source_system</cite>. The update is governed by the overlap
+between their uncertainty intervals, and the strength of the influence is
+controlled by the <cite>exposure</cite> parameter. Based on Relative Agreement approach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>source_system</strong><span class="classifier">Heating_system</span></dt><dd><p>The system that exerts influence.</p>
+</dd>
+<dt><strong>target_system</strong><span class="classifier">Heating_system</span></dt><dd><p>The system that is being influenced. Its parameters will be modified
+in-place.</p>
+</dd>
+<dt><strong>exposure</strong><span class="classifier">float, optional</span></dt><dd><p>A coefficient determining the strength of the influence, by default 1.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-helpers.warnings_custom">
+<span id="helpers-warnings-custom-module"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">helpers.warnings_custom module</a><a class="headerlink" href="#module-helpers.warnings_custom" title="Link to this heading"></a></h2>
+<p>This module modifies how warnings are handled and displayed throughout the
+project. Based on configuration settings, it can simplify the format of
+warning messages to make them more readable or escalate specific types of
+warnings into exceptions to enforce stricter code quality during debugging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;iee&#46;fraunhofer&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>iee<span>&#46;</span>fraunhofer<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="helpers.warnings_custom.custom_formatwarning">
+<span class="sig-name descname"><span class="pre">custom_formatwarning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/helpers/warnings_custom.html#custom_formatwarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#helpers.warnings_custom.custom_formatwarning" title="Link to this definition"></a></dt>
+<dd><p>This function overrides the default multi-line warning format. It
+discards all parts of the warning except for the message itself and
+prepends the message with its type (e.g., ‘DeprecationWarning’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>msg: Warning</strong></dt><dd><p>The warning message object.</p>
+</dd>
+<dt><strong>*args: tuple</strong></dt><dd><p>Additional arguments (ignored).</p>
+</dd>
+<dt><strong>**kwargs: dict</strong></dt><dd><p>Additional keyword arguments (ignored).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The formatted, single-line warning string.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-helpers">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-helpers" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="experiments.html" class="btn btn-neutral float-left" title="experiments package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interventions.html" class="btn btn-neutral float-right" title="interventions package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

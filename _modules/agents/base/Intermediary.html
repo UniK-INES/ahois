@@ -1,0 +1,577 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents.base.Intermediary &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agents.base.Intermediary</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agents.base.Intermediary</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Superclass for any intermediary in the model (i.e. Plumber, EnergyAdvisor (EA)), </span>
+<span class="sd">but not for Houseowner</span>
+<span class="sd">Contains common methods to ensure basic functionality.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sören Lohr</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">mesa</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">mesa.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">helpers.utils</span> <span class="kn">import</span> <span class="n">influence_by_relative_agreement</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi.intermediary&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Intermediary">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary">[docs]</a>
+<span class="k">class</span> <span class="nc">Intermediary</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for intermediary agents like Plumbers and Energy Advisors.</span>
+
+<span class="sd">    This  class provides common functionality for agents that interact with </span>
+<span class="sd">    Houseowners to provide services. It manages the lifecycle of jobs (queuing, </span>
+<span class="sd">    starting, and completing), evaluates heating systems based on a set of </span>
+<span class="sd">    preferences, and shares knowledge and ratings with other agents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">unique_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
+        <span class="n">heating_preferences</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">known_hs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">active_jobs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">completed_jobs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_concurrent_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">active_jobs_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">hs_evaluation_params</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">hs_evaluation_params_rescale</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises an intermediary.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unique_id: int</span>
+<span class="sd">            ID of the intermediary.</span>
+<span class="sd">        model: MESA Model</span>
+<span class="sd">            An instance of MESA Model to contain the intermediary.</span>
+<span class="sd">        heating_preferences: Heating_preferences</span>
+<span class="sd">            Class containing weights for heating attribute evaluation.</span>
+<span class="sd">        known_hs: list</span>
+<span class="sd">            A list of heating systems the agent has learned about </span>
+<span class="sd">            through information gathering or social interactions.</span>
+<span class="sd">        active_jobs: dict</span>
+<span class="sd">            Contains jobs that intermediary does.</span>
+<span class="sd">        completed_jobs: dict</span>
+<span class="sd">            Contains completed jobs for data gathering.</span>
+<span class="sd">        max_concurrent_jobs: int</span>
+<span class="sd">            Maximum number fo jobs the intermediary can do at the same time.</span>
+<span class="sd">        active_jobs_counter: int</span>
+<span class="sd">            Counts the number of jobs done currently.</span>
+<span class="sd">        hs_evaluation_params: list</span>
+<span class="sd">            List of heating attributes to be considered during evaluation.</span>
+<span class="sd">        hs_evaluation_params_rescale: list</span>
+<span class="sd">            List of heating attributes to be considered during evaluation,</span>
+<span class="sd">            rescaled if less or more attributes are needed.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">unique_id</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">heating_preferences</span> <span class="o">=</span> <span class="n">heating_preferences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="n">known_hs</span> <span class="k">if</span> <span class="n">known_hs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_evaluation_params</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">hs_evaluation_params</span>
+            <span class="k">if</span> <span class="n">hs_evaluation_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">[</span>
+                <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;installation effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_evaluation_params_rescale</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">hs_evaluation_params_rescale</span>
+            <span class="k">if</span> <span class="n">hs_evaluation_params_rescale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">[</span>
+                <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;installation effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span> <span class="o">=</span> <span class="n">active_jobs</span> <span class="k">if</span> <span class="n">active_jobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completed_jobs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">completed_jobs</span> <span class="k">if</span> <span class="n">completed_jobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_jobs</span> <span class="o">=</span> <span class="n">max_concurrent_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs_counter</span> <span class="o">=</span> <span class="n">active_jobs_counter</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_after_training</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#Number of steps passed after the last training</span>
+
+<div class="viewcode-block" id="Intermediary.step">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.step">[docs]</a>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the common step for any intermediary.</span>
+<span class="sd">        </span>
+<span class="sd">        Ensures that new subclasses perform basic actions without errors.</span>
+<span class="sd">        Should be overridden in each subclass to include specific actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">types</span><span class="p">)):</span> 
+            <span class="c1">#Debug to catch duplicate options in known_hs</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="s2"> has two similar systems in known_hs&quot;</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">:</span>
+            <span class="c1"># Different intermediaries can have different sets of services</span>
+            <span class="n">service</span><span class="o">.</span><span class="n">save_queue_length</span><span class="p">()</span>
+            <span class="n">seen_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">filtered_jobs</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+            <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            
+            <span class="c1"># Filters out duplicates among customers in the queue</span>
+            <span class="c1"># NOTE: there should be no duplicates in a normal situations</span>
+            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">job_queue</span><span class="p">:</span>
+                <span class="n">cust_id</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">unique_id</span>
+                <span class="k">if</span> <span class="n">cust_id</span> <span class="ow">in</span> <span class="n">seen_ids</span><span class="p">:</span>
+                    <span class="n">duplicates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cust_id</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">seen_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cust_id</span><span class="p">)</span>
+                    <span class="n">filtered_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+            <span class="c1"># Print, which duplicates were removed</span>
+            <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removed duplicate jobs for customers:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span>
+            <span class="c1"># Replace the job deque with the filtered deque</span>
+            <span class="n">service</span><span class="o">.</span><span class="n">job_queue</span> <span class="o">=</span> <span class="n">filtered_jobs</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps_after_training</span> <span class="o">&gt;</span> <span class="mi">52</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_attributes</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps_after_training</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps_after_training</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_attributes</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">work</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.work">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.work">[docs]</a>
+    <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Two actions:</span>
+<span class="sd">        1. Transfers some jobs from service.job_queue to self.active_jobs.</span>
+<span class="sd">        2. Performs service-specific job. This happens only for jobs </span>
+<span class="sd">        assigned for the current step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># + 1 because schedule.steps are incremented after all agent.step()</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">steps</span><span class="si">}</span><span class="s2">: Intermediary </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> works...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">begin_jobs</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">service</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_job_completion</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+            
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">steps</span><span class="si">}</span><span class="s2">: Active jobs: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span>
+                     <span class="sa">f</span><span class="s2">&quot; | Completed jobs: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">completed_jobs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.training">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.training">[docs]</a>
+    <span class="k">def</span> <span class="nf">training</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plumber/EA compatibility method</span>
+<span class="sd">        Plumbers have their own training, while EA use this</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">work</span><span class="p">()</span></div>
+
+        
+<div class="viewcode-block" id="Intermediary.update_attributes">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.update_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates data tables for known technologies when </span>
+<span class="sd">        dynamics values of the attributes are used.</span>
+<span class="sd">        Synchronises own parameter table with that of the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dynamic</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_params_table</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+            <span class="n">system_row</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">system_row</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.begin_jobs">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.begin_jobs">[docs]</a>
+    <span class="k">def</span> <span class="nf">begin_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">service</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transfers some jobs from service.job_queue to self.active_jobs.</span>
+<span class="sd">        Job completion is set to a step in the future.</span>
+<span class="sd">        Number of jobs transfered depends on self.max_concurrent_jobs.</span>
+<span class="sd">        Orders the service to begin the jobs.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        steps: int</span>
+<span class="sd">            ID of the step to set the job duration.</span>
+<span class="sd">            Normally, the current step.</span>
+<span class="sd">        service: Service</span>
+<span class="sd">            Service to begin the job.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_jobs</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">service</span><span class="o">.</span><span class="n">job_queue</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">job_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="n">job</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">begin_job</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.check_job_completion">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.check_job_completion">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_job_completion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks the self.active_jobs for jobs that should be finished</span>
+<span class="sd">        at the given step.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        steps: int</span>
+<span class="sd">            Step ID to check the job completion.</span>
+<span class="sd">            Normally, the current step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">job_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">job_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">completed_jobs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">complete_job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.evaluate_system">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.evaluate_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a heating system rating using heating system&#39;s parameters </span>
+<span class="sd">        and agent&#39;s preferences.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system: Heating_system</span>
+<span class="sd">            The Heating_system object to be evaluated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="c1"># Build a DataFrame of known heating systems&#39; attributes</span>
+        <span class="n">systems_attributes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">heating_system</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">heating_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">heating_system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+            <span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    
+        <span class="c1"># Create a DataFrame for agent preferences</span>
+        <span class="n">heating_preferences</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heating_preferences</span><span class="p">)])</span>
+    
+        <span class="c1"># Normalize system attributes</span>
+        <span class="n">normalized_attributes</span> <span class="o">=</span> <span class="n">systems_attributes</span> <span class="o">/</span> <span class="n">systems_attributes</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    
+        <span class="c1"># Specify columns for rescaling</span>
+        <span class="n">columns_to_rescale</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    
+        <span class="c1"># Rescale specified columns</span>
+        <span class="n">rescaled_attributes</span> <span class="o">=</span> <span class="n">normalized_attributes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">rescaled_attributes</span><span class="p">[</span><span class="n">columns_to_rescale</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">normalized_attributes</span><span class="p">[</span><span class="n">columns_to_rescale</span><span class="p">]</span>
+    
+        <span class="c1"># Align columns to match preference DataFrame</span>
+        <span class="n">rescaled_attributes</span> <span class="o">=</span> <span class="n">rescaled_attributes</span><span class="p">[</span><span class="n">heating_preferences</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    
+        <span class="c1"># Retrieve attributes of the selected system</span>
+        <span class="n">selected_system</span> <span class="o">=</span> <span class="n">rescaled_attributes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+    
+        <span class="c1"># Compute the weighted sum of attributes</span>
+        <span class="n">system_rating</span> <span class="o">=</span> <span class="p">(</span><span class="n">selected_system</span> <span class="o">*</span> <span class="n">heating_preferences</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+        <span class="c1"># Assign and return the calculated rating</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">system_rating</span>
+        <span class="k">return</span> <span class="n">system_rating</span> <span class="o">/</span> <span class="mi">6</span></div>
+
+
+
+<div class="viewcode-block" id="Intermediary.share_rating">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.share_rating">[docs]</a>
+    <span class="k">def</span> <span class="nf">share_rating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The intermediary shares the ratings of his known HS with a client</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent: Houseowner</span>
+<span class="sd">            A houseowner to share the ratings of known HS.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_known_hs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+        <span class="n">agent_known_hs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span>
+
+        <span class="k">for</span> <span class="n">my_system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>  <span class="c1"># For each system in my knowledge</span>
+            <span class="n">my_system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+                <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">his_system</span> <span class="ow">in</span> <span class="n">agent_known_hs</span><span class="p">:</span>  <span class="c1"># And each in owner&#39;s</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">my_system</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">his_system</span><span class="o">.</span><span class="vm">__class__</span>
+                <span class="p">):</span>  <span class="c1"># Check if those are matching</span>
+                    <span class="n">his_system</span><span class="o">.</span><span class="n">neighbours_opinions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">my_system</span><span class="o">.</span><span class="n">rating</span>
+                    <span class="p">)</span>  <span class="c1"># Modify an entry in the dictionary</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.share_knowledge">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.share_knowledge">[docs]</a>
+    <span class="k">def</span> <span class="nf">share_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The intermediary shares the knowledge </span>
+<span class="sd">        about their known heating systems with an agent.</span>
+<span class="sd">        It also influences agent&#39;s opinion on other known systems</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        counterpart: Houseowner</span>
+<span class="sd">            A houseowner to share the knowledge about known HS.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_known_hs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+        <span class="n">neighbours_known_hs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span>
+
+        <span class="c1"># Calculate house-specific values for the systems</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+                <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Get class names of the instances in neighbours_known_hs</span>
+        <span class="n">names_of_neighbours_known_hs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">system</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">neighbours_known_hs</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Influencing neighbours known systems parameters using Relative Agreement approach</span>
+        <span class="k">for</span> <span class="n">my_system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>  <span class="c1"># For each system in my knowledge</span>
+            <span class="k">for</span> <span class="n">his_system</span> <span class="ow">in</span> <span class="n">neighbours_known_hs</span><span class="p">:</span>  <span class="c1"># And each in owner&#39;s</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">my_system</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">his_system</span><span class="o">.</span><span class="vm">__class__</span>
+                <span class="p">):</span>  <span class="c1"># Check if those are matching</span>
+                    <span class="n">influence_by_relative_agreement</span><span class="p">(</span><span class="n">source_system</span> <span class="o">=</span> <span class="n">my_system</span><span class="p">,</span>
+                                                    <span class="n">target_system</span> <span class="o">=</span> <span class="n">his_system</span><span class="p">)</span>
+
+        <span class="c1"># Sharing knowledge with the neighbour</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">system</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_of_neighbours_known_hs</span><span class="p">:</span>
+                <span class="n">copied_system</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                <span class="n">copied_system</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="p">{}</span>
+                <span class="p">)</span>  <span class="c1"># Nullify subjective perception of the opinions of others</span>
+                <span class="n">neighbours_known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copied_system</span><span class="p">)</span></div>
+
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helpers for compatibility with the data collector.</span>
+<span class="sd">    Can be adjusted to return some data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Intermediary.get_heating">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_heating">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_heating</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_trigger">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_trigger">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_stage_dynamics">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_stage_dynamics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_stage_dynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_class">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_class">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_system_age">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_system_age">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_system_age</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_opinion">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_opinion">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_opinion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_satisfied_ratio">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_satisfied_ratio">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_satisfied_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_preferences">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_attributes">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_comprehensive_metrics">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_comprehensive_metrics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_comprehensive_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_emissions">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_emissions">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_emissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Intermediary.get_energy_demand">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_energy_demand">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_energy_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="Intermediary.get_obstacles">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Intermediary.Intermediary.get_obstacles">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_obstacles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>server package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="tests package" href="tests.html" />
+    <link rel="prev" title="plotting package" href="plotting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">server package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#server-launch-module">server.Launch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#server-server-module">server.Server module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-server.Visualization">server.Visualization module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-server.additional_methods">server.additional_methods module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-server">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">server package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/server.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="server-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">server package</a><a class="headerlink" href="#server-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#server-package" id="id1">server package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#server-launch-module" id="id2">server.Launch module</a></p></li>
+<li><p><a class="reference internal" href="#server-server-module" id="id3">server.Server module</a></p></li>
+<li><p><a class="reference internal" href="#module-server.Visualization" id="id4">server.Visualization module</a></p></li>
+<li><p><a class="reference internal" href="#module-server.additional_methods" id="id5">server.additional_methods module</a></p></li>
+<li><p><a class="reference internal" href="#module-server" id="id6">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="server-launch-module">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">server.Launch module</a><a class="headerlink" href="#server-launch-module" title="Link to this heading"></a></h2>
+</section>
+<section id="server-server-module">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">server.Server module</a><a class="headerlink" href="#server-server-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-server.Visualization">
+<span id="server-visualization-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">server.Visualization module</a><a class="headerlink" href="#module-server.Visualization" title="Link to this heading"></a></h2>
+<p>Defines the visualisation components for the Mesa server.</p>
+<p>This module creates all the necessary elements for the browser-based
+visualisation of the simulation. It includes several agent portrayal functions
+that define how agents are coloured and described on the map based on their
+current state (e.g., heating system type, energy demand, knowledge). It
+also sets up chart modules for plotting time-series data and configures
+the main map visualisation.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.HS_portrayal">
+<span class="sig-name descname"><span class="pre">HS_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#HS_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.HS_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the portrayal for visualising the distribution of heating systems.</p>
+<p>This function colours agents on the map based on the type of heating
+system currently installed in their house. Colours are defined in the
+global settings file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘size’ and ‘color’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.energy_demand_portrayal">
+<span class="sig-name descname"><span class="pre">energy_demand_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#energy_demand_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.energy_demand_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the portrayal for visualising the distribution of energy demand.</p>
+<p>This function colours agents on a yellow-to-red gradient based on their
+total energy demand. The colour intensity is scaled relative to the
+maximum energy demand observed in the model for normalisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘size’ and ‘color’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.emissions_portrayal">
+<span class="sig-name descname"><span class="pre">emissions_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#emissions_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.emissions_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the portrayal for visualizing the distribution of CO2 emissions.</p>
+<p>This function colours agents on a green-to-red gradient based on their
+annual CO2 emissions. The colour intensity is scaled relative to the
+maximum emissions observed in the model for normalisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘size’ and ‘color’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.information_overspread_middleware">
+<span class="sig-name descname"><span class="pre">information_overspread_middleware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#information_overspread_middleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.information_overspread_middleware" title="Link to this definition"></a></dt>
+<dd><p>Acts as a dispatcher to select the active information-spread portrayal.</p>
+<p>Based on a global setting, this function calls the appropriate portrayal
+method to visualise either the spread of subsidy knowledge, heating
+system knowledge, or the probability of installing a target system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>The portrayal dictionary from the selected function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.probability_of_installing_portrayal">
+<span class="sig-name descname"><span class="pre">probability_of_installing_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#probability_of_installing_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.probability_of_installing_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the portrayal for visualising the likelihood of installing a target system.</p>
+<p>This function colours an agent based on the comparison between the rating
+of their current heating system and their rating for a scenario-defined
+target system. The colour indicates how favourably the agent views the
+target system relative to their own.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘color’ and ‘description’ (tooltip).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.Visualization.best_system_rating">
+<span class="sig-name descname"><span class="pre">best_system_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/Visualization.html#best_system_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.Visualization.best_system_rating" title="Link to this definition"></a></dt>
+<dd><p>Defines the portrayal for visualising the rating of the target system vs. 
+the best-known alternative.</p>
+<p>This function colours an agent based on the ratio between their rating for a
+target heating system and the rating of the best alternative system they know.
+This helps to visualise the competitiveness of the target system from the
+agent’s perspective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘color’ and ‘description’ (tooltip).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-server.additional_methods">
+<span id="server-additional-methods-module"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">server.additional_methods module</a><a class="headerlink" href="#module-server.additional_methods" title="Link to this heading"></a></h2>
+<p>Helper functions for Mesa server visualisation.</p>
+<p>This module provides utility functions used by the main visualisation components.
+It includes a colour converter and specific agent portrayal methods for
+visualising the spread of information (subsidies and heating system knowledge)
+on the simulation map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="server.additional_methods.rgb_to_hex">
+<span class="sig-name descname"><span class="pre">rgb_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/additional_methods.html#rgb_to_hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.additional_methods.rgb_to_hex" title="Link to this definition"></a></dt>
+<dd><p>Converts an RGB colour tuple to a hexadecimal string.</p>
+<p>This function takes an RGB colour, represented as a list or tuple of three
+integers, and converts it into the standard hexadecimal colour format
+used in web and visualisation contexts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>rgb</strong><span class="classifier">list or tuple of int</span></dt><dd><p>An iterable containing three integer values (Red, Green, Blue)
+ranging from 0 to 255.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The hexadecimal color representation (e.g., ‘#RRGGBB’).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rgb_to_hex</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">&#39;#ff0000&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rgb_to_hex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="go">&#39;#0080ff&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.additional_methods.subsidy_overspread_portrayal">
+<span class="sig-name descname"><span class="pre">subsidy_overspread_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/additional_methods.html#subsidy_overspread_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.additional_methods.subsidy_overspread_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the agent portrayal for visualising subsidy knowledge.</p>
+<p>This Mesa portrayal function determines how a House agent is displayed on
+the map. If the agent’s associated houseowner knows about the specific
+subsidy being observed in the model (<cite>agent.model.subsidy_to_observe</cite>),
+the agent is coloured green. Otherwise, it is white. The portrayal’s
+description tooltip lists all subsidies known by the agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed. It is expected to have a <cite>houseowner</cite>
+attribute with subsidy information.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘color’ and ‘description’
+for the visualisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.additional_methods.heating_system_overspread_portrayal">
+<span class="sig-name descname"><span class="pre">heating_system_overspread_portrayal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/server/additional_methods.html#heating_system_overspread_portrayal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.additional_methods.heating_system_overspread_portrayal" title="Link to this definition"></a></dt>
+<dd><p>Defines the agent portrayal for visualising heating system knowledge.</p>
+<p>This Mesa portrayal function determines how a House agent is displayed on
+the map. If the agent’s associated houseowner knows about the specific
+heating system being observed in the model (<cite>agent.model.known_hs_to_observe</cite>),
+the agent is coloured green. Otherwise, it is white. The portrayal’s
+description tooltip lists all heating systems known by the agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">mesa_geo.GeoAgent</span></dt><dd><p>The House agent to be portrayed. It is expected to have a <cite>houseowner</cite>
+attribute with heating system information.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary specifying the agent’s ‘color’ and ‘description’
+for the visualisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-server">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-server" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plotting.html" class="btn btn-neutral float-left" title="plotting package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tests.html" class="btn btn-neutral float-right" title="tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

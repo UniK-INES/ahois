@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>helpers.utils &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">helpers.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for helpers.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A collection of miscellaneous utility functions for the project.</span>
+
+<span class="sd">This module provides various helper functions that support different parts of</span>
+<span class="sd">the application. Responsibilities include dynamically loading classes,</span>
+<span class="sd">generating standardized filenames for output data and images, converting</span>
+<span class="sd">data formats, and implementing specific model-related calculations.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span><span class="p">,</span> <span class="n">get_output_path</span><span class="p">,</span> <span class="n">config_logging</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Dynamically add the &#39;modules/&#39; folder to sys.path</span>
+<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>  <span class="c1"># Get the current directory (analysis folder)</span>
+<span class="n">modules_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;modules&#39;</span><span class="p">)</span>  <span class="c1"># Construct the path to the modules folder</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">modules_dir</span><span class="p">))</span>  <span class="c1"># Add the modules directory to sys.path</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi.util&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="load_class">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.utils.load_class">[docs]</a>
+<span class="k">def</span> <span class="nf">load_class</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function imports a module by its string name and then retrieves a</span>
+<span class="sd">    class from that module, also by its string name. This allows for flexible</span>
+<span class="sd">    instantiation of objects based on configuration settings.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_name : str</span>
+<span class="sd">        The name of the module to import.</span>
+<span class="sd">    class_name : str</span>
+<span class="sd">        The name of the class to retrieve from the module.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    class</span>
+<span class="sd">        The requested class object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+    <span class="n">class_</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">class_</span></div>
+
+
+
+<span class="n">files_name</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+<span class="n">images_name</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+
+<div class="viewcode-block" id="get_file_name">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.utils.get_file_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates a unique filename based on the project&#39;s</span>
+<span class="sd">    configuration settings. The name can be a simple run ID or a more</span>
+<span class="sd">    descriptive name including the scenario ID and random seeds, depending</span>
+<span class="sd">    on the `settings.output.simplenames` flag.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    run_id : int, optional</span>
+<span class="sd">        The ID of the run. If not provided, the `run_id` from the global</span>
+<span class="sd">        settings is used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The generated filename without an extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use the provided run_id or the one from settings</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">run_id</span> <span class="k">if</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span>
+    
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">simplenames</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">load_class</span><span class="p">(</span><span class="s1">&#39;Scenario&#39;</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">current_scenario</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">seed_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">seed_string</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_images_name">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.utils.get_images_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_images_name</span><span class="p">(</span><span class="n">milieu</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a unique name for an image based on the current run ID, file</span>
+<span class="sd">    prefix, and scenario ID from the global settings. An optional &#39;milieu&#39;</span>
+<span class="sd">    string can be included to further specify the image content.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    milieu : str, optional</span>
+<span class="sd">        A string identifier to append to the image name, by default None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The generated image name without an extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">load_class</span><span class="p">(</span><span class="s1">&#39;Scenario&#39;</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">current_scenario</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+    <span class="c1"># Use milieu if provided, otherwise leave as base name</span>
+    <span class="n">images_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">milieu</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">milieu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">images_name</span></div>
+
+
+
+<div class="viewcode-block" id="pickle_to_hdf5">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.utils.pickle_to_hdf5">[docs]</a>
+<span class="k">def</span> <span class="nf">pickle_to_hdf5</span><span class="p">(</span><span class="n">resulttype</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function scans output directories for pickled pandas DataFrames based</span>
+<span class="sd">    on a set of scenarios, run IDs, and file prefixes defined in the global</span>
+<span class="sd">    settings. It reads each pickle file and stores its contents in a single</span>
+<span class="sd">    HDF5 file, which is more efficient for querying and analysis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resulttype : str, optional</span>
+<span class="sd">        A string that is part of the pickle filename to identify the type</span>
+<span class="sd">        of result to process (e.g., &#39;model&#39; or &#39;agent&#39;), by default &quot;model&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scenarios</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">scenario_comparison</span><span class="o">.</span><span class="n">scenarios</span><span class="p">)</span>
+    <span class="n">run_ids</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">scenario_comparison</span><span class="o">.</span><span class="n">run_ids</span>
+    <span class="n">files_prefixes</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">scenario_comparison</span><span class="o">.</span><span class="n">files_prefixes</span>
+    
+    <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">get_output_path</span><span class="p">(</span><span class="n">runid</span><span class="o">=</span><span class="n">run_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;hdf5&#39;</span><span class="p">),</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">hdf5_filename</span><span class="p">))</span> <span class="k">as</span> <span class="n">hdf</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">files_prefix</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">run_ids</span><span class="p">,</span> <span class="n">files_prefixes</span><span class="p">):</span>
+                <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">load_class</span><span class="p">(</span><span class="s2">&quot;Scenario&quot;</span><span class="p">,</span> <span class="n">scenario</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">pickle_path</span> <span class="o">=</span> <span class="n">get_output_path</span><span class="p">(</span><span class="n">runid</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;pickles&#39;</span><span class="p">)</span>
+                <span class="n">pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pickle_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">resulttype</span><span class="si">}</span><span class="s2">_df_</span><span class="si">{</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">_*.pkl&quot;</span>
+                <span class="n">model_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">model_files</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">rseed_code</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+                        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Add DF for </span><span class="si">{</span><span class="n">files_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rseed_code</span><span class="si">}</span><span class="s2"> to HDF5 store...&quot;</span><span class="p">)</span>
+                        <span class="n">hdf</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">files_prefix</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">rseed_code</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">hdf5_format</span><span class="p">,</span> <span class="n">data_columns</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="influence_by_relative_agreement">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.utils.influence_by_relative_agreement">[docs]</a>
+<span class="k">def</span> <span class="nf">influence_by_relative_agreement</span><span class="p">(</span><span class="n">source_system</span><span class="p">,</span> <span class="n">target_system</span><span class="p">,</span> <span class="n">exposure</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function models knowledge exchange between two houseowners related to a single system type. </span>
+<span class="sd">    It updates the parameters (opinion and uncertainty) of a `target_system` based on</span>
+<span class="sd">    the parameters of a `source_system`. The update is governed by the overlap</span>
+<span class="sd">    between their uncertainty intervals, and the strength of the influence is</span>
+<span class="sd">    controlled by the `exposure` parameter. Based on Relative Agreement approach.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_system : Heating_system</span>
+<span class="sd">        The system that exerts influence.</span>
+<span class="sd">    target_system : Heating_system</span>
+<span class="sd">        The system that is being influenced. Its parameters will be modified</span>
+<span class="sd">        in-place.</span>
+<span class="sd">    exposure : float, optional</span>
+<span class="sd">        A coefficient determining the strength of the influence, by default 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">target_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Relative agreement calculation</span>
+        <span class="n">o_target</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">o_source</span> <span class="o">=</span> <span class="n">source_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">u_target</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">u_source</span> <span class="o">=</span> <span class="n">source_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">o_target</span> <span class="o">+</span> <span class="n">u_target</span><span class="p">,</span> <span class="n">o_source</span> <span class="o">+</span> <span class="n">u_source</span><span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">o_target</span> <span class="o">-</span> <span class="n">u_target</span><span class="p">,</span> <span class="n">o_source</span> <span class="o">-</span> <span class="n">u_source</span>
+        <span class="p">)</span>
+        <span class="c1"># Calculate kernel function</span>
+        <span class="c1"># kernel = (v / u_source) - 1 if v &gt; 0 else 0</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u_source</span><span class="p">))</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">kernel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Only update if kernel indicates convergence</span>
+            <span class="n">new_o</span> <span class="o">=</span> <span class="n">o_target</span> <span class="o">+</span> <span class="n">exposure</span> <span class="o">*</span> <span class="n">kernel</span> <span class="o">*</span> <span class="p">(</span><span class="n">o_source</span> <span class="o">-</span> <span class="n">o_target</span><span class="p">)</span>
+            <span class="n">new_u</span> <span class="o">=</span> <span class="n">u_target</span> <span class="o">+</span> <span class="n">exposure</span> <span class="o">*</span> <span class="n">kernel</span> <span class="o">*</span> <span class="p">(</span><span class="n">u_source</span> <span class="o">-</span> <span class="n">u_target</span><span class="p">)</span>
+            
+            <span class="c1"># Ensuring strictly positive values</span>
+            <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">new_o</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
+            <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">new_u</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span></div>
+
+
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">config_logging</span><span class="p">()</span>                        
+    <span class="n">pickle_to_hdf5</span><span class="p">()</span>      
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

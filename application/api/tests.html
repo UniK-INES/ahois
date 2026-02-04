@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Development" href="../../development.html" />
+    <link rel="prev" title="server package" href="server.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.Sandbox">tests.Sandbox module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.Test">tests.Test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests-conftest-module">tests.conftest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests-test-energy-advisor-module">tests.test_energy_advisor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.test_houseowner">tests.test_houseowner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests-test-intermediary-module">tests.test_intermediary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests-test-service-module">tests.test_service module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">tests package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/tests.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tests-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">tests package</a><a class="headerlink" href="#tests-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tests-package" id="id1">tests package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-tests.Sandbox" id="id2">tests.Sandbox module</a></p></li>
+<li><p><a class="reference internal" href="#module-tests.Test" id="id3">tests.Test module</a></p></li>
+<li><p><a class="reference internal" href="#tests-conftest-module" id="id4">tests.conftest module</a></p></li>
+<li><p><a class="reference internal" href="#tests-test-energy-advisor-module" id="id5">tests.test_energy_advisor module</a></p></li>
+<li><p><a class="reference internal" href="#module-tests.test_houseowner" id="id6">tests.test_houseowner module</a></p></li>
+<li><p><a class="reference internal" href="#tests-test-intermediary-module" id="id7">tests.test_intermediary module</a></p></li>
+<li><p><a class="reference internal" href="#tests-test-service-module" id="id8">tests.test_service module</a></p></li>
+<li><p><a class="reference internal" href="#module-tests" id="id9">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-tests.Sandbox">
+<span id="tests-sandbox-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">tests.Sandbox module</a><a class="headerlink" href="#module-tests.Sandbox" title="Link to this heading"></a></h2>
+<p>A sandbox script for various experiments, statistical tests, and debugging.</p>
+<p>This file serves as a collection of independent code snippets used for
+development, analysis, and exploratory work. It is not part of the main
+application logic or the formal test suite.</p>
+<p>The contents include:</p>
+<ul class="simple">
+<li><p>Statistical analysis scripts to compare beta distributions that model agent
+preferences, using methods like the KS-test and permutation tests on the
+Jensen-Shannon distance.</p></li>
+<li><p>A utility for checking system environment variables for debugging purposes.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="module-tests.Test">
+<span id="tests-test-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">tests.Test module</a><a class="headerlink" href="#module-tests.Test" title="Link to this heading"></a></h2>
+<p>A script for miscellaneous testing, debugging, and data exploration.</p>
+<p>This file serves as a “scratchpad” for developers to run quick, ad-hoc tests,
+experiments, or data checks. It is not part of the formal, automated test
+suite and contains several independent functions for different purposes.</p>
+<p>These include:
+- A simple Monte Carlo simulation function.
+- Functions to test breakdown probabilities using a Weibull distribution.
+- A utility to perform a detailed, column-by-column comparison of two</p>
+<blockquote>
+<div><p>simulation output DataFrames.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.Test.monte_carlo">
+<span class="sig-name descname"><span class="pre">monte_carlo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/Test.html#monte_carlo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.Test.monte_carlo" title="Link to this definition"></a></dt>
+<dd><p>Performs a simple Monte Carlo simulation for a discrete choice.</p>
+<p>This function simulates a random choice from a list of outcomes a given
+number of times, where each choice is weighted by a corresponding
+probability. It then prints the frequency of each outcome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>steps</strong><span class="classifier">int</span></dt><dd><p>The number of simulation trials to run.</p>
+</dd>
+<dt><strong>lists</strong><span class="classifier">list</span></dt><dd><p>A list of the possible outcomes to choose from.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">list</span></dt><dd><p>A list of probabilities corresponding to the outcomes in <cite>lists</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.Test.breakdown_check">
+<span class="sig-name descname"><span class="pre">breakdown_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/Test.html#breakdown_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.Test.breakdown_check" title="Link to this definition"></a></dt>
+<dd><p>Checks for a system breakdown based on a Weibull distribution.</p>
+<p>This function simulates whether a component of a certain <cite>age</cite> fails. The
+probability of failure is determined by a Weibull distribution with
+hardcoded scale and shape parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>age</strong><span class="classifier">int or float</span></dt><dd><p>The current age of the component to be checked.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>True if a breakdown occurs, False otherwise.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.Test.weibull_trial">
+<span class="sig-name descname"><span class="pre">weibull_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/Test.html#weibull_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.Test.weibull_trial" title="Link to this definition"></a></dt>
+<dd><p>Runs multiple breakdown checks to observe the failure frequency.</p>
+<p>This function calls <cite>breakdown_check</cite> repeatedly for a component of a
+fixed age to see how many times it fails over a large number of trials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>trials</strong><span class="classifier">int</span></dt><dd><p>The number of breakdown checks to perform.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.Test.compare_runs">
+<span class="sig-name descname"><span class="pre">compare_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/Test.html#compare_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.Test.compare_runs" title="Link to this definition"></a></dt>
+<dd><p>Compares two agent DataFrame pickle files for differences.</p>
+<p>This utility function loads two specified <cite>agent_df</cite> pickle files and
+performs a deep, column-by-column comparison. It reports which columns are
+identical and which ones differ. It includes special logic to handle
+floating-point comparisons within a column of dictionaries. This is
+useful for debugging and verifying model determinism between runs.</p>
+</dd></dl>
+
+</section>
+<section id="tests-conftest-module">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">tests.conftest module</a><a class="headerlink" href="#tests-conftest-module" title="Link to this heading"></a></h2>
+</section>
+<section id="tests-test-energy-advisor-module">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">tests.test_energy_advisor module</a><a class="headerlink" href="#tests-test-energy-advisor-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-tests.test_houseowner">
+<span id="tests-test-houseowner-module"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">tests.test_houseowner module</a><a class="headerlink" href="#module-tests.test_houseowner" title="Link to this heading"></a></h2>
+<p>Pytest unit tests for the <cite>Houseowner</cite> agent class.</p>
+<p>This file contains a suite of unit tests that cover a wide range of the
+<cite>Houseowner</cite> agent’s behaviours and methods. It uses the <cite>pytest</cite> framework
+and relies on fixtures defined in <cite>conftest.py</cite> to provide the necessary agent
+instances and other objects for testing.</p>
+<p>The tests are organised logically to follow the agent’s decision-making
+process, from evaluating its current situation to gathering information,
+making choices, and finally installing a new heating system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_evaluation_of_current_hs_cognitive_resource_depleting">
+<span class="sig-name descname"><span class="pre">test_evaluation_of_current_hs_cognitive_resource_depleting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_evaluation_of_current_hs_cognitive_resource_depleting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_evaluation_of_current_hs_cognitive_resource_depleting" title="Link to this definition"></a></dt>
+<dd><p>Tests that evaluating the current heating system 
+depletes cognitive resources.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_evaluation_of_current_hs_dissatisfied">
+<span class="sig-name descname"><span class="pre">test_evaluation_of_current_hs_dissatisfied</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_evaluation_of_current_hs_dissatisfied"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_evaluation_of_current_hs_dissatisfied" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner remains ‘Satisfied’ 
+if their heating system is relatively new.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_evaluation_of_current_hs_satisfied">
+<span class="sig-name descname"><span class="pre">test_evaluation_of_current_hs_satisfied</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_evaluation_of_current_hs_satisfied"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_evaluation_of_current_hs_satisfied" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner becomes ‘Dissatisfied’ 
+when the heating system approaches the end of its lifetime.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_exception_when_consultation_is_already_ordered">
+<span class="sig-name descname"><span class="pre">test_exception_when_consultation_is_already_ordered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_exception_when_consultation_is_already_ordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_exception_when_consultation_is_already_ordered" title="Link to this definition"></a></dt>
+<dd><p>Tests that <cite>get_data</cite> depletes cognitive resources 
+if a consultation is already ordered.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_ordered_consulation_after_breakdown">
+<span class="sig-name descname"><span class="pre">test_ordered_consulation_after_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_ordered_consulation_after_breakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_ordered_consulation_after_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Tests that a consultation is ordered automatically 
+when the heating system breaks down.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_share_rating">
+<span class="sig-name descname"><span class="pre">test_share_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_share_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_share_rating" title="Link to this definition"></a></dt>
+<dd><p>Tests that two neighbours correctly share and store 
+each other’s heating system ratings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_share_knowledge_of_known_hs">
+<span class="sig-name descname"><span class="pre">test_share_knowledge_of_known_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_share_knowledge_of_known_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_share_knowledge_of_known_hs" title="Link to this definition"></a></dt>
+<dd><p>Tests that a neighbour acquires knowledge of a new heating system 
+from another houseowner.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_share_knowledge_of_same_known_hs">
+<span class="sig-name descname"><span class="pre">test_share_knowledge_of_same_known_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_share_knowledge_of_same_known_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_share_knowledge_of_same_known_hs" title="Link to this definition"></a></dt>
+<dd><p>Tests that redundant knowledge (of an already known heating system) 
+is not shared.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_sharing_params_knowledge">
+<span class="sig-name descname"><span class="pre">test_sharing_params_knowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_sharing_params_knowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_sharing_params_knowledge" title="Link to this definition"></a></dt>
+<dd><p>Tests that knowledge sharing updates the parameters 
+(e.g., operation effort) of a known heating system.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_share_satisfaction">
+<span class="sig-name descname"><span class="pre">test_share_satisfaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_share_satisfaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_share_satisfaction" title="Link to this definition"></a></dt>
+<dd><p>Tests that a houseowner’s satisfaction ratio for a heating system 
+is updated based on neighbours’ opinions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_gaining_information_about_hs">
+<span class="sig-name descname"><span class="pre">test_gaining_information_about_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_internet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_magazine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_preference_cut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_gaining_information_about_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_gaining_information_about_hs" title="Link to this definition"></a></dt>
+<dd><p>Tests that a houseowner can gain knowledge 
+of new heating systems from media sources.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_gaining_information_about_hs_no_cognitive_resource">
+<span class="sig-name descname"><span class="pre">test_gaining_information_about_hs_no_cognitive_resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_preference_cut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_internet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">information_source_magazine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_gaining_information_about_hs_no_cognitive_resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_gaining_information_about_hs_no_cognitive_resource" title="Link to this definition"></a></dt>
+<dd><p>Tests that a houseowner with zero cognitive resources 
+cannot gain new information.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_attitude">
+<span class="sig-name descname"><span class="pre">test_calculate_attitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_attitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_attitude" title="Link to this definition"></a></dt>
+<dd><p>Tests that the calculated attitude (rating) 
+for a heating system is within the expected bounds.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_define_choice">
+<span class="sig-name descname"><span class="pre">test_define_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_define_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_define_choice" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner identifies at least one suitable heating system 
+when budget is unlimited.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_define_choice_when_infeasible">
+<span class="sig-name descname"><span class="pre">test_define_choice_when_infeasible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_define_choice_when_infeasible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_define_choice_when_infeasible" title="Link to this definition"></a></dt>
+<dd><p>Tests that no suitable heating systems are chosen 
+if all known systems are marked as infeasible.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_social_norm">
+<span class="sig-name descname"><span class="pre">test_calculate_social_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_social_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_social_norm" title="Link to this definition"></a></dt>
+<dd><p>Tests that the calculated social norm for a heating system 
+is a valid value between 0 and 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_social_norm_no_opinions">
+<span class="sig-name descname"><span class="pre">test_calculate_social_norm_no_opinions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_social_norm_no_opinions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_social_norm_no_opinions" title="Link to this definition"></a></dt>
+<dd><p>Tests that the social norm is 0 when there are no neighbours’ opinions available.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_PBC">
+<span class="sig-name descname"><span class="pre">test_calculate_PBC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_PBC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_PBC" title="Link to this definition"></a></dt>
+<dd><p>Tests that the Perceived Behavioural Control (PBC) 
+is calculated as a value between 0 and 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_integral_rating">
+<span class="sig-name descname"><span class="pre">test_calculate_integral_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_integral_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_integral_rating" title="Link to this definition"></a></dt>
+<dd><p>Tests that the final integral rating of suitable heating systems 
+falls within the expected range.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_compare_hs">
+<span class="sig-name descname"><span class="pre">test_compare_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_compare_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_compare_hs" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner selects a desired heating system 
+after comparing suitable options.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_compare_hs_quitting">
+<span class="sig-name descname"><span class="pre">test_compare_hs_quitting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_compare_hs_quitting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_compare_hs_quitting" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner quits the decision process 
+if no suitable heating systems are found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_install_no_money">
+<span class="sig-name descname"><span class="pre">test_install_no_money</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_install_no_money"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_install_no_money" title="Link to this definition"></a></dt>
+<dd><p>Tests that the installation process is halted if the houseowner lacks the budget.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_install">
+<span class="sig-name descname"><span class="pre">test_install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_install" title="Link to this definition"></a></dt>
+<dd><p>Tests that a plumber is correctly ordered when the houseowner decides 
+to install a heating system.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_install_return_to_compare_hs">
+<span class="sig-name descname"><span class="pre">test_install_return_to_compare_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_install_return_to_compare_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_install_return_to_compare_hs" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner re-evaluates choices 
+if their first desired system is found to be infeasible.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_system_has_been_installed">
+<span class="sig-name descname"><span class="pre">test_system_has_been_installed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_system_has_been_installed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_system_has_been_installed" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner’s state progresses after a successful installation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_dissatisfaction">
+<span class="sig-name descname"><span class="pre">test_calculate_dissatisfaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_oil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_dissatisfaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_dissatisfaction" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner becomes dissatisfied when their current system is
+significantly worse than other known options.</p>
+<p class="rubric">Notes</p>
+<p>The test depends on default parameter settings and is therefore not
+reliable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_calculate_satisfaction">
+<span class="sig-name descname"><span class="pre">test_calculate_satisfaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_system_heat_pump</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_calculate_satisfaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_calculate_satisfaction" title="Link to this definition"></a></dt>
+<dd><p>Tests that the houseowner is satisfied when their current system 
+is the only known/suitable option.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_step_breakdown">
+<span class="sig-name descname"><span class="pre">test_step_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_none</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_step_breakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_step_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Tests that a heating system breakdown correctly 
+triggers the goal-setting breakpoint.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tests.test_houseowner.test_step_lifetime">
+<span class="sig-name descname"><span class="pre">test_step_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">houseowner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_none</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tests/test_houseowner.html#test_step_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tests.test_houseowner.test_step_lifetime" title="Link to this definition"></a></dt>
+<dd><p>Tests that an expired heating system lifetime 
+correctly triggers the goal-setting breakpoint.</p>
+</dd></dl>
+
+</section>
+<section id="tests-test-intermediary-module">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">tests.test_intermediary module</a><a class="headerlink" href="#tests-test-intermediary-module" title="Link to this heading"></a></h2>
+</section>
+<section id="tests-test-service-module">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">tests.test_service module</a><a class="headerlink" href="#tests-test-service-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-tests">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-tests" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="server.html" class="btn btn-neutral float-left" title="server package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../development.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

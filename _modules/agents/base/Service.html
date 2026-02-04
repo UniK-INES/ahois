@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents.base.Service &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agents.base.Service</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agents.base.Service</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines base classes for services provided by intermediary agents.</span>
+
+<span class="sd">This module contains the abstract `Service` class, which provides a template </span>
+<span class="sd">for services like consultations or installations. It manages a job queue and </span>
+<span class="sd">handles the basic job lifecycle. It also includes a concrete `ConsultationService`</span>
+<span class="sd">class that inherits from `Service`.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sören Lohr</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">agents.base.Job</span> <span class="kn">import</span> <span class="n">Job</span><span class="p">,</span> <span class="n">IService</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<div class="viewcode-block" id="Service">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service">[docs]</a>
+<span class="k">class</span> <span class="nc">Service</span><span class="p">(</span><span class="n">IService</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An abstract base class for services offered by intermediary agents.</span>
+
+<span class="sd">    This class manages a queue of jobs, generates unique job IDs, and defines</span>
+<span class="sd">    the interface for beginning, completing, and logging jobs. Subclasses</span>
+<span class="sd">    must implement the `begin_job` method.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    intermediary : Intermediary</span>
+<span class="sd">        The intermediary agent providing the service.</span>
+<span class="sd">    duration : int</span>
+<span class="sd">        The default time in steps required to complete a job for this service.</span>
+<span class="sd">    job_counter : int</span>
+<span class="sd">        A counter for the number of jobs queued for this service.</span>
+<span class="sd">    job_queue : deque</span>
+<span class="sd">        A queue of `Job` objects waiting to be processed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intermediary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">job_queue</span><span class="p">:</span> <span class="n">deque</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a Service instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        intermediary : Intermediary, optional</span>
+<span class="sd">            The intermediary agent providing the service.</span>
+<span class="sd">        job_queue : deque, optional</span>
+<span class="sd">            An initial queue of jobs. Defaults to an empty deque.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span> <span class="o">=</span> <span class="n">intermediary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span> <span class="o">=</span> <span class="n">job_queue</span> <span class="k">if</span> <span class="n">job_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">deque</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Service.queue_job">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service.queue_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">houseowner</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new job to the service&#39;s queue for a given houseowner.</span>
+
+<span class="sd">        Also prevents duplicate jobs from the same houseowner from being </span>
+<span class="sd">        added to the queue. It creates a `Job` object and appends to the</span>
+<span class="sd">        job queue of the Service.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        houseowner : Houseowner</span>
+<span class="sd">            The houseowner agent requesting the service.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">==</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Houseowner </span><span class="si">{</span><span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="s2"> already has a queued consultation.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Job</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_id</span><span class="p">(),</span> <span class="n">houseowner</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="Service.generate_id">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service.generate_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a unique ID for a new job.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The formatted job ID, combining the intermediary ID, service name,</span>
+<span class="sd">            and job counter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">job_counter</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="Service.begin_job">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service.begin_job">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">begin_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An abstract method to begin processing a job.</span>
+
+<span class="sd">        Subclasses must implement this method to define the specific actions </span>
+<span class="sd">        taken when a job starts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Service.complete_job">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service.complete_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalizes a job and logs its completion.</span>
+
+<span class="sd">        Records the details of the completed job in the model&#39;s datacollector</span>
+<span class="sd">        for later analysis. Usually supplemented by complete_job</span>
+<span class="sd">        of a specific intermediary.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : Job</span>
+<span class="sd">            The job that has been completed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
+            <span class="s2">&quot;Job&quot;</span><span class="p">:</span> <span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span>
+            <span class="s2">&quot;Intermediary&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">unique_id</span><span class="p">,</span>
+            <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span> <span class="n">job</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">unique_id</span><span class="p">,</span>
+            <span class="s2">&quot;Service&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">service</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">datacollector</span><span class="o">.</span><span class="n">add_table_row</span><span class="p">(</span>
+            <span class="s2">&quot;Completed Intermediary Jobs&quot;</span><span class="p">,</span> <span class="n">row</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Service.save_queue_length">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.Service.save_queue_length">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_queue_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current length of the job queue to the datacollector.</span>
+
+<span class="sd">        This method is used for data collection at each simulation step to </span>
+<span class="sd">        track the workload of services.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
+            <span class="s2">&quot;Intermediary&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">get_milieu</span><span class="p">(),</span>
+            <span class="s2">&quot;Intermediary ID&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">unique_id</span><span class="p">,</span>
+            <span class="s2">&quot;Service&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;Queue Length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">datacollector</span><span class="o">.</span><span class="n">add_table_row</span><span class="p">(</span>
+            <span class="s2">&quot;Intermediary Queue Length&quot;</span><span class="p">,</span> <span class="n">row</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConsultationService">
+<a class="viewcode-back" href="../../../application/api/agents.base.html#agents.base.Service.ConsultationService">[docs]</a>
+<span class="k">class</span> <span class="nc">ConsultationService</span><span class="p">(</span><span class="n">Service</span><span class="p">):</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A concrete implementation of a consultation service.</span>
+
+<span class="sd">    This class serves as a specific type of `Service` for consultations. </span>
+<span class="sd">    It can be further subclassed or overridden to specify durations and behaviors </span>
+<span class="sd">    for different intermediary types (e.g., Plumber, EnergyAdvisor).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

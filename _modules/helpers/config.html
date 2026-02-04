@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>helpers.config &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">helpers.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for helpers.config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Core configuration management for the project.</span>
+
+<span class="sd">This module centralises all configuration handling using the Dynaconf library.</span>
+<span class="sd">It loads settings from multiple sources, including default TOML files, local</span>
+<span class="sd">overrides, and secrets. It also provides a custom loader to import specific</span>
+<span class="sd">experimental scenarios from an Excel file based on a configuration ID.</span>
+
+<span class="sd">Furthermore, it includes utility functions for:</span>
+<span class="sd">- Saving the current configuration state to a file for reproducibility.</span>
+<span class="sd">- Setting up a flexible logging system based on an external config file.</span>
+<span class="sd">- Generating standardised, run-specific output paths for both local and</span>
+<span class="sd">  remote (cluster) environments.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sascha Holzhauer &lt;Sascha.Holzhauer@uni-kassel.de&gt;</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">dynaconf</span> <span class="kn">import</span> <span class="n">Dynaconf</span>
+<span class="kn">from</span> <span class="nn">dynaconf</span> <span class="kn">import</span> <span class="n">inspect_settings</span>
+<span class="kn">from</span> <span class="nn">dynaconf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">dynaconf.utils.boxing</span> <span class="kn">import</span> <span class="n">DynaBox</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">dynaconf.config</span> <span class="kn">import</span> <span class="n">AHIDConfig</span>
+    <span class="n">stopeval</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">stopeval</span> <span class="o">=</span> <span class="kc">False</span>
+    
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging.config</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">gitinfo</span>
+<span class="kn">from</span> <span class="nn">helpers.information</span> <span class="kn">import</span> <span class="n">get_git_version</span>
+
+<span class="n">current_directory</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+<span class="n">settings_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AHOI_SETTINGS_FILE_FOR_DYNACONF&quot;</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;settings/settings_local.toml&quot;</span><span class="p">)</span>
+
+<span class="n">settings</span> <span class="o">=</span> <span class="n">Dynaconf</span><span class="p">(</span><span class="n">root_path</span><span class="o">=</span><span class="n">current_directory</span><span class="p">,</span>
+                    <span class="n">merge_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">envvar_prefix</span><span class="o">=</span><span class="s2">&quot;AHOI&quot;</span><span class="p">,</span>
+                    <span class="n">settings_files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;settings/settings.toml&quot;</span><span class="p">,</span> <span class="n">settings_filename</span><span class="p">,</span>
+                                    <span class="s2">&quot;settings/.secrets.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;settings/constants.toml&quot;</span><span class="p">],</span>
+                    <span class="n">includes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;config_post.toml&quot;</span><span class="p">],)</span>
+
+<span class="n">output_path_task</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi&quot;</span><span class="p">)</span>
+
+<span class="c1">#Custom excel loader</span>
+<div class="viewcode-block" id="settings_loader">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.settings_loader">[docs]</a>
+<span class="k">def</span> <span class="nf">settings_loader</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">config_id</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function serves as a custom loader for Dynaconf. It reads a specified</span>
+<span class="sd">    Excel file, finds the row matching the given `config_id`, and updates the</span>
+<span class="sd">    `settings` object with the values from that row. String values containing</span>
+<span class="sd">    the specified delimiter are automatically split into lists.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    settings: Dynaconf</span>
+<span class="sd">        The Dynaconf settings object to be updated.</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        The path to the Excel scenario file.</span>
+<span class="sd">    config_id: int</span>
+<span class="sd">        The ID of the configuration row to load from the Excel file.</span>
+<span class="sd">    delimiter: str, optional</span>
+<span class="sd">        The delimiter used to split string values into lists, by default &quot;,&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Helper Function for Type Conversion</span>
+    <span class="k">def</span> <span class="nf">parse_value</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to convert string to int, then float, else return string.&quot;&quot;&quot;</span>
+        <span class="n">cleaned_item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">cleaned_item</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cleaned_item</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">cleaned_item</span>
+    
+    <span class="c1"># Read the Excel file</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Sheet1&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Filter the DataFrame for the specified config ID</span>
+    <span class="n">matching_rows</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">config_id</span><span class="p">]</span>
+    
+    <span class="c1"># Check if any rows match the config_id</span>
+    <span class="k">if</span> <span class="n">matching_rows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No configuration found for ID </span><span class="si">{</span><span class="n">config_id</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Proceed with loading the configuration data</span>
+    <span class="n">config_data</span> <span class="o">=</span> <span class="n">matching_rows</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Load each item</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">delimiter</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="c1"># 1. Split the string</span>
+            <span class="n">raw_list</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
+            
+            <span class="c1"># 2. Parse each item using the helper function</span>
+            <span class="n">settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_value</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">raw_list</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="load_config_for_id">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.load_config_for_id">[docs]</a>
+<span class="k">def</span> <span class="nf">load_config_for_id</span><span class="p">(</span><span class="n">config_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a specific scenario configuration from the project&#39;s Excel file.</span>
+<span class="sd">    This is a convenience wrapper around `settings_loader` that uses the</span>
+<span class="sd">    scenario file path defined in the global settings.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_id : int</span>
+<span class="sd">        The ID of the configuration to load.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;../&quot;</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">excel_scenario_file</span><span class="p">)</span>
+    <span class="n">settings_loader</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">config_id</span><span class="o">=</span><span class="n">config_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="output_conf">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.output_conf">[docs]</a>
+<span class="k">def</span> <span class="nf">output_conf</span><span class="p">(</span><span class="n">settings_to_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes the current settings configuration and history to files.</span>
+<span class="sd">    This function serialises the state of a Dynaconf settings object to disk,</span>
+<span class="sd">    creating two files: one with the current configuration (including Git repo</span>
+<span class="sd">    info) and another with the full settings history (how values were loaded</span>
+<span class="sd">    and merged).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    settings_to_output : Dynaconf, optional</span>
+<span class="sd">        The settings object to output. If None, the global `settings`</span>
+<span class="sd">        object is used, by default None.</span>
+
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    settings.output.output_settings_path : str</span>
+<span class="sd">        The subfolder within the run&#39;s output path to save the files.</span>
+<span class="sd">    settings.output.output_settings_filename : str</span>
+<span class="sd">        The filename for the current settings dump.</span>
+<span class="sd">    settings.output.output_settingshistory_filename : str</span>
+<span class="sd">        The filename for the settings history dump.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The &#39;other parameters&#39; are taken from the global</span>
+<span class="sd">    settings object.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings_to_output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">settings_to_output</span> <span class="o">=</span> <span class="n">settings</span>
+
+    <span class="k">if</span> <span class="n">stopeval</span><span class="p">:</span>
+        <span class="n">AHIDConfig</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">settings_to_output</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;repos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gitinfo</span><span class="o">.</span><span class="n">get_git_info</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;repos&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_git_version</span><span class="p">()</span>
+    <span class="n">loaders</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">get_output_path</span><span class="p">(</span><span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output_settings_path</span><span class="p">),</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output_settings_filename</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">DynaBox</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="n">inspect_settings</span><span class="p">(</span>
+        <span class="n">settings_to_output</span><span class="p">,</span>
+        <span class="n">to_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">get_output_path</span><span class="p">(</span><span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output_settings_path</span><span class="p">),</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output_settingshistory_filename</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">dumper</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output_settingshistory_key</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">stopeval</span><span class="p">:</span>
+        <span class="n">AHIDConfig</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+        
+<div class="viewcode-block" id="stop_dynaconf_evaluation">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.stop_dynaconf_evaluation">[docs]</a>
+<span class="k">def</span> <span class="nf">stop_dynaconf_evaluation</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disables Dynaconf&#39;s deep evaluation feature.</span>
+<span class="sd">    This function is a performance optimisation. It disables the deep</span>
+<span class="sd">    evaluation of settings values in Dynaconf after all necessary</span>
+<span class="sd">    configurations have been loaded, which can prevent costly re-evaluations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">stopeval</span>    
+    <span class="k">if</span> <span class="n">stopeval</span><span class="p">:</span>
+        <span class="n">AHIDConfig</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Set Dynaconf&#39;s AHIDConfig.evaluate to False!&quot;</span><span class="p">)</span></div>
+
+
+    
+<div class="viewcode-block" id="config_logging">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.config_logging">[docs]</a>
+<span class="k">def</span> <span class="nf">config_logging</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configures the project&#39;s logging system from a file.</span>
+<span class="sd">    This function initialises the Python logging framework using a configuration</span>
+<span class="sd">    file specified in the settings. It dynamically re-routes file handlers to</span>
+<span class="sd">    write logs to run-specific files, ensuring that logs from different runs</span>
+<span class="sd">    and modules are kept separate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">configfile</span>
+    <span class="p">)</span>
+    <span class="n">logfolder</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span>
+    <span class="n">runidjobfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span>
+        
+    <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fileConfig</span><span class="p">(</span><span class="n">configfile</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">logfolder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">loggerDict</span><span class="p">:</span>
+        <span class="n">logger_to_redirect</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">numfilehandlers</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">logger_to_redirect</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">handler</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="n">numfilehandlers</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">fhandler</span> <span class="o">=</span> <span class="n">handler</span>
+
+                <span class="n">postfix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">numfilehandlers</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">handler</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">newhandler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">logfolder</span><span class="p">,</span>
+                        <span class="s2">&quot;ahoi&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">runidjobfolder</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="n">postfix</span> <span class="o">+</span> <span class="s2">&quot;.log&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">newhandler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">fhandler</span><span class="o">.</span><span class="n">formatter</span><span class="p">)</span>
+                <span class="n">newhandler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">fhandler</span><span class="o">.</span><span class="n">level</span><span class="p">)</span>
+                <span class="n">logger_to_redirect</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">fhandler</span><span class="p">)</span>
+                <span class="n">logger_to_redirect</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">newhandler</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Logging set up using config file &quot;</span> <span class="o">+</span> <span class="n">configfile</span><span class="p">)</span></div>
+
+    
+    
+<div class="viewcode-block" id="get_output_path">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.get_output_path">[docs]</a>
+<span class="k">def</span> <span class="nf">get_output_path</span><span class="p">(</span>
+    <span class="n">runid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">subfolder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">createfolder</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the output path for output data, logging, settings storage, slurm files.</span>
+<span class="sd">    If not existing, the folder is created.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    runid: int or string</span>
+<span class="sd">        the run ID the output data is associated with. To refer to &quot;RS&quot; runs, the runid</span>
+<span class="sd">        may be a string such as &quot;RS0912&quot;.</span>
+<span class="sd">    subfolder: str</span>
+<span class="sd">        last part of the output folder</span>
+<span class="sd">    createfolder: bool</span>
+<span class="sd">        If True, the folder will be created if non-existent</span>
+
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+
+<span class="sd">    - settings.main.runid</span>
+<span class="sd">    - settings.main.task</span>
+<span class="sd">    - settings.main.output_path</span>
+<span class="sd">    - settings.main.output_path_custom</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The absolute path to the designated output directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">output_path_task</span>
+
+    <span class="k">if</span> <span class="n">runid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">runid</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span>
+    <span class="k">if</span> <span class="n">subfolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">subfolder</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">task</span>
+
+    <span class="k">if</span> <span class="n">output_path_task</span> <span class="o">!=</span> <span class="n">task</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">_%H-%M-%S&quot;</span><span class="p">)</span>
+        <span class="n">output_path_task</span> <span class="o">=</span> <span class="n">task</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">output_path</span><span class="p">):</span>
+        <span class="n">opath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+                <span class="s2">&quot;..&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;..&quot;</span><span class="p">,</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
+                <span class="n">task</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">runid</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">opath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
+                <span class="n">task</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">runid</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">output_path_sub</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opath</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">createfolder</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path_sub</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_path_sub</span></div>
+
+
+<div class="viewcode-block" id="get_cluster_output_path">
+<a class="viewcode-back" href="../../application/api/helpers.html#helpers.config.get_cluster_output_path">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cluster_output_path</span><span class="p">(</span>
+    <span class="n">runid</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
+    <span class="n">subfolder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the output folder of output data, logging, settings storage, slurm files</span>
+<span class="sd">    on the cluster</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    runid: int</span>
+<span class="sd">        the run ID the output data is associated with</span>
+<span class="sd">    subfolder: str</span>
+<span class="sd">        last part of the output folder</span>
+<span class="sd">    createfolder: bool</span>
+<span class="sd">        If True, the folder will be created if non-existent</span>
+
+<span class="sd">    Other Parameters</span>
+<span class="sd">    ----------------</span>
+
+<span class="sd">    - settings.slurm.target_cluster_mainpath</span>
+<span class="sd">    - settings.main.project,</span>
+<span class="sd">    - settings.main.task</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    str:</span>
+<span class="sd">        cluster output path</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">subfolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">subfolder</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        
+    <span class="n">opath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_cluster_mainpath</span><span class="p">,</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">runid</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opath</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

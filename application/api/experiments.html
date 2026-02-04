@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>experiments package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="helpers package" href="helpers.html" />
+    <link rel="prev" title="analysis package" href="analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">experiments package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-experiments.slurm_fetchback">experiments.slurm_fetchback module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-experiments.slurm_management">experiments.slurm_management module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-experiments.slurm_script_generation">experiments.slurm_script_generation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-experiments">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">experiments package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/experiments.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="experiments-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">experiments package</a><a class="headerlink" href="#experiments-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#experiments-package" id="id1">experiments package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-experiments.slurm_fetchback" id="id2">experiments.slurm_fetchback module</a></p></li>
+<li><p><a class="reference internal" href="#module-experiments.slurm_management" id="id3">experiments.slurm_management module</a></p></li>
+<li><p><a class="reference internal" href="#module-experiments.slurm_script_generation" id="id4">experiments.slurm_script_generation module</a></p></li>
+<li><p><a class="reference internal" href="#module-experiments" id="id5">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-experiments.slurm_fetchback">
+<span id="experiments-slurm-fetchback-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">experiments.slurm_fetchback module</a><a class="headerlink" href="#module-experiments.slurm_fetchback" title="Link to this heading"></a></h2>
+<p>Fetch result data back from cluster to local hard drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Instructions<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<ul class="simple">
+<li><p>Define scenarios/parameter sets in settings_local.toml</p></li>
+<li><p>execute main</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_fetchback.fetch_outputfiles_from_cluster">
+<span class="sig-name descname"><span class="pre">fetch_outputfiles_from_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_fetchback.html#fetch_outputfiles_from_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_fetchback.fetch_outputfiles_from_cluster" title="Link to this definition"></a></dt>
+<dd><p>Fetch output files from cluster via SCP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>- settings.slurm.fetch_pattern</strong></dt><dd></dd>
+<dt><strong>- settings.slurm.output_path</strong></dt><dd></dd>
+<dt><strong>- settings.slurm.host</strong></dt><dd></dd>
+<dt><strong>- settings.slurm.username</strong></dt><dd></dd>
+<dt><strong>- settings.merge_output.run_ids</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-experiments.slurm_management">
+<span id="experiments-slurm-management-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">experiments.slurm_management module</a><a class="headerlink" href="#module-experiments.slurm_management" title="Link to this heading"></a></h2>
+<p>Create bash scripts for simulation on SLURM managed cluster,
+transfer these scripts to the cluster and optionally execute them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Instructions<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<ul class="simple">
+<li><p>Define scenarios/parameter sets in excel scenario sheet, referenced by config ID</p></li>
+<li><p>execute main</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_management.transferSlurmFiles">
+<span class="sig-name descname"><span class="pre">transferSlurmFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxRunId</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_management.html#transferSlurmFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_management.transferSlurmFiles" title="Link to this definition"></a></dt>
+<dd><p>Transfer files to cluster via SCP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>maxRunID: int</strong></dt><dd><p>maximum run ID of this job set</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_management.transferSettingsFile">
+<span class="sig-name descname"><span class="pre">transferSettingsFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_management.html#transferSettingsFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_management.transferSettingsFile" title="Link to this definition"></a></dt>
+<dd><p>Transfer settings.toml</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_management.transferScenarioFile">
+<span class="sig-name descname"><span class="pre">transferScenarioFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_management.html#transferScenarioFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_management.transferScenarioFile" title="Link to this definition"></a></dt>
+<dd><p>Transfer Scenario Config Excel File</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_management.executeSlurmScript">
+<span class="sig-name descname"><span class="pre">executeSlurmScript</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execScriptFilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxRunId</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_management.html#executeSlurmScript"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_management.executeSlurmScript" title="Link to this definition"></a></dt>
+<dd><p>Execute slurm batch runs on cluster via SSH</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>execScriptFilename: str</strong></dt><dd><p>Script file to execute</p>
+</dd>
+<dt><strong>maxRunId: int</strong></dt><dd><p>maximum Run ID to enter correct folder</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_management.generateAndTransfer">
+<span class="sig-name descname"><span class="pre">generateAndTransfer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_management.html#generateAndTransfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_management.generateAndTransfer" title="Link to this definition"></a></dt>
+<dd><p>Generates required files, transfers these to the cluster and executes the SLURM script on the cluster.
+In particular:</p>
+<ul class="simple">
+<li><p>generate SLURM scripts</p></li>
+<li><p>transfer SLURM scripts to cluster</p></li>
+<li><p>transfer settings file to cluster</p></li>
+<li><p>transfer scenario file to cluster</p></li>
+<li><p>execute SLURM scripts on cluster</p></li>
+</ul>
+<p>Particular steps can be enabled/disabled by parameter settings (see below).</p>
+<p>Considered parameters:</p>
+<ul class="simple">
+<li><p>settings.slurm.batchconfig_file</p></li>
+<li><p>settings.slurm.batchconfig_sheetname</p></li>
+<li><p>settings.slurm.batchconfig_rows</p></li>
+<li><p>settings.slurm.editbatchConfigFile (default: True)</p></li>
+<li><p>settings.slurm.generateSlurmFile (default: True)</p></li>
+<li><p>settings.slurm.transferSlurmFile (default: True)</p></li>
+<li><p>settings.slurm.transferSettingsFile (default: True)</p></li>
+<li><p>settings.slurm.transferScenarioExcelFile (default: True)</p></li>
+<li><p>settings.slurm.executeSLURMscripts (default: False)</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="module-experiments.slurm_script_generation">
+<span id="experiments-slurm-script-generation-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">experiments.slurm_script_generation module</a><a class="headerlink" href="#module-experiments.slurm_script_generation" title="Link to this heading"></a></h2>
+<p>Create SLURM scripts to run AHOI on a linux cluster.
+Creates multiple runs depending an seed range defined in scenario file (per row)
+and subsample sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:Sascha&#46;Holzhauer&#37;&#52;&#48;uni-kassel&#46;de">Sascha<span>&#46;</span>Holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="experiments.slurm_script_generation.generate_script">
+<span class="sig-name descname"><span class="pre">generate_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['source',</span> <span class="pre">'../_build']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/experiments/slurm_script_generation.html#generate_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#experiments.slurm_script_generation.generate_script" title="Link to this definition"></a></dt>
+<dd><p>Creates SLURM scripts by replacing placeholders in template and generates execution script
+to call SLURM scripts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>run_id: int</strong></dt><dd><p>Run ID</p>
+</dd>
+<dt><strong>args: list[str]</strong></dt><dd><p>arguments for SLURM script creation</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>filename of execution script</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Other Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>* settings.slurm.template_file</strong></dt><dd></dd>
+<dt><strong>* settings.slurm.target_batchfiles</strong></dt><dd></dd>
+<dt><strong>* settings.slurm.target_execfile</strong></dt><dd></dd>
+<dt><strong>* settings.slurm.target_cluster_logfiles</strong></dt><dd></dd>
+<dt><strong>* settings.slurm.target_cluster_batchfiles</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-experiments">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-experiments" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="analysis.html" class="btn btn-neutral float-left" title="analysis package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helpers.html" class="btn btn-neutral float-right" title="helpers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

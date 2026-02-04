@@ -1,0 +1,2917 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Random Number Generation" href="rng.html" />
+    <link rel="prev" title="Concepts" href="../concepts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../concepts.html">Concepts</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#order-of-configuration-consideration">Order of configuration consideration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#defining-scenarios">Defining Scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#conserving-scenario-settings">Conserving Scenario Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inspecting-settings-history">Inspecting Settings History</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settings-documentation">Settings Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rng.html">Random Number Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="output.html">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../concepts.html">Concepts</a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/concepts/configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<span id="concepts-config"></span><h1><a class="toc-backref" href="#id11" role="doc-backlink">Configuration</a><a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#order-of-configuration-consideration" id="id6">Order of configuration consideration</a></p></li>
+<li><p><a class="reference internal" href="#defining-scenarios" id="id7">Defining Scenarios</a></p></li>
+<li><p><a class="reference internal" href="#conserving-scenario-settings" id="id8">Conserving Scenario Settings</a></p></li>
+<li><p><a class="reference internal" href="#inspecting-settings-history" id="id9">Inspecting Settings History</a></p></li>
+<li><p><a class="reference internal" href="#settings-documentation" id="id10">Settings Documentation</a></p></li>
+</ul>
+</nav>
+<p>Configuration and parameter management is done via the <a class="reference external" href="https://www.dynaconf.com">Dynaconf Framework</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Because of bug #896 in dynaconf (and because we apply <cite>merge_enabled=True</cite>) it is currently
+not straight forward to prevent the merging of lists in the configuration, i.e. items of a list
+defined in <cite>settings_default.toml</cite> will be kept even if the setting is overridden in other places.
+Therefore, defaults of list settings which may be overriden should be initialised empty. A workaround is
+using <cite>CLEAR</cite> to override list entries as the first entry of the new list. The according setting key needs to be added
+to <cite>config/dynaconf_hooks.py</cite>.</p>
+</div>
+<section id="order-of-configuration-consideration">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Order of configuration consideration</a><a class="headerlink" href="#order-of-configuration-consideration" title="Link to this heading"></a></h2>
+<p>Default values for all settings are meant to be defined in <cite>settings/settings.toml</cite> in the repos. Your personal settings that
+might override the default ones usually go into <cite>settings/settings_local.toml</cite>.</p>
+<ol class="arabic simple">
+<li><p>Configuration in <cite>settings.toml</cite></p></li>
+<li><p>Configuration in <cite>settings_local.toml</cite> (or whatever is set in env var AHOI_SETTINGS_FILE_FOR_DYNACONF)</p></li>
+<li><p>Configuration in <cite>.secrets.toml</cite></p></li>
+<li><p>Configuration in <cite>constants.toml</cite></p></li>
+<li><p>Configuration in Scenario XLSX file (if MAIN__EXCEL_SCENARIO_FILE is set)</p></li>
+<li><p>Environment variables</p></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Note that settings integrated by includes are not processed right after the file they are defined in
+but after settings in <cite>constants.toml</cite> and all loaders. Special attention must be paid to settings
+which affect other loaders, e.g. <cite>MAIN__EXCEL_SCENARIO_FILE</cite> and <cite>AHOI_MAIN__SCENARIO_ID</cite>.
+Defining these as includes usually comes to late!</p>
+</div>
+<div class="admonition-background admonition">
+<p class="admonition-title">Background</p>
+<p>Environment are off because we use sections to cluster parameters. Global merging is on
+because we want to combine parameters within parameter clusters.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can apply settings for specific environments/context such as the cluster by passing the
+according settings filename (absolute or relative to <cite>building-stock-model/building_stock_model/config</cite>)
+to the environment variable <cite>AHOI_SETTINGS_FILE_FOR_DYNACONF</cite>.</p>
+</div>
+</section>
+<section id="defining-scenarios">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Defining Scenarios</a><a class="headerlink" href="#defining-scenarios" title="Link to this heading"></a></h2>
+<p>Often, many runs need to be conducted with changes in only one or few parameters. In this case it is convenient to fill an
+excel table with lines for each particular scenario parameter set, indexed by a so-called scenario ID. The scenario ID
+(MAIN__SCENARIO_ID) can then be switched via an environment variable, e.g. in the SLURM configuration file when running
+on a cluster or in the personal settings.toml file.</p>
+<p>The Scenario excel file looks like this (there is a template <cite>input_data/Scenario_Template.xlsx</cite>):</p>
+<table class="docutils align-left" id="id1" style="width: 100%">
+<caption><span class="caption-text">Scenario_Template.xlsx</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub"></th>
+<th class="head"><p>MAIN</p></th>
+<th class="head"><p>MAIN</p></th>
+<th class="head"><p>MAIN</p></th>
+<th class="head"><p>RNG</p></th>
+<th class="head"><p>RNG</p></th>
+</tr>
+<tr class="row-even"><th class="head stub"><p>ScenarioID</p></th>
+<th class="head"><p>STARTYEAR</p></th>
+<th class="head"><p>STEPSIZE</p></th>
+<th class="head"><p>FINALYEAR</p></th>
+<th class="head"><p>seed_buildinginit</p></th>
+<th class="head"><p>seed_buildingnew</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><th class="stub"><p>1</p></th>
+<td><p>2020</p></td>
+<td><p>5</p></td>
+<td><p>2050</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>2</p></th>
+<td><p>2020</p></td>
+<td><p>1</p></td>
+<td><p>2050</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>3</p></th>
+<td><p>2022</p></td>
+<td><p>5</p></td>
+<td><p>2050</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>4</p></th>
+<td><p>2022</p></td>
+<td><p>1</p></td>
+<td><p>2050</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+</tr>
+</tbody>
+</table>
+<p>The part of the SLURM script may look like this:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Part of SLURM config file</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;started...&quot;</span>
+<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">AHOI_MAIN__SCENARIO_ID</span><span class="o">=</span><span class="m">1</span>
+<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">AHOI_OUTOUT_OUTPUT_SETTINGS</span><span class="o">=</span>TRUE
+<span class="w"> </span>srun<span class="w"> </span>python<span class="w"> </span>./src/run.py
+<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;finished&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>The excel file is specified via <cite>MAIN__EXCEL_SCENARIO_FILE</cite> (relative to <cite>MAIN__INPUT_PATH</cite> or absolute). To disable loading
+settings from excel file, set</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Disable loading settings from excel file</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">[main]</span>
+<span class="w"> </span><span class="n">excel_scenario_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;@none&quot;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="conserving-scenario-settings">
+<span id="concepts-config-conserve"></span><h2><a class="toc-backref" href="#id14" role="doc-backlink">Conserving Scenario Settings</a><a class="headerlink" href="#conserving-scenario-settings" title="Link to this heading"></a></h2>
+<p>If <cite>OUTPUT__OUTPUT_SETTINGS</cite> is <cite>True</cite> (the default), applied settings are exported to
+<cite>&lt;OUTPUT__OUTPUT_PATH&gt;/&lt;OUTPUT__SUBFOLDER&gt;/&lt;OUTPUT__OUTPUT_SETTINGS_PATH&gt;/settings.toml</cite></p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Config for output of applied settings</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">[output]</span>
+<span class="w"> </span><span class="n">output_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">     </span><span class="n">output_settings_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;conf&quot;</span>
+<span class="w">     </span><span class="n">output_settings_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;settings.toml&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure to store the excel files and other input data which is referenced in the stored settings.toml as they
+are during simulation!</p>
+</div>
+</section>
+<section id="inspecting-settings-history">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">Inspecting Settings History</a><a class="headerlink" href="#inspecting-settings-history" title="Link to this heading"></a></h2>
+<p>In case of application of unexpected settings it can be helpful to inspect the history of settings.
+Simply make sure the switch <cite>OUTPUT__OUTPUT_SETTINGS</cite> is <cite>True</cite> (default) and optionally filter
+by a settings key (part) for <cite>OUTPUT__OUTPUT_SETTINGSHISTORY_KEY</cite>:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Config for output of settings history</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">[output]</span>
+<span class="w"> </span><span class="n">output_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w"> </span><span class="n">output_settingshistory_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;settings_history.json&quot;</span>
+<span class="w"> </span><span class="n">output_settingshistory_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;@none&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>The according dynconf feature is documented as <a class="reference external" href="https://www.dynaconf.com/advanced/#inspecting-history">Inspecting History</a>.
+It shows first the finally applied settings and afterwards exports the history with the according loader
+and its parameters from last to first.</p>
+</section>
+<section id="settings-documentation">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">Settings Documentation</a><a class="headerlink" href="#settings-documentation" title="Link to this heading"></a></h2>
+<nav class="contents" id="sections">
+<p class="topic-title">Sections</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#configuration" id="id11">Configuration</a></p>
+<ul>
+<li><p><a class="reference internal" href="#order-of-configuration-consideration" id="id12">Order of configuration consideration</a></p></li>
+<li><p><a class="reference internal" href="#defining-scenarios" id="id13">Defining Scenarios</a></p></li>
+<li><p><a class="reference internal" href="#conserving-scenario-settings" id="id14">Conserving Scenario Settings</a></p></li>
+<li><p><a class="reference internal" href="#inspecting-settings-history" id="id15">Inspecting Settings History</a></p></li>
+<li><p><a class="reference internal" href="#settings-documentation" id="id16">Settings Documentation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#main" id="id17">main</a></p></li>
+<li><p><a class="reference internal" href="#experiments" id="id18">experiments</a></p></li>
+<li><p><a class="reference internal" href="#data" id="id19">data</a></p></li>
+<li><p><a class="reference internal" href="#scenario-comparison" id="id20">scenario_comparison</a></p></li>
+<li><p><a class="reference internal" href="#seeds" id="id21">seeds</a></p></li>
+<li><p><a class="reference internal" href="#output" id="id22">output</a></p></li>
+<li><p><a class="reference internal" href="#information-source" id="id23">information_source</a></p></li>
+<li><p><a class="reference internal" href="#subsidies" id="id24">subsidies</a></p></li>
+<li><p><a class="reference internal" href="#houseowner" id="id25">houseowner</a></p></li>
+<li><p><a class="reference internal" href="#houseowner-leading" id="id26">houseowner.leading</a></p></li>
+<li><p><a class="reference internal" href="#houseowner-mainstream" id="id27">houseowner.mainstream</a></p></li>
+<li><p><a class="reference internal" href="#houseowner-traditionals" id="id28">houseowner.traditionals</a></p></li>
+<li><p><a class="reference internal" href="#houseowner-hedonists" id="id29">houseowner.hedonists</a></p></li>
+<li><p><a class="reference internal" href="#information-overspread" id="id30">information_overspread</a></p></li>
+<li><p><a class="reference internal" href="#decision-making-costs" id="id31">decision_making_costs</a></p></li>
+<li><p><a class="reference internal" href="#intermediary" id="id32">intermediary</a></p></li>
+<li><p><a class="reference internal" href="#plumber" id="id33">plumber</a></p></li>
+<li><p><a class="reference internal" href="#energy-advisor" id="id34">energy_advisor</a></p></li>
+<li><p><a class="reference internal" href="#heating-systems-colors" id="id35">heating_systems_colors</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-heat-pumps" id="id36">reference.Scenario_heat_pumps</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-network-district" id="id37">reference.Scenario_network_district</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-network-local-hot" id="id38">reference.Scenario_network_local_hot</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-network-local-cold" id="id39">reference.Scenario_network_local_cold</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-mix-pellet-heat-pump" id="id40">reference.Scenario_mix_pellet_heat_pump</a></p></li>
+<li><p><a class="reference internal" href="#reference-scenario-mix-pellet-heat-pump-network" id="id41">reference.Scenario_mix_pellet_heat_pump_network</a></p></li>
+<li><p><a class="reference internal" href="#information-sources" id="id42">information_sources</a></p></li>
+<li><p><a class="reference internal" href="#network" id="id43">network</a></p></li>
+<li><p><a class="reference internal" href="#milieu" id="id44">milieu</a></p></li>
+<li><p><a class="reference internal" href="#triggers" id="id45">triggers</a></p></li>
+<li><p><a class="reference internal" href="#slurm" id="id46">slurm</a></p></li>
+<li><p><a class="reference internal" href="#eval" id="id47">eval</a></p></li>
+<li><p><a class="reference internal" href="#slides" id="id48">slides</a></p></li>
+<li><p><a class="reference internal" href="#create-settings-documentation" id="id49">Create settings documentation</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="main">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">main</a><a class="headerlink" href="#main" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>current_scenario</p></td>
+<td></td>
+<td></td>
+<td><p>“Scenario_heat_pumps”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>project</p></td>
+<td></td>
+<td></td>
+<td><p>“AHOI”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>run_id</p></td>
+<td></td>
+<td></td>
+<td><p>“0”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>task</p></td>
+<td></td>
+<td></td>
+<td><p>“”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>start_year</p></td>
+<td></td>
+<td></td>
+<td><p>2025</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>end_year</p></td>
+<td></td>
+<td></td>
+<td><p>2045</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>number_of_plumbers</p></td>
+<td></td>
+<td></td>
+<td><p>10</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>number_of_energy_advisors</p></td>
+<td></td>
+<td></td>
+<td><p>10</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>steps</p></td>
+<td></td>
+<td></td>
+<td><p>1040</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>serialization_function</p></td>
+<td></td>
+<td></td>
+<td><p>“to_excel”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>files_prefix</p></td>
+<td></td>
+<td></td>
+<td><p>“”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>input_path</p></td>
+<td></td>
+<td></td>
+<td><p>“./data/input/”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>output_path</p></td>
+<td></td>
+<td></td>
+<td><p>“./src/data/output”</p></td>
+<td></td>
+<td></td>
+<td><p>Output ‘root’ for logs, settings history, graphml files etc. Absolute or relative to working dir.</p></td>
+</tr>
+<tr class="row-odd"><td><p>excel_scenario_file</p></td>
+<td></td>
+<td></td>
+<td><p>“settings/settings.xlsx”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>config_id_start</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>config_id_end</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="experiments">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">experiments</a><a class="headerlink" href="#experiments" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>plumber_training</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>plumber_training_system</p></td>
+<td></td>
+<td></td>
+<td><p>“Heating_system_heat_pump_brine”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>information_campaign</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>inf_campaign_systems</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>inf_campaign_duration</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>inf_campaign_reach</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>inf_campaign_mode</p></td>
+<td></td>
+<td></td>
+<td><p>“Risk_targeting”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>inf_campaign_risk_mitigation</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>enforcement</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>enforcement_systems</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>replacement_mandates</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>emissions_mandate</p></td>
+<td></td>
+<td></td>
+<td><p>1000000000</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>systems_mandate</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">data</a><a class="headerlink" href="#data" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dynamic</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heat_demand</p></td>
+<td></td>
+<td></td>
+<td><p>“eqcity”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>milieu_params</p></td>
+<td></td>
+<td></td>
+<td><p>“milieu_parameters.csv”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heat_sys_params</p></td>
+<td></td>
+<td></td>
+<td><p>“heating_parameters.csv”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heat_sys_params_dynamics</p></td>
+<td></td>
+<td></td>
+<td><p>“heating_params_dynamics.csv”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>plt_settings</p></td>
+<td></td>
+<td></td>
+<td><p>“plotting/config_plt_unik.yaml”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scenario-comparison">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">scenario_comparison</a><a class="headerlink" href="#scenario-comparison" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>active</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>scenarios</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>files_prefixes</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>run_ids</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="seeds">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">seeds</a><a class="headerlink" href="#seeds" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>model_init</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>model_run</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>house_init</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>milieu_init</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heating_init</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>information_source_run</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>houseowner_run</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>plumber_run</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="output">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">output</a><a class="headerlink" href="#output" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>randomstreaminvocations</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>randomstreaminvocations_folder</p></td>
+<td></td>
+<td></td>
+<td><p>“&#64;format ./data/output/rng/{this.main.run_id}/”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>randomstream_cutentries</p></td>
+<td></td>
+<td></td>
+<td><p>2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>logger_model_init</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id50"><span class="problematic" id="id51">test_model_init_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>logger_model_run</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id52"><span class="problematic" id="id53">test_model_run_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>logger_house_init</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id54"><span class="problematic" id="id55">test_house_init_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>logger_milieu_init</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id56"><span class="problematic" id="id57">test_milieu_init_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>logger_houseowner_run</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id58"><span class="problematic" id="id59">test_houseowner_run_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>logger_plumber_run</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id60"><span class="problematic" id="id61">test_plumber_run_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>logger_information_source_run</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id62"><span class="problematic" id="id63">test_information_source_run_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>logger_heating_init</p></td>
+<td></td>
+<td></td>
+<td><p>“<a href="#id64"><span class="problematic" id="id65">test_heating_init_</span></a>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>resultdata_as_csv</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>agentdata_as_pickle</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>intermediarydata_as_pickle</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>simplenames</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>output_settings</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>output_settings_path</p></td>
+<td></td>
+<td></td>
+<td><p>“conf”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>output_settings_filename</p></td>
+<td></td>
+<td></td>
+<td><p>“settings.toml”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>output_settingshistory_filename</p></td>
+<td></td>
+<td></td>
+<td><p>“settings_history.json”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>output_settingshistory_key</p></td>
+<td></td>
+<td></td>
+<td><p>“&#64;none”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>hdf5_filename</p></td>
+<td></td>
+<td></td>
+<td><p>“AHOI.h5”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>hdf5_format</p></td>
+<td></td>
+<td></td>
+<td><p>“fixed”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="information-source">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">information_source</a><a class="headerlink" href="#information-source" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>distortion</p></td>
+<td></td>
+<td></td>
+<td><p>0.5</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>uncertainty_lower</p></td>
+<td></td>
+<td></td>
+<td><p>0.2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>uncertainty_upper</p></td>
+<td></td>
+<td></td>
+<td><p>0.5</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="subsidies">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">subsidies</a><a class="headerlink" href="#subsidies" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>district</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heat_pump</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heat_pump_brine</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>pellet</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>network_local_hot</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>GP_Joule</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>climate_speed</p></td>
+<td></td>
+<td></td>
+<td><p>0.2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>income</p></td>
+<td></td>
+<td></td>
+<td><p>0.3</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>efficiency</p></td>
+<td></td>
+<td></td>
+<td><p>0.05</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="houseowner">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">houseowner</a><a class="headerlink" href="#houseowner" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>aspiration</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>overload</p></td>
+<td></td>
+<td></td>
+<td><p>2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>perception</p></td>
+<td></td>
+<td></td>
+<td><p>0.1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>budget_limit</p></td>
+<td></td>
+<td></td>
+<td><p>104</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>risk_tolerance_std</p></td>
+<td></td>
+<td></td>
+<td><p>0.19</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>random_risk_tolerance</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>loan_taking_probability</p></td>
+<td></td>
+<td></td>
+<td><p>0.32</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>tpb_weights_std</p></td>
+<td></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td></td>
+<td><p>xactly three numbers</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="houseowner-leading">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">houseowner.leading</a><a class="headerlink" href="#houseowner-leading" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>mean_savings</p></td>
+<td></td>
+<td></td>
+<td><p>178</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>stdev_savings</p></td>
+<td></td>
+<td></td>
+<td><p>66</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>risk_tolerance</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="houseowner-mainstream">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">houseowner.mainstream</a><a class="headerlink" href="#houseowner-mainstream" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>mean_savings</p></td>
+<td></td>
+<td></td>
+<td><p>142</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>stdev_savings</p></td>
+<td></td>
+<td></td>
+<td><p>62</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>risk_tolerance</p></td>
+<td></td>
+<td></td>
+<td><p>0.7</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="houseowner-traditionals">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">houseowner.traditionals</a><a class="headerlink" href="#houseowner-traditionals" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>mean_savings</p></td>
+<td></td>
+<td></td>
+<td><p>158</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>stdev_savings</p></td>
+<td></td>
+<td></td>
+<td><p>69</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>risk_tolerance</p></td>
+<td></td>
+<td></td>
+<td><p>0.5</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="houseowner-hedonists">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">houseowner.hedonists</a><a class="headerlink" href="#houseowner-hedonists" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>mean_savings</p></td>
+<td></td>
+<td></td>
+<td><p>158</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>stdev_savings</p></td>
+<td></td>
+<td></td>
+<td><p>58</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>risk_tolerance</p></td>
+<td></td>
+<td></td>
+<td><p>0.6</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="information-overspread">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">information_overspread</a><a class="headerlink" href="#information-overspread" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>selected_optio</p></td>
+<td></td>
+<td></td>
+<td><p>“subsidy_to_observe”</p></td>
+<td></td>
+<td></td>
+<td><p>choices: subsidy_to_observe, known_hs_to_observe</p></td>
+</tr>
+<tr class="row-odd"><td><p>subsidies_list</p></td>
+<td></td>
+<td></td>
+<td><blockquote>
+<div><p>[“Climate_speed”, “Heat_pump”, “Income”]</p>
+</div></blockquote>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>subsidies_current</p></td>
+<td></td>
+<td></td>
+<td><p>“Climate_speed”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>known_hs_list</p></td>
+<td></td>
+<td></td>
+<td><p>[</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>known_hs_current</p></td>
+<td></td>
+<td></td>
+<td><p>“Heating_system_heat_pump”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decision-making-costs">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">decision_making_costs</a><a class="headerlink" href="#decision-making-costs" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>evaluate</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>get_data</p></td>
+<td></td>
+<td></td>
+<td><p>2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>define_choice</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_hs</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>install</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>calculate_satisfaction</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="intermediary">
+<h3><a class="toc-backref" href="#id32" role="doc-backlink">intermediary</a><a class="headerlink" href="#intermediary" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>job_duration</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="plumber">
+<h3><a class="toc-backref" href="#id33" role="doc-backlink">plumber</a><a class="headerlink" href="#plumber" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>aspiration</p></td>
+<td></td>
+<td></td>
+<td><p>100</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>perception</p></td>
+<td></td>
+<td></td>
+<td><p>0.1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cognitive_resource</p></td>
+<td></td>
+<td></td>
+<td><p>20</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>hs_budget</p></td>
+<td></td>
+<td></td>
+<td><p>200</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cons_duration</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ins_duration</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>share_systems</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>assume_area_avg</p></td>
+<td></td>
+<td></td>
+<td><p>106</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>assume_energydemand_avg</p></td>
+<td></td>
+<td></td>
+<td><p>147</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>assume_heatload_avg</p></td>
+<td></td>
+<td></td>
+<td><p>19</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="energy-advisor">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">energy_advisor</a><a class="headerlink" href="#energy-advisor" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cons_duration</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="heating-systems-colors">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">heating_systems_colors</a><a class="headerlink" href="#heating-systems-colors" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>heating_system_electricity</p></td>
+<td></td>
+<td></td>
+<td><p>“red”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heating_system_gas</p></td>
+<td></td>
+<td></td>
+<td><p>“blue”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heating_system_heat_pump</p></td>
+<td></td>
+<td></td>
+<td><p>“yellow”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heating_system_heat_pump_brine</p></td>
+<td></td>
+<td></td>
+<td><p>“purple”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heating_system_oil</p></td>
+<td></td>
+<td></td>
+<td><p>“black”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heating_system_pellet</p></td>
+<td></td>
+<td></td>
+<td><p>“brown”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>heating_system_network_district</p></td>
+<td></td>
+<td></td>
+<td><p>“pink”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>heating_system_network_local</p></td>
+<td></td>
+<td></td>
+<td><p>“orange”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-heat-pumps">
+<h3><a class="toc-backref" href="#id36" role="doc-backlink">reference.Scenario_heat_pumps</a><a class="headerlink" href="#reference-scenario-heat-pumps" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_heat_pump</p></td>
+<td></td>
+<td></td>
+<td><p>100</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-network-district">
+<h3><a class="toc-backref" href="#id37" role="doc-backlink">reference.Scenario_network_district</a><a class="headerlink" href="#reference-scenario-network-district" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_network_district</p></td>
+<td></td>
+<td></td>
+<td><p>100</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-network-local-hot">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">reference.Scenario_network_local_hot</a><a class="headerlink" href="#reference-scenario-network-local-hot" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_network_local</p></td>
+<td></td>
+<td></td>
+<td><p>100</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-network-local-cold">
+<h3><a class="toc-backref" href="#id39" role="doc-backlink">reference.Scenario_network_local_cold</a><a class="headerlink" href="#reference-scenario-network-local-cold" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_heat_pump_brine</p></td>
+<td></td>
+<td></td>
+<td><p>100</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-mix-pellet-heat-pump">
+<h3><a class="toc-backref" href="#id40" role="doc-backlink">reference.Scenario_mix_pellet_heat_pump</a><a class="headerlink" href="#reference-scenario-mix-pellet-heat-pump" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_heat_pump</p></td>
+<td></td>
+<td></td>
+<td><p>80</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Heating_system_pellet</p></td>
+<td></td>
+<td></td>
+<td><p>20</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-scenario-mix-pellet-heat-pump-network">
+<h3><a class="toc-backref" href="#id41" role="doc-backlink">reference.Scenario_mix_pellet_heat_pump_network</a><a class="headerlink" href="#reference-scenario-mix-pellet-heat-pump-network" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Heating_system_heat_pump</p></td>
+<td></td>
+<td></td>
+<td><p>10</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Heating_system_pellet</p></td>
+<td></td>
+<td></td>
+<td><p>30</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Heating_system_network_local</p></td>
+<td></td>
+<td></td>
+<td><p>60</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="information-sources">
+<h3><a class="toc-backref" href="#id42" role="doc-backlink">information_sources</a><a class="headerlink" href="#information-sources" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>list</p></td>
+<td></td>
+<td></td>
+<td><blockquote>
+<div><p>[“internet”, “magazine”, “plumber”, “neighbours”, “energy_advisor”]</p>
+</div></blockquote>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="network">
+<h3><a class="toc-backref" href="#id43" role="doc-backlink">network</a><a class="headerlink" href="#network" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>scenario_id</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="milieu">
+<h3><a class="toc-backref" href="#id44" role="doc-backlink">milieu</a><a class="headerlink" href="#milieu" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>groups</p></td>
+<td></td>
+<td></td>
+<td><blockquote>
+<div><p>[“Generalized”, “Leading”, “Mainstream”, “Traditionals”, “Hedonists”]</p>
+</div></blockquote>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="triggers">
+<h3><a class="toc-backref" href="#id45" role="doc-backlink">triggers</a><a class="headerlink" href="#triggers" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>adoptive_trigger</p></td>
+<td></td>
+<td></td>
+<td><p>“Heating_system_heat_pump”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>adoptive_trigger_active</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="slurm">
+<h3><a class="toc-backref" href="#id46" role="doc-backlink">slurm</a><a class="headerlink" href="#slurm" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>template_file</p></td>
+<td></td>
+<td></td>
+<td><p>“src/experiments/slurm_script_template.sh”</p></td>
+<td></td>
+<td></td>
+<td><p>relative to get_input_path:</p></td>
+</tr>
+<tr class="row-odd"><td><p>target_execfile</p></td>
+<td></td>
+<td></td>
+<td><p>“slurm”</p></td>
+<td></td>
+<td></td>
+<td><p>relative to get_batchconfig_path:</p></td>
+</tr>
+<tr class="row-even"><td><p>target_batchfiles</p></td>
+<td></td>
+<td></td>
+<td><p>“slurm/batchfiles”</p></td>
+<td></td>
+<td></td>
+<td><p>relative to get_batchconfig_path (should be subfolder of target_execfile):</p></td>
+</tr>
+<tr class="row-odd"><td><p>target_cluster_mainpath</p></td>
+<td></td>
+<td></td>
+<td><p>“~/ahoi/”</p></td>
+<td></td>
+<td></td>
+<td><p>project root path on cluster</p></td>
+</tr>
+<tr class="row-even"><td><p>target_cluster_modelbase</p></td>
+<td></td>
+<td></td>
+<td><p>“&#64;format {this.slurm.target_cluster_mainpath}/ahois-pro/src/”</p></td>
+<td></td>
+<td></td>
+<td><p>path to agenthomid code at cluster</p></td>
+</tr>
+<tr class="row-odd"><td><p>target_cluster_batchfiles</p></td>
+<td></td>
+<td></td>
+<td><p>“./batchfiles”</p></td>
+<td></td>
+<td></td>
+<td><p>relative to target_excefiles</p></td>
+</tr>
+<tr class="row-even"><td><p>target_cluster_logfiles</p></td>
+<td></td>
+<td></td>
+<td><p>“&#64;format {this.slurm.target_cluster_mainpath}/{this.main.task}”</p></td>
+<td></td>
+<td></td>
+<td><p>path to store slurm log files at cluster (needs to correspond with the pattern defined in template_file -</p>
+<p>the part before the RunID / Job which are added programmaatically):</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>host</p></td>
+<td></td>
+<td></td>
+<td><p>“its-cs1.its.uni-kassel.de”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>username</p></td>
+<td></td>
+<td></td>
+<td><p>“uk093483”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>num_runs_per_batch</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>config_id_start</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>config_id_end</p></td>
+<td></td>
+<td></td>
+<td><p>0</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fetch_pattern</p></td>
+<td></td>
+<td></td>
+<td><p>“pickles/<em>.</em>”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>partitio</p></td>
+<td></td>
+<td></td>
+<td><p>“FB16”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>duratio</p></td>
+<td></td>
+<td></td>
+<td><p>300</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="eval">
+<h3><a class="toc-backref" href="#id47" role="doc-backlink">eval</a><a class="headerlink" href="#eval" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>language</p></td>
+<td></td>
+<td></td>
+<td><p>[“en_GB”]</p></td>
+<td></td>
+<td></td>
+<td><p>anguage = [“de_DE”]</p></td>
+</tr>
+<tr class="row-odd"><td><p>colname_heating</p></td>
+<td></td>
+<td></td>
+<td><p>“Heizsystem”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ahid_settings_files</p></td>
+<td></td>
+<td></td>
+<td><p>[“ahid_settings_default.toml”]</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>process_agent_files</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>target_samplesize</p></td>
+<td></td>
+<td></td>
+<td><p>1000</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>start_year</p></td>
+<td></td>
+<td></td>
+<td><p>2025</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>target_year</p></td>
+<td></td>
+<td></td>
+<td><p>2045</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>plot_title</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>xticks</p></td>
+<td></td>
+<td></td>
+<td><blockquote>
+<div><p>[2025, 2030, 2035, 2040, 2045]</p>
+</div></blockquote>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>years_in_period</p></td>
+<td></td>
+<td></td>
+<td><p>5</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>widt</p></td>
+<td></td>
+<td></td>
+<td><p>12</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>widthfactorbox</p></td>
+<td></td>
+<td></td>
+<td><p>0.6</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>height</p></td>
+<td></td>
+<td></td>
+<td><p>7</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>dpi</p></td>
+<td></td>
+<td></td>
+<td><p>192</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>resolution</p></td>
+<td></td>
+<td></td>
+<td><p>192</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>markevery</p></td>
+<td></td>
+<td></td>
+<td><p>52</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>markersize</p></td>
+<td></td>
+<td></td>
+<td><p>10</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>labelrotation</p></td>
+<td></td>
+<td></td>
+<td><p>30</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>labe</p></td>
+<td></td>
+<td></td>
+<td><p>“NN”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>use_adjust_text</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>show_legend</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>process_all_outputs</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>analyze_obstacles</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>analyze_obstacles_by_period</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>individual_plots_by_ids</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>labels_file</p></td>
+<td></td>
+<td></td>
+<td><p>“settings/figure_labels.xlsx”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_fulfillment</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_emissions</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_energy_demand</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_optimality</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_opex</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_total_expenses</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_total_effort</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_heating_systems_distribution</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_hs_knowledge</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_obstacles_counts</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>compare_obstacles_percentage</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>compare_attributes</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>title_fulfillment</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>title_hs_distribution_final</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>title_emissions</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>title_quota</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>xlabel_hs_distribution_final</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>xlabel_obstacles_percentage</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="slides">
+<h3><a class="toc-backref" href="#id48" role="doc-backlink">slides</a><a class="headerlink" href="#slides" title="Link to this heading"></a></h3>
+<table class="docutils align-left" style="width: 700px">
+<colgroup>
+<col style="width: 16.0%" />
+<col style="width: 8.0%" />
+<col style="width: 8.0%" />
+<col style="width: 10.0%" />
+<col style="width: 10.0%" />
+<col style="width: 23.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Scope</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Annotations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>config</p></td>
+<td></td>
+<td></td>
+<td><p>“AHOI_SlideGeneration.xlsx”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>template</p></td>
+<td></td>
+<td></td>
+<td><p>“/plotting/DT2_Slides_Template_Interventions.pptx”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sections</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>section_title_variants</p></td>
+<td></td>
+<td></td>
+<td><p>false</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>font</p></td>
+<td></td>
+<td></td>
+<td><p>“Frutiger LT 45 Light”</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fontface_bold</p></td>
+<td></td>
+<td></td>
+<td><p>true</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fontsize_pt</p></td>
+<td></td>
+<td></td>
+<td><p>6</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="create-settings-documentation">
+<h3><a class="toc-backref" href="#id49" role="doc-backlink">Create settings documentation</a><a class="headerlink" href="#create-settings-documentation" title="Link to this heading"></a></h3>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>CSV files can be created automatically for new settings (sections) via the script
+<code class="docutils literal notranslate"><span class="pre">doc/source/application/concepts/settings/parse_settings2doc.py</span></code>. Comment lines above the setting
+are used in the <cite>Annotations</cite> column.
+To add unit, type, scope, description and annotation values, use LibreOffice and store with “_edit” added.
+Use then the above mentioned script to convert line endings in multiline cells.
+Adapt the filename of edited CSV files in <code class="docutils literal notranslate"><span class="pre">settings_doc.rst</span></code>.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../concepts.html" class="btn btn-neutral float-left" title="Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rng.html" class="btn btn-neutral float-right" title="Random Number Generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

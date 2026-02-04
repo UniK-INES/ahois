@@ -1,0 +1,859 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.test_houseowner &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tests.test_houseowner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tests.test_houseowner</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Pytest unit tests for the `Houseowner` agent class.</span>
+
+<span class="sd">This file contains a suite of unit tests that cover a wide range of the</span>
+<span class="sd">`Houseowner` agent&#39;s behaviours and methods. It uses the `pytest` framework</span>
+<span class="sd">and relies on fixtures defined in `conftest.py` to provide the necessary agent</span>
+<span class="sd">instances and other objects for testing.</span>
+
+<span class="sd">The tests are organised logically to follow the agent&#39;s decision-making</span>
+<span class="sd">process, from evaluating its current situation to gathering information,</span>
+<span class="sd">making choices, and finally installing a new heating system.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># testing of evaluate() method</span>
+
+
+<div class="viewcode-block" id="test_evaluation_of_current_hs_cognitive_resource_depleting">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_evaluation_of_current_hs_cognitive_resource_depleting">[docs]</a>
+<span class="k">def</span> <span class="nf">test_evaluation_of_current_hs_cognitive_resource_depleting</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that evaluating the current heating system </span>
+<span class="sd">    depletes cognitive resources.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">initial_cognitive_resource</span> <span class="o">=</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">cognitive_resource</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">==</span> <span class="n">initial_cognitive_resource</span> <span class="o">-</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="test_evaluation_of_current_hs_dissatisfied">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_evaluation_of_current_hs_dissatisfied">[docs]</a>
+<span class="k">def</span> <span class="nf">test_evaluation_of_current_hs_dissatisfied</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner remains &#39;Satisfied&#39; </span>
+<span class="sd">    if their heating system is relatively new.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># housewoner still has a new heating system</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">==</span> <span class="s2">&quot;Satisfied&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_evaluation_of_current_hs_satisfied">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_evaluation_of_current_hs_satisfied">[docs]</a>
+<span class="k">def</span> <span class="nf">test_evaluation_of_current_hs_satisfied</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner becomes &#39;Dissatisfied&#39; </span>
+<span class="sd">    when the heating system approaches the end of its lifetime.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># the lifetime of the heating system is almost over</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">==</span> <span class="s2">&quot;Dissatisfied&quot;</span></div>
+
+
+
+<span class="c1"># testing of get_data() method and its possible consequences</span>
+
+
+<div class="viewcode-block" id="test_exception_when_consultation_is_already_ordered">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_exception_when_consultation_is_already_ordered">[docs]</a>
+<span class="k">def</span> <span class="nf">test_exception_when_consultation_is_already_ordered</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that `get_data` depletes cognitive resources </span>
+<span class="sd">    if a consultation is already ordered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_ordered_consulation_after_breakdown">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_ordered_consulation_after_breakdown">[docs]</a>
+<span class="k">def</span> <span class="nf">test_ordered_consulation_after_breakdown</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a consultation is ordered automatically </span>
+<span class="sd">    when the heating system breaks down.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">==</span> <span class="kc">True</span></div>
+
+
+
+<span class="c1"># When get_data method will find neighbours as a valid source of information</span>
+<span class="c1"># we should therefore test ask_neighbours method</span>
+<span class="c1"># which after finding neighbours will share knowledge with them by invoke methods</span>
+<span class="c1"># share_ratings, shate_knowledge, share_satisfaction</span>
+
+
+<div class="viewcode-block" id="test_share_rating">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_share_rating">[docs]</a>
+<span class="k">def</span> <span class="nf">test_share_rating</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that two neighbours correctly share and store </span>
+<span class="sd">    each other&#39;s heating system ratings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_oil</span><span class="p">]</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_oil</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">share_rating</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">share_rating</span><span class="p">(</span><span class="n">houseowner</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">neighbours_opinions</span><span class="p">[</span><span class="n">neighbour</span><span class="o">.</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.1</span>
+    <span class="k">assert</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">neighbours_opinions</span><span class="p">[</span><span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.1</span></div>
+
+
+
+<div class="viewcode-block" id="test_share_knowledge_of_known_hs">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_share_knowledge_of_known_hs">[docs]</a>
+<span class="k">def</span> <span class="nf">test_share_knowledge_of_known_hs</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">,</span> <span class="n">heating_system_gas</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a neighbour acquires knowledge of a new heating system </span>
+<span class="sd">    from another houseowner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_oil</span><span class="p">]</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_gas</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">share_knowledge</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="test_share_knowledge_of_same_known_hs">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_share_knowledge_of_same_known_hs">[docs]</a>
+<span class="k">def</span> <span class="nf">test_share_knowledge_of_same_known_hs</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that redundant knowledge (of an already known heating system) </span>
+<span class="sd">    is not shared.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+
+    <span class="c1"># assuring that we will not share the same object</span>
+    <span class="n">heating_system_oil_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_system_oil_copy</span><span class="p">)</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">share_knowledge</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+
+    <span class="c1"># neighbour will not aquire any knowledge, because he already know the oil heating system</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="test_sharing_params_knowledge">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_sharing_params_knowledge">[docs]</a>
+<span class="k">def</span> <span class="nf">test_sharing_params_knowledge</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that knowledge sharing updates the parameters </span>
+<span class="sd">    (e.g., operation effort) of a known heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">heterogenous_heating_system_oil</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+    <span class="n">neighbour_initial_operation_effort</span> <span class="o">=</span> <span class="mf">15.0</span>
+
+    <span class="n">heterogenous_heating_system_oil</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">neighbour_initial_operation_effort</span><span class="p">,</span>
+        <span class="mi">10</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># non-zero uncertainty</span>
+    <span class="n">heating_system_oil</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heterogenous_heating_system_oil</span><span class="p">)</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">share_knowledge</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">neighbour_initial_operation_effort</span>
+        <span class="o">!=</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_share_satisfaction">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_share_satisfaction">[docs]</a>
+<span class="k">def</span> <span class="nf">test_share_satisfaction</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a houseowner&#39;s satisfaction ratio for a heating system </span>
+<span class="sd">    is updated based on neighbours&#39; opinions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># assuring that we will not share the same object</span>
+    <span class="n">heating_system_oil_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_system_oil</span><span class="p">)</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_system_oil_copy</span><span class="p">)</span>
+
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">neighbours_HS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Houseowner 1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">:</span> <span class="s2">&quot;Satisfied&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;Houseowner 2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">:</span> <span class="s2">&quot;Disatisfied&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;Houseowner 3&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">:</span> <span class="s2">&quot;Satisfied&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;Houseowner 4&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">:</span> <span class="s2">&quot;Disatisfied&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;Houseowner 5&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">:</span> <span class="s2">&quot;Satisfied&quot;</span><span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">heating_system_oil</span>
+    <span class="n">neighbour</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">heating_system_oil_copy</span>
+
+    <span class="c1"># 3 Satisfied opinion / 5 Disatisfied opinion = 0.6 Satisfied ration</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">share_satisfaction</span><span class="p">(</span><span class="n">neighbour</span><span class="p">)</span>
+
+    <span class="c1"># initially was None, here tests prove that satisfied ratio has changed</span>
+    <span class="k">assert</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">&gt;=</span> <span class="mi">0</span></div>
+
+
+
+<span class="c1"># When get_data method will use internet and magazine as a source of information</span>
+<span class="c1"># we need to test functionality with other logic compare to other sources of information</span>
+
+
+<div class="viewcode-block" id="test_gaining_information_about_hs">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_gaining_information_about_hs">[docs]</a>
+<span class="k">def</span> <span class="nf">test_gaining_information_about_hs</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span>
+    <span class="n">information_source_internet</span><span class="p">,</span>
+    <span class="n">information_source_magazine</span><span class="p">,</span>
+    <span class="n">information_source_preference_cut</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a houseowner can gain knowledge </span>
+<span class="sd">    of new heating systems from media sources.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># assuring that houseowner will definetelly chose some of the resources provided above</span>
+    <span class="c1"># because other possbile recources was already tested</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">source_preferences</span> <span class="o">=</span> <span class="n">information_source_preference_cut</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">list_of_sources</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">information_source_internet</span><span class="p">,</span>
+        <span class="n">information_source_magazine</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="test_gaining_information_about_hs_no_cognitive_resource">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_gaining_information_about_hs_no_cognitive_resource">[docs]</a>
+<span class="k">def</span> <span class="nf">test_gaining_information_about_hs_no_cognitive_resource</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span>
+    <span class="n">information_source_preference_cut</span><span class="p">,</span>
+    <span class="n">information_source_internet</span><span class="p">,</span>
+    <span class="n">information_source_magazine</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a houseowner with zero cognitive resources </span>
+<span class="sd">    cannot gain new information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">source_preferences</span> <span class="o">=</span> <span class="n">information_source_preference_cut</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">list_of_sources</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">information_source_internet</span><span class="p">,</span>
+        <span class="n">information_source_magazine</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<span class="c1"># to test define_choice method first we need to test calculate_attitude method</span>
+
+
+<div class="viewcode-block" id="test_calculate_attitude">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_attitude">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_attitude</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the calculated attitude (rating) </span>
+<span class="sd">    for a heating system is within the expected bounds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">heating_system_gas</span><span class="p">,</span>
+        <span class="n">heating_system_oil</span><span class="p">,</span>
+        <span class="n">heating_system_heat_pump</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">system</span> <span class="o">=</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_define_choice">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_define_choice">[docs]</a>
+<span class="k">def</span> <span class="nf">test_define_choice</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner identifies at least one suitable heating system </span>
+<span class="sd">    when budget is unlimited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">income</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">risk_tolerance</span> <span class="o">=</span> <span class="mf">1.0</span> 
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">uncertainty_factor</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">infeasible</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">heating_system_gas</span><span class="p">,</span>
+        <span class="n">heating_system_oil</span><span class="p">,</span>
+        <span class="n">heating_system_heat_pump</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">define_choice</span><span class="p">()</span>
+
+    <span class="c1"># by current maximum standard all heating systems are suitable</span>
+    <span class="c1"># taking into account that parameters of different heating systems can be changed and</span>
+    <span class="c1"># set randomly</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_define_choice_when_infeasible">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_define_choice_when_infeasible">[docs]</a>
+<span class="k">def</span> <span class="nf">test_define_choice_when_infeasible</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_oil</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that no suitable heating systems are chosen </span>
+<span class="sd">    if all known systems are marked as infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">heating_system_gas</span><span class="p">,</span>
+        <span class="n">heating_system_oil</span><span class="p">,</span>
+        <span class="n">heating_system_heat_pump</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">infeasible</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_gas&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Heating_system_oil&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">define_choice</span><span class="p">()</span>
+
+    <span class="c1"># each heating system is infeasible</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">==</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_social_norm">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_social_norm">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_social_norm</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the calculated social norm for a heating system </span>
+<span class="sd">    is a valid value between 0 and 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">successor</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_cell_list_contents</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)))</span>
+    <span class="p">}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_social_norm</span><span class="p">(</span><span class="n">heating_system_gas</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">social_norm</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">social_norm</span> <span class="o">&lt;=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_social_norm_no_opinions">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_social_norm_no_opinions">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_social_norm_no_opinions</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the social norm is 0 when there are no neighbours&#39; opinions available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">successor</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_cell_list_contents</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)))</span>
+    <span class="p">}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">neighbours_systems</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_social_norm</span><span class="p">(</span><span class="n">heating_system_gas</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">social_norm</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_PBC">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_PBC">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_PBC</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the Perceived Behavioural Control (PBC) </span>
+<span class="sd">    is calculated as a value between 0 and 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_PBC</span><span class="p">(</span><span class="n">heating_system_heat_pump</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">behavioural_control</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">behavioural_control</span> <span class="o">&lt;=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_integral_rating">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_integral_rating">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_integral_rating</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the final integral rating of suitable heating systems </span>
+<span class="sd">    falls within the expected range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Houseowner 65&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;Houseowner 182&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;Houseowner 97&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;Houseowner 96&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Plumber 23&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">]</span>
+
+    <span class="n">system_rating</span> <span class="o">=</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_integral_rating</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">system_rating</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">&lt;=</span> <span class="mi">3</span></div>
+
+
+
+<div class="viewcode-block" id="test_compare_hs">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_compare_hs">[docs]</a>
+<span class="k">def</span> <span class="nf">test_compare_hs</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner selects a desired heating system </span>
+<span class="sd">    after comparing suitable options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Houseowner 65&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;Houseowner 182&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;Houseowner 97&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;Houseowner 96&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Plumber 23&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_heat_pump</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">compare_hs</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="test_compare_hs_quitting">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_compare_hs_quitting">[docs]</a>
+<span class="k">def</span> <span class="nf">test_compare_hs_quitting</span><span class="p">(</span><span class="n">houseowner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner quits the decision process </span>
+<span class="sd">    if no suitable heating systems are found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">compare_hs</span><span class="p">()</span>
+
+    <span class="c1"># housewner has no good option and he quits</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_install_no_money">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_install_no_money">[docs]</a>
+<span class="k">def</span> <span class="nf">test_install_no_money</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">plumber</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the installation process is halted if the houseowner lacks the budget.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">plumber</span> <span class="o">=</span> <span class="n">plumber</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">==</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">==</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="test_install">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_install">[docs]</a>
+<span class="k">def</span> <span class="nf">test_install</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">plumber</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a plumber is correctly ordered when the houseowner decides </span>
+<span class="sd">    to install a heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">plumber</span> <span class="o">=</span> <span class="n">plumber</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">plumber</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">job_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">customer</span> <span class="o">==</span> <span class="n">houseowner</span></div>
+
+
+
+<div class="viewcode-block" id="test_install_return_to_compare_hs">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_install_return_to_compare_hs">[docs]</a>
+<span class="k">def</span> <span class="nf">test_install_return_to_compare_hs</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">plumber</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">,</span> <span class="n">heating_system_gas</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner re-evaluates choices </span>
+<span class="sd">    if their first desired system is found to be infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">plumber</span> <span class="o">=</span> <span class="n">plumber</span>
+    <span class="n">plumber</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">job_queue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">infeasible</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Setup for the alternative system (Gas)</span>
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Houseowner 65&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="c1"># ... other opinions ...</span>
+    <span class="p">}</span>
+    
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Plumber 23&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_heat_pump</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">]</span>
+
+    <span class="c1"># 1. First Install Attempt (Fails)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+    <span class="c1"># Verify the infeasible option was dropped and desired_hs reset</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">==</span> <span class="p">[</span><span class="n">heating_system_gas</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span>
+
+    <span class="c1"># 2. INTERMEDIATE STEP: Select the new system</span>
+    <span class="c1"># We must replenish cognitive resources because install() consumed them.</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">initial_cognitive_resource</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">compare_hs</span><span class="p">()</span>
+    
+    <span class="c1"># 3. Verify a new system was chosen (Gas)</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">heating_system_gas</span><span class="p">)</span>
+
+    <span class="c1"># 4. Second Install Attempt (Succeeds)</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+    
+    <span class="c1"># Check first service&#39;s (consultation) job queue list:</span>
+    <span class="k">assert</span> <span class="n">plumber</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">job_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">customer</span> <span class="o">==</span> <span class="n">houseowner</span></div>
+
+
+
+<div class="viewcode-block" id="test_system_has_been_installed">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_system_has_been_installed">[docs]</a>
+<span class="k">def</span> <span class="nf">test_system_has_been_installed</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner&#39;s state progresses after a successful installation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+
+    <span class="c1"># proceed to next stage</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">==</span> <span class="s2">&quot;Implementation&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_dissatisfaction">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_dissatisfaction">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_dissatisfaction</span><span class="p">(</span>
+    <span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">,</span> <span class="n">heating_system_gas</span><span class="p">,</span> <span class="n">heating_system_oil</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner becomes dissatisfied when their current system is</span>
+<span class="sd">    significantly worse than other known options.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The test depends on default parameter settings and is therefore not</span>
+<span class="sd">    reliable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># length of params for heating system will be maximum rating value</span>
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">heating_system_oil</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">heating_system_oil</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> 
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99999</span>
+    
+    <span class="n">heating_system_gas</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">heating_system_oil</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> 
+    <span class="n">heating_system_heat_pump</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99999</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">heating_system_heat_pump</span><span class="p">,</span>
+        <span class="n">heating_system_gas</span><span class="p">,</span>
+        <span class="n">heating_system_oil</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">heating_system_heat_pump</span><span class="p">,</span>
+        <span class="n">heating_system_gas</span><span class="p">,</span>
+        <span class="n">heating_system_oil</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_satisfaction</span><span class="p">()</span>
+
+    <span class="c1"># houseowner will be always dissatisfied</span>
+    <span class="c1"># because other current systems has a maximum possible rating</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">==</span> <span class="s2">&quot;Dissatisfied&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_calculate_satisfaction">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_calculate_satisfaction">[docs]</a>
+<span class="k">def</span> <span class="nf">test_calculate_satisfaction</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">heating_system_heat_pump</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that the houseowner is satisfied when their current system </span>
+<span class="sd">    is the only known/suitable option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">heating_system_heat_pump</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_heat_pump</span><span class="p">]</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="n">heating_system_heat_pump</span><span class="p">]</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">calculate_satisfaction</span><span class="p">()</span>
+
+    <span class="c1"># houseowner will be always satisfied</span>
+    <span class="c1"># because he has only one suitable heating system</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">==</span> <span class="s2">&quot;Satisfied&quot;</span></div>
+
+
+
+<span class="c1"># TODO uncomment after mileu implementation wil be added to main branch</span>
+
+<span class="c1"># def test_step_neighbour_jealousy(houseowner, neighbour, house, heating_system_gas, heating_system_oil, trigger_neighbour_jealousy, trigger_none):</span>
+<span class="c1">#     neighbour.satisfaction = &quot;Satisfied&quot;</span>
+
+<span class="c1">#     neighbour.house.current_heating = heating_system_gas</span>
+<span class="c1">#     houseowner.house.current_heating = heating_system_oil</span>
+
+<span class="c1">#     house.houseowner = neighbour</span>
+
+<span class="c1">#     houseowner.model.space.add_agents(house)</span>
+
+<span class="c1">#     # houseowner has new installed heating system</span>
+<span class="c1">#     # therefore triggers like &quot;Trigger_breakdown&quot;, &quot;Trigger_lifetime&quot; will not append to the active_trigger list</span>
+<span class="c1">#     houseowner.house.current_heating.age = 0</span>
+
+<span class="c1">#     houseowner.step()</span>
+
+<span class="c1">#     assert type(houseowner.active_trigger).__name__ == type(trigger_neighbour_jealousy).__name__</span>
+
+<span class="c1">#     neighbour.satisfaction = &quot;Dissatisfied&quot;</span>
+
+<span class="c1">#     houseowner.step()</span>
+
+<span class="c1">#     assert type(houseowner.active_trigger).__name__ == type(trigger_none).__name__</span>
+
+
+<div class="viewcode-block" id="test_step_breakdown">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_step_breakdown">[docs]</a>
+<span class="k">def</span> <span class="nf">test_step_breakdown</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">trigger_none</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that a heating system breakdown correctly </span>
+<span class="sd">    triggers the goal-setting breakpoint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># will force houseowner be triggered by breakdown</span>
+    <span class="c1"># and it should switch his breakpoint to &quot;goal&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">==</span> <span class="s2">&quot;Goal&quot;</span>
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="c1"># active trigger should be set to None</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">active_trigger</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">trigger_none</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+
+<div class="viewcode-block" id="test_step_lifetime">
+<a class="viewcode-back" href="../../application/api/tests.html#tests.test_houseowner.test_step_lifetime">[docs]</a>
+<span class="k">def</span> <span class="nf">test_step_lifetime</span><span class="p">(</span><span class="n">houseowner</span><span class="p">,</span> <span class="n">trigger_none</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests that an expired heating system lifetime </span>
+<span class="sd">    correctly triggers the goal-setting breakpoint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># will force houseowner be triggered by lifetime</span>
+    <span class="c1"># and it should switch his breakpoint to &quot;goal&quot;</span>
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">houseowner</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">==</span> <span class="s2">&quot;Goal&quot;</span>
+    <span class="c1"># active trigger should be set to None</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">houseowner</span><span class="o">.</span><span class="n">active_trigger</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">trigger_none</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

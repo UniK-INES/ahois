@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>analysis package &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="experiments package" href="experiments.html" />
+    <link rel="prev" title="agents.base package" href="agents.base.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">analysis package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-analysis-module">analysis.Analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-analysis-modules-module">analysis.Analysis_modules module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-analysis.Distributions_fit">analysis.Distributions_fit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-analysis.analyse_by_ahid">analysis.analyse_by_ahid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-analyse-sa-morris-module">analysis.analyse_sa_morris module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-analyse-sa-sobol-module">analysis.analyse_sa_sobol module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-analysis.dynaconf_filter">analysis.dynaconf_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-prepare-sa-settings-module">analysis.prepare_sa_settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-analysis.statistical_testing">analysis.statistical_testing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-analysis">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">analysis package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analysis-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">analysis package</a><a class="headerlink" href="#analysis-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#analysis-package" id="id1">analysis package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#analysis-analysis-module" id="id2">analysis.Analysis module</a></p></li>
+<li><p><a class="reference internal" href="#analysis-analysis-modules-module" id="id3">analysis.Analysis_modules module</a></p></li>
+<li><p><a class="reference internal" href="#module-analysis.Distributions_fit" id="id4">analysis.Distributions_fit module</a></p></li>
+<li><p><a class="reference internal" href="#module-analysis.analyse_by_ahid" id="id5">analysis.analyse_by_ahid module</a></p></li>
+<li><p><a class="reference internal" href="#analysis-analyse-sa-morris-module" id="id6">analysis.analyse_sa_morris module</a></p></li>
+<li><p><a class="reference internal" href="#analysis-analyse-sa-sobol-module" id="id7">analysis.analyse_sa_sobol module</a></p></li>
+<li><p><a class="reference internal" href="#module-analysis.dynaconf_filter" id="id8">analysis.dynaconf_filter module</a></p></li>
+<li><p><a class="reference internal" href="#analysis-prepare-sa-settings-module" id="id9">analysis.prepare_sa_settings module</a></p></li>
+<li><p><a class="reference internal" href="#module-analysis.statistical_testing" id="id10">analysis.statistical_testing module</a></p></li>
+<li><p><a class="reference internal" href="#module-analysis" id="id11">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="analysis-analysis-module">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">analysis.Analysis module</a><a class="headerlink" href="#analysis-analysis-module" title="Link to this heading"></a></h2>
+</section>
+<section id="analysis-analysis-modules-module">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">analysis.Analysis_modules module</a><a class="headerlink" href="#analysis-analysis-modules-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-analysis.Distributions_fit">
+<span id="analysis-distributions-fit-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">analysis.Distributions_fit module</a><a class="headerlink" href="#module-analysis.Distributions_fit" title="Link to this heading"></a></h2>
+<p>Fits statistical distributions to survey data on user preferences.</p>
+<p>This script reads user preference data from an Excel file, preprocesses it,
+and fits a beta distribution to several data columns for different user groups.
+The primary goal is to find the parameters (alpha, beta) of a beta
+distribution that best describes the empirical data for each preference.</p>
+<p>For each user group and preference variable, the script performs the following:
+1.  Loads and preprocesses the data by handling NaNs, truncating outliers,</p>
+<blockquote>
+<div><p>and normalising values to the (0, 1) interval.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Fits a beta distribution using SciPy’s <cite>beta.fit</cite> method.</p></li>
+<li><p>Generates and saves diagnostic plots (QQ plot and CDF comparison) to
+visually assess the goodness-of-fit.</p></li>
+<li><p>Performs a Kolmogorov-Smirnov (K-S) test to statistically quantify
+the goodness-of-fit.</p></li>
+<li><p>Exports the fitted distribution parameters and K-S test results to an
+Excel file for further use and analysis.</p></li>
+</ol>
+<p>The script also contains a commented-out section for fitting a Weibull
+distribution, which follows a similar process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="module-analysis.analyse_by_ahid">
+<span id="analysis-analyse-by-ahid-module"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">analysis.analyse_by_ahid module</a><a class="headerlink" href="#module-analysis.analyse_by_ahid" title="Link to this heading"></a></h2>
+<p>Performs analysis and visualisation of model outputs using methods 
+of AgentHomeID (ahid) by Fraunhofer IEE.</p>
+<p>This script acts as a bridge to reuse visualisation capabilities. 
+It loads and transforms the output data from the
+current model into a format compatible with the ‘ahid’ plotting functions.
+Using Python’s ‘mock’ library, it intercepts data loading calls within the
+‘ahid’ functions, injects the transformed data, and generates the desired plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.analyse_by_ahid.read_output_data">
+<span class="sig-name descname"><span class="pre">read_output_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/analyse_by_ahid.html#read_output_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.analyse_by_ahid.read_output_data" title="Link to this definition"></a></dt>
+<dd><p>Reads the agent output DataFrame from a pickle file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>run_id</strong><span class="classifier">int, optional</span></dt><dd><p>The ID of the simulation run from which to load the data. 
+If None, it uses the default path settings.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>A DataFrame containing the agent data for the specified run.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.analyse_by_ahid.convert_output_data">
+<span class="sig-name descname"><span class="pre">convert_output_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/analyse_by_ahid.html#convert_output_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.analyse_by_ahid.convert_output_data" title="Link to this definition"></a></dt>
+<dd><p>Converts and reformats the model’s output data for ‘ahid’ compatibility.</p>
+<p>This function fetches the raw agent data and applies several transformations
+to make it suitable for the ‘building_stock_model’ evaluation functions.
+Transformations include adding a scale factor, renaming columns to match
+the expected schema, adding a placeholder ID, and converting simulation
+steps into calendar years. The result is cached to avoid redundant processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>The transformed and analysis-ready DataFrame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.analyse_by_ahid.ahoi_plot_total_num_heatingsystems">
+<span class="sig-name descname"><span class="pre">ahoi_plot_total_num_heatingsystems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocked_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mocked_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/analyse_by_ahid.html#ahoi_plot_total_num_heatingsystems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.analyse_by_ahid.ahoi_plot_total_num_heatingsystems" title="Link to this definition"></a></dt>
+<dd><p>Generates a plot of the total number of heating systems using an ‘ahid’ function.</p>
+<p>This wrapper uses mocking to inject the model’s converted data into the
+<cite>plot_total_num_heatingsystems</cite> function from the ‘building_stock_model’.
+It bypasses that function’s data loading and path discovery mechanisms,
+allowing it to work directly with the local model’s output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mocked_path</strong><span class="classifier">unittest.mock.MagicMock</span></dt><dd><p>A mock object that replaces <cite>get_output_path</cite> in the target module.</p>
+</dd>
+<dt><strong>mocked_data</strong><span class="classifier">unittest.mock.MagicMock</span></dt><dd><p>A mock object that replaces <cite>get_data</cite> in the target module.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.analyse_by_ahid.ahoi_plot_share_heatingsystems__sns">
+<span class="sig-name descname"><span class="pre">ahoi_plot_share_heatingsystems__sns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mocked_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mocked_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/analyse_by_ahid.html#ahoi_plot_share_heatingsystems__sns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.analyse_by_ahid.ahoi_plot_share_heatingsystems__sns" title="Link to this definition"></a></dt>
+<dd><p>Generates a plot of the market share of heating systems using an ‘ahid’ function.</p>
+<p>Similar to <cite>ahoi_plot_total_num_heatingsystems</cite>, this wrapper uses
+mocking to inject this model’s data into the <cite>plot_share_heatingsystems__sns</cite>
+visualisation function from the ‘building_stock_model’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mocked_path</strong><span class="classifier">unittest.mock.MagicMock</span></dt><dd><p>A mock object that replaces <cite>get_output_path</cite> in the target module.</p>
+</dd>
+<dt><strong>mocked_data</strong><span class="classifier">unittest.mock.MagicMock</span></dt><dd><p>A mock object that replaces <cite>get_data</cite> in the target module.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="analysis-analyse-sa-morris-module">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">analysis.analyse_sa_morris module</a><a class="headerlink" href="#analysis-analyse-sa-morris-module" title="Link to this heading"></a></h2>
+</section>
+<section id="analysis-analyse-sa-sobol-module">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">analysis.analyse_sa_sobol module</a><a class="headerlink" href="#analysis-analyse-sa-sobol-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-analysis.dynaconf_filter">
+<span id="analysis-dynaconf-filter-module"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">analysis.dynaconf_filter module</a><a class="headerlink" href="#module-analysis.dynaconf_filter" title="Link to this heading"></a></h2>
+<p>Provides a custom Dynaconf loader that merges settings without overriding.</p>
+<p>This module contains a custom loader function for the Dynaconf settings
+management library. Unlike the default loaders which override existing keys,
+this loader implements a “fill-in” logic. It reads settings from specified
+TOML files and only adds keys (or sub-keys) that are not already present in the
+settings object. This is particularly useful for loading default values that
+should not overwrite any user-specified configurations.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.dynaconf_filter.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/dynaconf_filter.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.dynaconf_filter.load" title="Link to this definition"></a></dt>
+<dd><p>Loads settings from TOML files without overriding existing values.</p>
+<p>This function iterates through a list of filenames defined in the settings
+variable <cite>EVAL.AHID_SETTINGS_FILES</cite>. For each file, it parses the content
+and merges it into the main settings object (<cite>obj</cite>) under the condition
+that the keys do not already exist.</p>
+<p>The merging logic is as follows:
+1. If a top-level key from the file is not in <cite>obj</cite>, the key and its</p>
+<blockquote>
+<div><p>entire value are added.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>If a top-level key exists, the function checks its sub-keys. Only the
+sub-keys from the file that are not already in <cite>obj[key]</cite> are added.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>obj</strong><span class="classifier">dynaconf.base.LazySettings</span></dt><dd><p>The Dynaconf settings instance to be loaded into.</p>
+</dd>
+<dt><strong>env</strong><span class="classifier">str, optional</span></dt><dd><p>The environment to load. This parameter is part of the standard loader
+signature but is not used by this function. Defaults to None.</p>
+</dd>
+<dt><strong>silent</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, exceptions during file loading (e.g., file not found) are
+suppressed. Defaults to True.</p>
+</dd>
+<dt><strong>key</strong><span class="classifier">str, optional</span></dt><dd><p>Load only this specific key. This parameter is not used by this
+function. Defaults to None.</p>
+</dd>
+<dt><strong>filename</strong><span class="classifier">str, optional</span></dt><dd><p>A specific file to be loaded. This parameter is not used; the function
+relies on the <cite>EVAL.AHID_SETTINGS_FILES</cite> list in <cite>obj</cite>. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="analysis-prepare-sa-settings-module">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">analysis.prepare_sa_settings module</a><a class="headerlink" href="#analysis-prepare-sa-settings-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-analysis.statistical_testing">
+<span id="analysis-statistical-testing-module"></span><h2><a class="toc-backref" href="#id10" role="doc-backlink">analysis.statistical_testing module</a><a class="headerlink" href="#module-analysis.statistical_testing" title="Link to this heading"></a></h2>
+<p>Performs a Mann-Whitney U statistical test to compare model outputs.</p>
+<p>This script is designed to assess the statistical significance of differences
+in simulation outputs between two experimental scenarios (e.g., a baseline vs.
+a policy intervention). It locates and loads pickled model DataFrames based on
+a naming convention that includes the scenario, run ID, and an experiment prefix.</p>
+<p>The script specifically extracts data on installation obstacles encountered 
+by agents for various heating systems. 
+It aggregates this data across multiple simulation seeds
+for each of the two scenarios being compared. Finally, it performs a
+non-parametric Mann-Whitney U test on the collected samples for each obstacle
+and prints the p-values to the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="analysis.statistical_testing.perform_obstacle_significance_test">
+<span class="sig-name descname"><span class="pre">perform_obstacle_significance_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenarios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario1_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario2_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/analysis/statistical_testing.html#perform_obstacle_significance_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#analysis.statistical_testing.perform_obstacle_significance_test" title="Link to this definition"></a></dt>
+<dd><p>Compares obstacle data between two scenarios using the Mann-Whitney U test.</p>
+<p>This function handles the process of finding data, aggregating it, and
+running statistical tests.</p>
+<p>The workflow is as follows:
+1.  <strong>Data Aggregation</strong>: It iterates through the specified scenarios and</p>
+<blockquote>
+<div><p>run IDs, searching for output pickle files matching <cite>scenario1_prefix</cite>
+and <cite>scenario2_prefix</cite>. For each file found (representing one seed),
+it extracts the ‘Obstacles’ dictionary from the last time step. The
+obstacle values are collected into two main groups corresponding to the
+two prefixes.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><strong>Statistical Testing</strong>: After gathering data from all seeds, it
+iterates through each heating system and obstacle type. For each
+obstacle, it compares the sample of values from the first scenario
+against the sample from the second.</p></li>
+<li><p><strong>Output</strong>: A two-sided Mann-Whitney U test is performed. The resulting
+p-value is printed to the console, along with an interpretation of
+whether the difference is significant at the p &lt; 0.05 level.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>scenarios</strong><span class="classifier">list</span></dt><dd><p>A list of scenario class name strings to analyse.</p>
+</dd>
+<dt><strong>run_ids</strong><span class="classifier">list</span></dt><dd><p>A list of integer run IDs to include in the analysis.</p>
+</dd>
+<dt><strong>scenario1_prefix</strong><span class="classifier">str</span></dt><dd><p>The file prefix for the first group, typically the baseline or
+control group (e.g., ‘DEZ_Baseline’).</p>
+</dd>
+<dt><strong>scenario2_prefix</strong><span class="classifier">str</span></dt><dd><p>The file prefix for the second group, typically the treatment or
+campaign group (e.g., ‘DEZ_Beraterkampagne’).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-analysis">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id11" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-analysis" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agents.base.html" class="btn btn-neutral float-left" title="agents.base package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="experiments.html" class="btn btn-neutral float-right" title="experiments package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

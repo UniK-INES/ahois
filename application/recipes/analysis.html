@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="APIs" href="../api.html" />
+    <link rel="prev" title="SLURM-managed Cluster Runs" href="slurmClusterRuns.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../recipes.html">Recipes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="slurmClusterRuns.html">SLURM-managed Cluster Runs</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#figures">Figures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../recipes.html">Recipes</a></li>
+      <li class="breadcrumb-item active">Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/recipes/analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analysis">
+<span id="recipes-analysis"></span><h1>Analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#figures" id="id4">Figures</a></p>
+<ul>
+<li><p><a class="reference internal" href="#figure-labels" id="id5">Figure labels</a></p>
+<ul>
+<li><p><a class="reference internal" href="#update-new-labels-from-code" id="id6">Update new labels from code</a></p></li>
+<li><p><a class="reference internal" href="#editing-labels" id="id7">Editing Labels</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#compare-scenarios" id="id8">Compare Scenarios</a></p></li>
+<li><p><a class="reference internal" href="#slide-generation" id="id9">Slide Generation</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="figures">
+<h2><a class="toc-backref" href="#contents" role="doc-backlink">Figures</a><a class="headerlink" href="#figures" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="./AHOISpro_Figures_Overview_SH.ods">Overview of implemented figures</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may set global matplotlib setting in a .plt file specified by
+<cite>settings.data.plt_settings</cite> (default is <cite>plotting/config_plt_unik.yaml</cite>).</p>
+</div>
+<section id="figure-labels">
+<span id="recipes-analysis-figurelabels"></span><h3><a class="toc-backref" href="#contents" role="doc-backlink">Figure labels</a><a class="headerlink" href="#figure-labels" title="Link to this heading"></a></h3>
+<p>Labels of figures work via l18n, using python’s gettext feature, i.e. figures can be labeled by any translation which is defined
+by the setting <cite>AHOI_EVAL__LANGUAGE</cite>.</p>
+<section id="update-new-labels-from-code">
+<h4><a class="toc-backref" href="#contents" role="doc-backlink">Update new labels from code</a><a class="headerlink" href="#update-new-labels-from-code" title="Link to this heading"></a></h4>
+<p>Update the Portable Object Template (POT) file (call in AHOIS’ root folder):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">extract_messages</span>
+        <span class="o">--</span><span class="n">output</span><span class="o">-</span><span class="n">file</span><span class="o">=</span><span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi_parsed</span><span class="o">.</span><span class="n">pot</span>
+</pre></div>
+</div>
+<p>Combine (automatically) created POT-file with (manually) defined POT file with outside-code-strings (e.g. defined in settings):</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p><cite>xgettext</cite> is shipped with <a class="reference external" href="https://poedit.net/">POedit</a> (see below). To make it available at the command line
+add the bin folder (e.g. <cite>C:\Program Files (x86)\Poedit\GettextTools\bin</cite>) to your PATH-variable.</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Unix</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xgettext</span> <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi_parsed</span><span class="o">.</span><span class="n">pot</span>
+        <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi_manual</span><span class="o">.</span><span class="n">pot</span>
+        <span class="o">-</span><span class="n">o</span> <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi</span><span class="o">.</span><span class="n">pot</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Windows</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xgettext</span><span class="o">.</span><span class="n">exe</span> <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi_parsed</span><span class="o">.</span><span class="n">pot</span>
+        <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi_manual</span><span class="o">.</span><span class="n">pot</span>
+        <span class="o">-</span><span class="n">o</span> <span class="n">src</span><span class="o">/</span><span class="n">helpers</span><span class="o">/</span><span class="n">ahoi</span><span class="o">.</span><span class="n">pot</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="editing-labels">
+<h4><a class="toc-backref" href="#contents" role="doc-backlink">Editing Labels</a><a class="headerlink" href="#editing-labels" title="Link to this heading"></a></h4>
+<p>Often it makes sense to create a separate language/label set per project to label figures with project-specific terms.
+<strong>New languages</strong> can be added as follows:</p>
+<p>Create a .po file for the new language/label set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">init_catalog</span>  <span class="o">-</span><span class="n">l</span> <span class="n">en_GB</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Often it is useful to build upon existing translations. To do so copy the desired translation (<cite>ahid.po</cite>) to the new translation’s
+place: <cite>building_stock_model/locale/&lt;LOCALE&gt;/LC_MESSAGES/ahid.po</cite></p>
+</div>
+<p>Fill the translations within the newly created .po file at <cite>src/helpers/&lt;LOCALE&gt;/LC_MESSAGES</cite>
+by either using a text editor or <a class="reference external" href="https://poedit.net/">POedit</a>.
+Using POedit the required machine readable versions of the .po files (.mo) files are created automatically when saving.
+Otherwise call:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">compile_catalog</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Many labels for subsamples of result data such as building types, owner types, energy carriers, or building parts are
+defined in an excel file (default: FigureLabels.xlsx). To translate these, store the excel file with a langauge specific
+name (e.g. “FigureLabels_en_GB.xlsx”) according to <cite>eval.language</cite> and edit the label columns within the excel sheets.</p>
+</div>
+</section>
+</section>
+<section id="compare-scenarios">
+<h3><a class="toc-backref" href="#contents" role="doc-backlink">Compare Scenarios</a><a class="headerlink" href="#compare-scenarios" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Choose scenarios/files_prefixes to compare:</p>
+<blockquote>
+<div><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[scenario_comparison]</span>
+<span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">scenarios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Scenario_mix_pellet_heat_pump&quot;</span><span class="p">]</span>
+<span class="n">files_prefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;DEZ_Baseline&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;DEZ_Beraterkampagne&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Select plots to create:</p>
+<blockquote>
+<div><div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[scenario_comparison]</span>
+<span class="n">compare_fulfillment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_emissions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_energy_demand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_optimality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_opex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_total_expenses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_total_effort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_heating_systems_distribution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_hs_knowledge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">compare_obstacles_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">compare_obstacles_step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span>
+<span class="n">compare_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>Execute <cite>python Built_plots.py</cite></p></li>
+</ol>
+</section>
+<section id="slide-generation">
+<h3><a class="toc-backref" href="#contents" role="doc-backlink">Slide Generation</a><a class="headerlink" href="#slide-generation" title="Link to this heading"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="slurmClusterRuns.html" class="btn btn-neutral float-left" title="SLURM-managed Cluster Runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api.html" class="btn btn-neutral float-right" title="APIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

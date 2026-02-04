@@ -1,0 +1,1284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents.Plumber &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agents.Plumber</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agents.Plumber</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the Plumber agent and its consultation and installation services.</span>
+
+<span class="sd">This module contains the `Plumber` class, an intermediary agent responsible for </span>
+<span class="sd">consulting houseowners about heating system options and installing new systems. </span>
+<span class="sd">It includes two service classes, `ConsultationServicePlumber` and </span>
+<span class="sd">`InstallationServicePlumber`, which manage the respective job queues and the </span>
+<span class="sd">logic for these tasks.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_plumber_run</span>
+<span class="kn">from</span> <span class="nn">modules.Heating_systems</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Heating_system_oil</span><span class="p">,</span>
+    <span class="n">Heating_system_gas</span><span class="p">,</span>
+    <span class="n">Heating_system_heat_pump</span><span class="p">,</span>
+    <span class="n">Heating_system_heat_pump_brine</span><span class="p">,</span>
+    <span class="n">Heating_system_electricity</span><span class="p">,</span>
+    <span class="n">Heating_system_pellet</span><span class="p">,</span>
+    <span class="n">Heating_system_network_district</span><span class="p">,</span>
+    <span class="n">Heating_system_network_local</span><span class="p">,</span>
+    <span class="n">Heating_system_GP_Joule</span><span class="p">,</span>
+    <span class="n">Heating_system_vacuum_tube</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">helpers.utils</span> <span class="kn">import</span> <span class="n">influence_by_relative_agreement</span>
+<span class="kn">from</span> <span class="nn">interventions.Loans</span> <span class="kn">import</span> <span class="n">Loan</span>
+<span class="kn">from</span> <span class="nn">interventions.Subsidy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">agents.base.Intermediary</span> <span class="kn">import</span> <span class="n">Intermediary</span>
+<span class="kn">from</span> <span class="nn">agents.base.Service</span> <span class="kn">import</span> <span class="n">Service</span>
+<span class="kn">from</span> <span class="nn">agents.base.Job</span> <span class="kn">import</span> <span class="n">Job</span><span class="p">,</span> <span class="n">IService</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi.intermediary.plumber&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConsultationServicePlumber">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.ConsultationServicePlumber">[docs]</a>
+<span class="k">class</span> <span class="nc">ConsultationServicePlumber</span><span class="p">(</span><span class="n">Service</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A service for handling heating system consultations by a Plumber.</span>
+
+<span class="sd">    When a consultation job is completed, this service triggers the Plumber&#39;s </span>
+<span class="sd">    `consultation` method, where the Plumber shares knowledge, provides </span>
+<span class="sd">    recommendations, or performs a feasibility check on a desired heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intermediary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the consultation service for a Plumber.</span>
+<span class="sd">        Sets plumber-specific default job duration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">intermediary</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">cons_duration</span>
+
+<div class="viewcode-block" id="ConsultationServicePlumber.begin_job">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.ConsultationServicePlumber.begin_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">begin_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Begins a consultation job.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">begin_job</span><span class="p">()</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Begin job </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConsultationServicePlumber.complete_job">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.ConsultationServicePlumber.complete_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Completes a consultation job by calling the Plumber&#39;s `consultation` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : Job</span>
+<span class="sd">            The consultation job to be completed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Complete job </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">complete_job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">consultation</span><span class="p">(</span><span class="n">job</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="InstallationServicePlumber">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.InstallationServicePlumber">[docs]</a>
+<span class="k">class</span> <span class="nc">InstallationServicePlumber</span><span class="p">(</span><span class="n">Service</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A service for managing and executing heating system installations.</span>
+
+<span class="sd">    This service manages the queue for installation jobs. It has a custom </span>
+<span class="sd">    `queue_job` method to handle variable installation times. When a job is </span>
+<span class="sd">    completed, it triggers the Plumber&#39;s `installation` method to finalise the </span>
+<span class="sd">    process in the simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intermediary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the installation service for a Plumber.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">intermediary</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">ins_duration</span>
+    
+<div class="viewcode-block" id="InstallationServicePlumber.queue_job">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.InstallationServicePlumber.queue_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">houseowner</span><span class="p">,</span> <span class="n">installation_time</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds an installation job to the queue with a specific duration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        houseowner : Houseowner</span>
+<span class="sd">            The customer for whom the installation will be performed.</span>
+<span class="sd">        installation_time : int</span>
+<span class="sd">            The specific time required for this type of heating system installation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">==</span> <span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Houseowner </span><span class="si">{</span><span class="n">houseowner</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="s2"> already has a queued installation.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Job</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_id</span><span class="p">(),</span> 
+                                  <span class="n">houseowner</span><span class="p">,</span> 
+                                  <span class="bp">self</span><span class="p">,</span> 
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="o">+</span><span class="n">installation_time</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="InstallationServicePlumber.begin_job">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.InstallationServicePlumber.begin_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">begin_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Begins an installation job.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">begin_job</span><span class="p">()</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Begin job </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="InstallationServicePlumber.complete_job">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.InstallationServicePlumber.complete_job">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Completes an installation job by calling the Plumber&#39;s `installation` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : Job</span>
+<span class="sd">            The installation job to be completed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Complete job </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">complete_job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediary</span><span class="o">.</span><span class="n">installation</span><span class="p">(</span><span class="n">job</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Plumber">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber">[docs]</a>
+<span class="k">class</span> <span class="nc">Plumber</span><span class="p">(</span><span class="n">Intermediary</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An intermediary agent who consults on and installs heating systems.</span>
+
+<span class="sd">    The Plumber agent models a trade professional who interacts directly with </span>
+<span class="sd">    Houseowners. Plumbers have their own knowledge base of heating systems, which </span>
+<span class="sd">    can be expanded through `training`. They provide consultations to help </span>
+<span class="sd">    Houseowners choose a system and are responsible for the entire installation </span>
+<span class="sd">    process, from feasibility checks to final implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">unique_id</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">heating_preferences</span><span class="p">,</span>
+        <span class="n">standard</span><span class="p">,</span>
+        <span class="n">current_heating</span><span class="p">,</span>
+        <span class="n">cognitive_resource</span><span class="p">,</span>
+        <span class="n">aspiration_value</span><span class="p">,</span>
+        <span class="n">known_hs</span><span class="p">,</span>
+        <span class="n">suitable_hs</span><span class="p">,</span>
+        <span class="n">desired_hs</span><span class="p">,</span>
+        <span class="n">hs_budget</span><span class="p">,</span>
+        <span class="n">current_breakpoint</span><span class="p">,</span>
+        <span class="n">current_stage</span><span class="p">,</span>
+        <span class="n">satisfaction</span><span class="p">,</span>
+        <span class="n">active_trigger</span><span class="p">,</span>
+        <span class="n">active_jobs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">completed_jobs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_concurrent_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">active_jobs_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">known_subsidies</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a Plumber agent.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Many parameters are inherited from the Houseowner class for data </span>
+<span class="sd">        collector compatibility and may not be directly used in the Plumber&#39;s logic.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unique_id : int</span>
+<span class="sd">            The unique identifier for the agent.</span>
+<span class="sd">        model : mesa.Model</span>
+<span class="sd">            The main model instance.</span>
+<span class="sd">        heating_preferences : Heating_preferences</span>
+<span class="sd">            The agent&#39;s preferences for evaluating heating systems.</span>
+<span class="sd">        known_hs : list</span>
+<span class="sd">            A list of known `Heating_system` objects.</span>
+<span class="sd">        known_subsidies : list</span>
+<span class="sd">            A list of known `Subsidy` objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Other attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heating_preferences</span> <span class="o">=</span> <span class="n">heating_preferences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="n">standard</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">current_heating</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="n">cognitive_resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">aspiration_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="n">known_hs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="n">suitable_hs</span> <span class="k">if</span> <span class="n">suitable_hs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="n">desired_hs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">=</span> <span class="n">hs_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="n">current_breakpoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="n">current_stage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">=</span> <span class="n">satisfaction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_trigger</span> <span class="o">=</span> <span class="n">active_trigger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_counter</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trigger_for_record</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infeasible</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suboptimality</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plumber specific parameters below&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies</span> <span class="o">=</span> <span class="n">known_subsidies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organize_subsidies</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consultation_power</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Plumber&#39;s ability to process his queues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_power</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Plumber&#39;s ability to process his queues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients_systems</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#{neighbour_id: system_name}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">unique_id</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">,</span>
+            <span class="n">heating_preferences</span><span class="p">,</span>
+            <span class="n">known_hs</span><span class="p">,</span>
+            <span class="n">active_jobs</span><span class="p">,</span>
+            <span class="n">completed_jobs</span><span class="p">,</span>
+            <span class="n">max_concurrent_jobs</span><span class="p">,</span>
+            <span class="n">active_jobs_counter</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">heating</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_system</span><span class="p">(</span><span class="n">heating</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">Services</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ConsultationServicePlumber</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">InstallationServicePlumber</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+        <span class="p">]</span>
+        
+        <span class="c1"># Calculate values for the systems for an average house</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                <span class="n">area</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">assume_area_avg</span><span class="p">,</span>
+                <span class="n">energy_demand</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">assume_energydemand_avg</span><span class="p">,</span>
+                <span class="n">heat_load</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">assume_heatload_avg</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rng_plumber_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_lower</span><span class="p">,</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+                    <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_system</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+            
+
+<div class="viewcode-block" id="Plumber.check_job_completion">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.check_job_completion">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_job_completion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks for and finalises any jobs scheduled for completion at the current step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        steps : int</span>
+<span class="sd">            The current simulation step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">job_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">job_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">completed_jobs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">complete_job</span><span class="p">(</span><span class="n">job</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plumber.estimate_queue_time">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.estimate_queue_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">estimate_queue_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates the total waiting time for a given service queue.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        q_type : str</span>
+<span class="sd">            The name of the service queue (&#39;Consultation&#39; or &#39;Installation&#39;).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The estimated total duration in steps for all jobs in the queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">q_type</span> <span class="o">==</span> <span class="s2">&quot;Consultation&quot;</span><span class="p">:</span>
+            <span class="n">estimate</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">last_active_job</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">active_jobs_length</span> <span class="o">=</span> <span class="n">last_active_job</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span>
+            <span class="n">estimate</span> <span class="o">+=</span> <span class="n">active_jobs_length</span>
+            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">job_queue</span><span class="p">:</span>
+                <span class="n">estimate</span> <span class="o">+=</span> <span class="n">job</span><span class="o">.</span><span class="n">duration</span>
+            <span class="k">return</span> <span class="n">estimate</span>
+        
+        <span class="k">elif</span> <span class="n">q_type</span> <span class="o">==</span> <span class="s2">&quot;Installation&quot;</span><span class="p">:</span>
+            <span class="n">estimate</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">last_active_job</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_jobs</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+            <span class="n">active_jobs_length</span> <span class="o">=</span> <span class="n">last_active_job</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span>
+            <span class="n">estimate</span> <span class="o">+=</span> <span class="n">active_jobs_length</span>
+            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">job_queue</span><span class="p">:</span>
+                <span class="n">estimate</span> <span class="o">+=</span> <span class="n">job</span><span class="o">.</span><span class="n">duration</span>
+            <span class="k">return</span> <span class="n">estimate</span></div>
+
+<span class="w">        </span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The part about plumber obtaining new knowledge and skills&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Plumber.training">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.training">[docs]</a>
+    <span class="k">def</span> <span class="nf">training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expands the Plumber&#39;s knowledge by learning about a new heating system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># logger.info(&quot;I want to educate myself!&quot;)</span>
+        <span class="n">all_options</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems</span><span class="o">.</span><span class="n">list</span>
+        <span class="p">)</span>  <span class="c1"># List of options available during training</span>
+        <span class="n">known_options</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+        <span class="p">)</span>  <span class="c1"># List of types of known HS</span>
+
+        <span class="n">possible_additions</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">all_options</span> <span class="k">if</span> <span class="n">o</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_options</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Possible additions: </span><span class="si">{</span><span class="n">possible_additions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> 
+        
+        <span class="k">if</span> <span class="n">possible_additions</span><span class="p">:</span>
+            <span class="n">randomizer</span> <span class="o">=</span> <span class="n">rng_plumber_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                <span class="n">possible_additions</span>
+            <span class="p">)</span>  <span class="c1"># Randomly choose one type among possible to learn</span>
+            <span class="k">if</span> <span class="n">system</span><span class="p">:</span>
+                <span class="n">actual_addition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">actual_addition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">randomizer</span><span class="p">)</span>
+            <span class="n">actual_addition</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span><span class="n">area</span><span class="o">=</span><span class="mi">106</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="mi">147</span><span class="p">,</span>
+                                                     <span class="n">heat_load</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">actual_addition</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rng_plumber_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_lower</span><span class="p">,</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+                    <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Added through training: </span><span class="si">{</span><span class="n">actual_addition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    
+                        
+            <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">actual_addition</span>
+            <span class="p">)</span>  <span class="c1"># Add previous row&#39;s result to known_hs</span>
+            <span class="c1"># logger.info(&quot;I learned about {}&quot;.format(type(self.known_hs[-1]).__name__))</span>
+            <span class="k">for</span> <span class="n">heating</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_system</span><span class="p">(</span><span class="n">heating</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># logger.info(&quot;Apparently, I already know everything!&quot;)</span>
+            <span class="k">pass</span></div>
+
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The part about plumber consulting agents to inform them about heating systems and feasibility of their chosen heating&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Plumber.consultation">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.consultation">[docs]</a>
+    <span class="k">def</span> <span class="nf">consultation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs a consultation for a houseowner.</span>
+
+<span class="sd">        This method has two main paths:</span>
+<span class="sd">        1. If the houseowner has no desired system, the Plumber shares knowledge</span>
+<span class="sd">           about various systems and provides a recommendation.</span>
+<span class="sd">        2. If the houseowner has a desired system, the Plumber checks its </span>
+<span class="sd">           feasibility, verifies the houseowner&#39;s ability to afford it (including </span>
+<span class="sd">           subsidies and loans), updates the final costs, and, if successful, </span>
+<span class="sd">           queues an installation job.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : Job</span>
+<span class="sd">            The consultation job containing the customer information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">agent_to_consult</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">customer</span>
+        <span class="c1"># Consultation part if agent has no desired HS, i.e. is gathering information</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span>
+        <span class="p">):</span>  <span class="c1"># The plumber shares knowledge about known HS</span>
+            <span class="c1"># logger.info(&quot;I share my knowledge with {}!&quot;.format(id_to_consult))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">share_knowledge</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">share_rating</span><span class="p">(</span>
+                <span class="n">agent_to_consult</span>
+            <span class="p">)</span>  <span class="c1"># Pass the plumber&#39;s ratings to the opinions of an agent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">share_systems</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>
+            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Consultation part if agent has a desired HS, i.e. needs a feasibility check</span>
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">!=</span> <span class="s2">&quot;No&quot;</span>
+        <span class="p">):</span>  <span class="c1"># The plumber evaluates feasibility of the chosen HS</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">insulation_threshold</span>
+                <span class="ow">and</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">insulation_list</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;Failure&quot;</span>
+                
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">))</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">):</span>
+                <span class="c1"># logger.info(&quot;I don&#39;t know this system. We cannot work together!&quot;)</span>
+                    <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">plumber</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">unqualified_plumbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)</span>
+                    <span class="k">return</span>
+                
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;Failure&quot;</span>
+                <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">replacement_mandates</span> 
+                     <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                     <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">systems_mandate</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">enforcement</span> 
+                     <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                     <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">enforcement_systems</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="s2">&quot;Scenario_perfect&quot;</span>
+            <span class="p">):</span>
+                <span class="c1"># logger.info(&quot;{}&#39;s desired HS is infeasible!&quot;.format(id_to_consult))</span>
+                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="p">)</span>
+                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+               
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># logger.info(&quot;{}&#39;s desired HS is feasible! I added it to the installation queue&quot;.format(id_to_consult))</span>
+                <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                        <span class="n">area</span><span class="o">=</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> 
+                        <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+                        <span class="n">heat_load</span><span class="o">=</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">share_rating</span><span class="p">(</span>
+                    <span class="n">agent_to_consult</span>
+                <span class="p">)</span>  <span class="c1"># Pass the plumber&#39;s ratings to the opinions of an agent</span>
+                <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                        <span class="c1"># If the desired_hs is more expensive than expected</span>
+                        <span class="n">hs_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span>
+                        <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">calculate_installation_costs</span><span class="p">(</span><span class="n">area</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span>
+                                                                                          <span class="n">heat_load</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span><span class="p">)</span>
+                        <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">calculate_operating_costs</span><span class="p">(</span><span class="n">area</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span>
+                                                                                      <span class="n">heat_load</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">heat_delivery_contract</span><span class="p">:</span>
+                            <span class="n">can_afford_and_sustain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_affordability</span><span class="p">(</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">can_afford_and_sustain</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">queue_job</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">,</span>
+                                                   <span class="n">installation_time</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">installation_time</span><span class="p">)</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+                                
+                            <span class="k">elif</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;Goal&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 2&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_stage_2&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_drop&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                        
+                        <span class="k">elif</span> <span class="p">(</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="p">):</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            
+                            <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">hs_copy</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span>
+                                <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span> <span class="n">agent_to_consult</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+                                    <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">find_loan</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span>
+                                                               <span class="n">bypass_avoidance</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                            
+                            <span class="n">can_afford_and_sustain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_affordability</span><span class="p">(</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">can_afford_and_sustain</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">queue_job</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">,</span>
+                                                           <span class="n">installation_time</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">installation_time</span><span class="p">)</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+                            
+                            <span class="k">elif</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;Goal&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 2&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_stage_2&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_drop&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                                
+                        
+                        <span class="k">elif</span> <span class="p">(</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="o">&gt;</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="p">):</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">subsidised</span>
+                                <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs_copy</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span>
+                                <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span> 
+                                                     <span class="n">agent_to_consult</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">find_loan</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span>
+                                                           <span class="n">bypass_avoidance</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                            <span class="c1"># Adds an agent to the installation queue if feasible</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">queue_job</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">,</span>
+                                                       <span class="n">installation_time</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">installation_time</span><span class="p">)</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># Adds an agent to the installation queue if feasible</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs_copy</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">subsidised</span>
+                                <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs_copy</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span>
+                                <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span> 
+                                                     <span class="n">agent_to_consult</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+                                    <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">find_loan</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">,</span>
+                                                               <span class="n">bypass_avoidance</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                            
+                            <span class="n">can_afford_and_sustain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_affordability</span><span class="p">(</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="n">can_afford_and_sustain</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">queue_job</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">,</span>
+                                                           <span class="n">installation_time</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">installation_time</span><span class="p">)</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+                            
+                            <span class="k">elif</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;Goal&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 2&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_stage_2&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">suitable_hs</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">desired_hs</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">initial_aspiration_value</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_3&quot;</span><span class="p">][</span><span class="s2">&quot;Plumber_consulted_to_drop&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="Plumber.recommend">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.recommend">[docs]</a>
+    <span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recommends the best-rated heating system to a houseowner.</span>
+
+<span class="sd">        The recommendation is based on the Plumber&#39;s own evaluation of the </span>
+<span class="sd">        systems they know.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The houseowner to whom the recommendation is given.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sorted_known</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">rating</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">insulation_threshold</span><span class="p">:</span>
+            <span class="n">names_to_remove</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">insulation_list</span>
+            <span class="n">sorted_known</span> <span class="o">=</span> <span class="p">[</span><span class="n">hs</span> <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="n">sorted_known</span> 
+                            <span class="k">if</span> <span class="n">hs</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_to_remove</span><span class="p">]</span>
+            
+        <span class="n">filtered_sorted_known</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">instance</span>
+            <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">sorted_known</span>
+            <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span>
+        <span class="p">]</span>
+        
+        <span class="n">best</span> <span class="o">=</span> <span class="n">filtered_sorted_known</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># The best HS according to ratings</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">recommended_hs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">best</span><span class="p">)</span></div>
+
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A part about installation of a chosen heating system&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Plumber.installation">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.installation">[docs]</a>
+    <span class="k">def</span> <span class="nf">installation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the installation of a new heating system for a client.</span>
+
+<span class="sd">        This method is called when an installation job is completed. It finalises</span>
+<span class="sd">        the installation, updates the model&#39;s state (e.g., counters), and </span>
+<span class="sd">        deducts the cost from the houseowner&#39;s budget.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        job : Job</span>
+<span class="sd">            The installation job containing the customer information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_to_install</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">unique_id</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">==</span> <span class="n">id_to_install</span><span class="p">:</span>
+                <span class="n">hs_to_install</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="k">if</span> <span class="n">hs_to_install</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">changes_counter</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">milieu</span><span class="o">.</span><span class="n">milieu_type</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">install_system</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">hs_to_install</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">replacements_counter</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">milieu</span><span class="o">.</span><span class="n">milieu_type</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">+=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">loan_amount</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Price is higher than budget!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Plumber ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Agent ID: </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Desired HS: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Recommended: Yes&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">recommended_hs</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Recommended: No&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Subsidised: Yes&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">subsidised</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Subsidised: No&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Loan: </span><span class="si">{</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">loan_amount</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Income: </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">income</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Budget: </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Price: </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Difference: </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span> <span class="o">-=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">houseowner_spending</span> <span class="o">+=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">installation_ordered</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">installed_once</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+                <span class="c1"># logger.info(&quot;I installed a new system for &quot; + str(id_to_install)) </span>
+<span class="w">    </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Heating system part&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Plumber.generate_system">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.generate_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an instance of a heating system from its class name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variant : str</span>
+<span class="sd">            The class name of the heating system to create.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Heating_system</span>
+<span class="sd">            An instance of the specified heating system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_params_table</span>
+        <span class="n">class_obj</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">variant</span><span class="p">]</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">class_obj</span><span class="p">(</span><span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">system</span></div>
+
+
+<div class="viewcode-block" id="Plumber.install_system">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.install_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">install_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">heating</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replaces the agent&#39;s old heating system with a new one.</span>
+
+<span class="sd">        This is the core logic for the installation, where the houseowner&#39;s </span>
+<span class="sd">        `current_heating` is updated, along with all relevant </span>
+<span class="sd">        financial and environmental metrics in the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The houseowner receiving the new system.</span>
+<span class="sd">        heating : str</span>
+<span class="sd">            The class name of the heating system to install.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">heating</span><span class="p">)</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+            <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+            <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+        <span class="p">)</span>
+        <span class="c1">#Data collection</span>
+        <span class="n">subsidy</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_effort</span><span class="p">[</span><span class="s2">&quot;Subsidies&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">subsidy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_distribution</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_distribution</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1">#Proceed with installation</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">investment</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">payback</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">investment</span> <span class="o">/</span> <span class="n">system</span><span class="o">.</span><span class="n">lifetime</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">lifetime</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">neighbours_opinions</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">rating</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">social_norm</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">social_norm</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">behavioural_control</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">behavioural_control</span>
+        
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">subsidised</span><span class="p">:</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">subsidised</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_effort</span><span class="p">[</span><span class="s2">&quot;Loans&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">system</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">loan_amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modify_agent_income</span><span class="p">(</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span><span class="p">,</span> 
+                                 <span class="n">old_system</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">,</span> 
+                                 <span class="n">new_system</span> <span class="o">=</span> <span class="n">system</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients_systems</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span></div>
+
+        
+        
+<div class="viewcode-block" id="Plumber.evaluate_system">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.evaluate_system">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rates a heating system based on the Plumber&#39;s own preferences.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : Heating_system</span>
+<span class="sd">            The heating system to evaluate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Extract parameters from known heating systems</span>
+        <span class="n">systems_attributes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">heating_system</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">heating_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">heating_system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+            <span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    
+        <span class="c1"># Create a DataFrame of agent preferences</span>
+        <span class="n">heating_preferences</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heating_preferences</span><span class="p">)])</span>
+    
+        <span class="c1"># Normalize attributes</span>
+        <span class="n">normalized_attributes</span> <span class="o">=</span> <span class="n">systems_attributes</span> <span class="o">/</span> <span class="n">systems_attributes</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    
+        <span class="c1"># Columns to rescale</span>
+        <span class="n">columns_to_rescale</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    
+        <span class="c1"># Rescale selected columns</span>
+        <span class="n">rescaled_attributes</span> <span class="o">=</span> <span class="n">normalized_attributes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">rescaled_attributes</span><span class="p">[</span><span class="n">columns_to_rescale</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">normalized_attributes</span><span class="p">[</span><span class="n">columns_to_rescale</span><span class="p">]</span>
+    
+        <span class="c1"># Match order of preferences and attributes</span>
+        <span class="n">rescaled_attributes</span> <span class="o">=</span> <span class="n">rescaled_attributes</span><span class="p">[</span><span class="n">heating_preferences</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    
+        <span class="c1"># Calculate the rating for the given system</span>
+        <span class="n">selected_system</span> <span class="o">=</span> <span class="n">rescaled_attributes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="n">system_rating</span> <span class="o">=</span> <span class="p">(</span><span class="n">selected_system</span> <span class="o">*</span> <span class="n">heating_preferences</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+        <span class="c1"># Assign the calculated rating to the system</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">system_rating</span> <span class="o">/</span> <span class="mi">6</span></div>
+
+
+<div class="viewcode-block" id="Plumber.share_systems">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.share_systems">[docs]</a>
+    <span class="k">def</span> <span class="nf">share_systems</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shares knowledge of other clients&#39; systems with a houseowner.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to share information with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">plumber</span><span class="o">.</span><span class="n">share_systems</span><span class="p">:</span>
+            <span class="c1"># Here, predecessors as the ones who influence this agent seem appropriate</span>
+            <span class="n">predecessors</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_cell_list_contents</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)))</span>
+            <span class="n">neighbours_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">unique_id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">predecessors</span><span class="p">]</span>
+            <span class="c1"># Get neighbour systems from self.clients_systems where the neighbour ID matches</span>
+            <span class="n">neighbours_systems</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients_systems</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">neighbours_ids</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Update agent.neighbours_systems with those, replacing existing values if necessary</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">neighbours_systems</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">neighbours_systems</span><span class="p">)</span></div>
+
+        
+        
+<div class="viewcode-block" id="Plumber.share_rating">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.share_rating">[docs]</a>
+    <span class="k">def</span> <span class="nf">share_rating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shares the Plumber&#39;s ratings of known systems with a houseowner.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to share ratings with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_known_hs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span>
+        <span class="n">agent_known_hs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span>
+
+        <span class="k">for</span> <span class="n">my_system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>  <span class="c1"># For each system in my knowledge</span>
+            <span class="k">for</span> <span class="n">his_system</span> <span class="ow">in</span> <span class="n">agent_known_hs</span><span class="p">:</span>  <span class="c1"># And each in owner&#39;s</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">my_system</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">his_system</span><span class="o">.</span><span class="vm">__class__</span>
+                <span class="p">):</span>  <span class="c1"># Check if those are matching</span>
+                    <span class="n">his_system</span><span class="o">.</span><span class="n">neighbours_opinions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">my_system</span><span class="o">.</span><span class="n">rating</span>
+                    <span class="p">)</span>  <span class="c1"># Modify an entry in the dictionary</span></div>
+
+
+<div class="viewcode-block" id="Plumber.share_knowledge">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.share_knowledge">[docs]</a>
+    <span class="k">def</span> <span class="nf">share_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shares attribute knowledge about systems with a houseowner.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to share knowledge with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_known_hs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span>
+        <span class="n">neighbours_known_hs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span>
+        
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">calculate_installation_costs</span><span class="p">(</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span>
+                <span class="n">heat_load</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+            <span class="p">)</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">calculate_operating_costs</span><span class="p">(</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span>
+                <span class="n">heat_load</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Get class names of the instances in neighbours_known_hs</span>
+        <span class="n">names_of_neighbours_known_hs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">neighbours_known_hs</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Influencing neighbours known systems parameters using Relative Agreement approach</span>
+        <span class="k">for</span> <span class="n">my_system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>  <span class="c1"># For each system in my knowledge</span>
+            <span class="k">for</span> <span class="n">his_system</span> <span class="ow">in</span> <span class="n">neighbours_known_hs</span><span class="p">:</span>  <span class="c1"># And each in owner&#39;s</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">my_system</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">his_system</span><span class="o">.</span><span class="vm">__class__</span>
+                <span class="p">):</span>  <span class="c1"># Check if those are matching</span>
+                    <span class="n">influence_by_relative_agreement</span><span class="p">(</span>
+                        <span class="n">source_system</span> <span class="o">=</span> <span class="n">my_system</span><span class="p">,</span>
+                        <span class="n">target_system</span> <span class="o">=</span> <span class="n">his_system</span>
+                    <span class="p">)</span>
+
+        <span class="c1"># Sharing knowledge with the client</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">my_known_hs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_of_neighbours_known_hs</span><span class="p">:</span>
+                <span class="n">copied_system</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                <span class="n">copied_system</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="p">{}</span>
+                <span class="p">)</span>  <span class="c1"># Nullify subjective perception of the opinions of others</span>
+                <span class="n">copied_system</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Plumber&quot;</span>
+                <span class="n">neighbours_known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copied_system</span><span class="p">)</span>
+                
+        <span class="c1"># Sharing knowledge about subsidies</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="Plumber.modify_agent_income">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.modify_agent_income">[docs]</a>
+    <span class="k">def</span> <span class="nf">modify_agent_income</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">old_system</span><span class="p">,</span> <span class="n">new_system</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjusts a houseowner&#39;s weekly net income after a new system is installed.</span>
+
+<span class="sd">        The income is modified based on the difference in weekly running costs </span>
+<span class="sd">        (fuel and opex) between the old and new heating systems.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent whose income is being modified.</span>
+<span class="sd">        old_system : Heating_system</span>
+<span class="sd">            The previously installed heating system.</span>
+<span class="sd">        new_system : Heating_system</span>
+<span class="sd">            The newly installed heating system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_fuel_cost</span> <span class="o">=</span> <span class="n">new_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">52</span>
+        <span class="n">new_opex</span> <span class="o">=</span> <span class="n">new_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">52</span>
+        <span class="n">current_fuel_cost</span> <span class="o">=</span> <span class="n">old_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">52</span>
+        <span class="n">current_opex</span> <span class="o">=</span> <span class="n">old_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">52</span>
+        <span class="n">difference</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_fuel_cost</span> <span class="o">+</span> <span class="n">new_opex</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">current_fuel_cost</span> <span class="o">+</span> <span class="n">current_opex</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">income</span> <span class="o">-=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">difference</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">income</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">income</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Plumber.check_affordability">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.check_affordability">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_affordability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifies if a houseowner can afford a new heating system.</span>
+
+<span class="sd">        Checks both the upfront installation cost against the agent&#39;s budget </span>
+<span class="sd">        (including loans) and the ongoing running costs against the agent&#39;s income.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent whose affordability is being checked.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the agent can afford the system, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">can_afford</span> <span class="o">=</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> 
+                      <span class="o">&lt;=</span> <span class="n">agent</span><span class="o">.</span><span class="n">hs_budget</span> 
+                      <span class="o">+</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">loan_amount</span> 
+                         <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+                      <span class="p">)</span>
+                            
+        <span class="n">weekly_fuel_costs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">52</span>
+        <span class="n">weekly_opex</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">52</span>
+        <span class="n">old_weekly_fuel_costs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">52</span>
+        <span class="n">old_weekly_opex</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">52</span>
+        <span class="n">sum_new</span> <span class="o">=</span> <span class="n">weekly_fuel_costs</span> <span class="o">+</span> <span class="n">weekly_opex</span>
+        <span class="n">sum_old</span> <span class="o">=</span> <span class="n">old_weekly_fuel_costs</span> <span class="o">+</span> <span class="n">old_weekly_opex</span>
+        <span class="n">difference</span> <span class="o">=</span> <span class="n">sum_new</span> <span class="o">-</span> <span class="n">sum_old</span>
+        
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="p">:</span>
+            <span class="n">payment</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">desired_hs</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">monthly_payment</span> <span class="o">/</span> <span class="mi">4</span>
+            <span class="n">difference</span> <span class="o">+=</span> <span class="n">payment</span>
+            
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">loan</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">burden</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">monthly_payment</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">burden</span> <span class="o">=</span> <span class="mi">0</span>
+                
+        <span class="n">can_sustain</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">income</span> <span class="o">-</span> <span class="n">difference</span> <span class="o">-</span> <span class="n">burden</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+        
+        <span class="k">if</span> <span class="n">can_afford</span> <span class="ow">and</span> <span class="n">can_sustain</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+        
+    
+<div class="viewcode-block" id="Plumber.organize_subsidies">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.organize_subsidies">[docs]</a>
+    <span class="k">def</span> <span class="nf">organize_subsidies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Structures known subsidies into a dictionary for easy lookup.</span>
+<span class="sd">        Sorts subsidies by the type of heating system they are applied to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="k">for</span> <span class="n">subsidy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">hs_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="k">if</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">deepcopy</span><span class="p">(</span>
+                                <span class="n">Subsidy</span><span class="p">(</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                    <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                    <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                    <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                    <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                    <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+            <span class="k">if</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span> <span class="o">==</span> <span class="s2">&quot;Any&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">hs_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">deepcopy</span><span class="p">(</span>
+                            <span class="n">Subsidy</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">deepcopy</span><span class="p">(</span><span class="n">subsidy</span><span class="p">)</span>
+                <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Plumber.apply_subsidies">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.apply_subsidies">[docs]</a>
+    <span class="k">def</span> <span class="nf">apply_subsidies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies relevant subsidies to a heating system for a given agent.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hs : Heating_system</span>
+<span class="sd">            The heating system to which subsidies will be applied.</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent for whom the subsidy conditions are checked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    
+        <span class="n">current_price</span> <span class="o">=</span> <span class="n">hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">total_subsidy</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Calculate the maximum allowed subsidy (min of 70% price or 21,000)</span>
+        <span class="n">subsidy_cap</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">current_price</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">21000</span><span class="p">)</span>
+    
+        <span class="k">for</span> <span class="n">subsidy_rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">system_type</span><span class="p">]:</span>
+            <span class="c1"># Check if subsidy applies</span>
+            <span class="k">if</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">subsidy_amount</span> <span class="o">=</span> <span class="n">current_price</span> <span class="o">*</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">subsidy</span>
+                <span class="n">total_subsidy</span> <span class="o">+=</span> <span class="n">subsidy_amount</span>
+            <span class="k">elif</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">check_condition</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">hs</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">):</span>
+                <span class="n">subsidy_amount</span> <span class="o">=</span> <span class="n">current_price</span> <span class="o">*</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">subsidy</span>
+                <span class="n">total_subsidy</span> <span class="o">+=</span> <span class="n">subsidy_amount</span>
+    
+            <span class="c1"># Enforce the cap immediately</span>
+            <span class="k">if</span> <span class="n">total_subsidy</span> <span class="o">&gt;=</span> <span class="n">subsidy_cap</span><span class="p">:</span>
+                <span class="n">total_subsidy</span> <span class="o">=</span> <span class="n">subsidy_cap</span>
+                <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="n">total_subsidy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hs</span><span class="o">.</span><span class="n">subsidised</span> <span class="o">=</span> <span class="kc">True</span>
+    
+        <span class="c1"># Apply the final price reduction</span>
+        <span class="n">hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_subsidy</span><span class="p">)</span>
+        
+        <span class="c1"># Reset the price uncertainty parameter</span>
+        <span class="n">hs</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<span class="w">    </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helpers for compatibility with the data collector&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Plumber.get_heating">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_heating">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_heating</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_trigger">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_trigger">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_for_record</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_stage_dynamics">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_stage_dynamics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_stage_dynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage_counter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">array</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_class">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_class">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_system_age">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_system_age">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_system_age</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">age</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_satisfied_ratio">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_satisfied_ratio">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_satisfied_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">rating</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_milieu">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_milieu">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_milieu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Plumber&quot;</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_opex">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_opex">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_opex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_preferences">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_heating_system_evaluation">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_heating_system_evaluation">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_heating_system_evaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Plumber.get_attributes">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Plumber_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Plumber.get_comprehensive_metrics">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_comprehensive_metrics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_comprehensive_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="Plumber.get_house_area">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.Plumber.Plumber.get_house_area">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_house_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

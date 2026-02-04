@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Concepts &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration" href="concepts/configuration.html" />
+    <link rel="prev" title="Glossary" href="glossary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">Glossary</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/rng.html">Random Number Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/logging.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/output.html">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipes.html">Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../application.html">Application</a></li>
+      <li class="breadcrumb-item active">Concepts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/application/concepts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="concepts">
+<h1>Concepts<a class="headerlink" href="#concepts" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="concepts/configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/configuration.html#order-of-configuration-consideration">Order of configuration consideration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/configuration.html#defining-scenarios">Defining Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/configuration.html#conserving-scenario-settings">Conserving Scenario Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/configuration.html#inspecting-settings-history">Inspecting Settings History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/configuration.html#settings-documentation">Settings Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#main">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#experiments">experiments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#data">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#scenario-comparison">scenario_comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#seeds">seeds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#output">output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#information-source">information_source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#subsidies">subsidies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#houseowner">houseowner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#houseowner-leading">houseowner.leading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#houseowner-mainstream">houseowner.mainstream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#houseowner-traditionals">houseowner.traditionals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#houseowner-hedonists">houseowner.hedonists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#information-overspread">information_overspread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#decision-making-costs">decision_making_costs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#intermediary">intermediary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#plumber">plumber</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#energy-advisor">energy_advisor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#heating-systems-colors">heating_systems_colors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-heat-pumps">reference.Scenario_heat_pumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-network-district">reference.Scenario_network_district</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-network-local-hot">reference.Scenario_network_local_hot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-network-local-cold">reference.Scenario_network_local_cold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-mix-pellet-heat-pump">reference.Scenario_mix_pellet_heat_pump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#reference-scenario-mix-pellet-heat-pump-network">reference.Scenario_mix_pellet_heat_pump_network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#information-sources">information_sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#network">network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#milieu">milieu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#triggers">triggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#slurm">slurm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#eval">eval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#slides">slides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/configuration.html#create-settings-documentation">Create settings documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts/rng.html">Random Number Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/rng.html#control-random-number-streams">Control Random Number Streams</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts/logging.html">Logging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/logging.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/logging.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts/output.html">Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/output.html#folder-structure">Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/output.html#further-output-information">Further output information</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="glossary.html" class="btn btn-neutral float-left" title="Glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="concepts/configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

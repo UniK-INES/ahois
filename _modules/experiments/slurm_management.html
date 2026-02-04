@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>experiments.slurm_management &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">experiments.slurm_management</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for experiments.slurm_management</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Create bash scripts for simulation on SLURM managed cluster,</span>
+<span class="sd">transfer these scripts to the cluster and optionally execute them.</span>
+
+<span class="sd">:Instructions:</span>
+
+<span class="sd">- Define scenarios/parameter sets in excel scenario sheet, referenced by config ID</span>
+<span class="sd">- execute main</span>
+
+<span class="sd">:Authors: </span>
+
+<span class="sd">* Sascha Holzhauer &lt;Sascha.Holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">settings</span><span class="p">,</span> <span class="n">load_config_for_id</span><span class="p">,</span> <span class="n">config_logging</span><span class="p">,</span> 
+    <span class="n">get_output_path</span><span class="p">,</span>
+    <span class="n">get_cluster_output_path</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">experiments.slurm_script_generation</span> <span class="kn">import</span> <span class="n">generate_script</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi.cluster.batchscript&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="transferSlurmFiles">
+<a class="viewcode-back" href="../../application/api/experiments.html#experiments.slurm_management.transferSlurmFiles">[docs]</a>
+<span class="k">def</span> <span class="nf">transferSlurmFiles</span><span class="p">(</span><span class="n">maxRunId</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transfer files to cluster via SCP</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    maxRunID: int</span>
+<span class="sd">        maximum run ID of this job set</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sshstransfer</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;ssh &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\&quot;</span><span class="s2">mkdir -p &quot;</span>
+        <span class="o">+</span> <span class="n">get_cluster_output_path</span><span class="p">(</span>
+            <span class="n">runid</span><span class="o">=</span><span class="n">maxRunId</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_execfile</span>
+        <span class="p">)</span>
+        <span class="o">+</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">transferSlurmFile</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create directories for slurm files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Statement: &quot;</span> <span class="o">+</span> <span class="n">sshstransfer</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">sshstransfer</span><span class="p">)</span>
+
+    <span class="n">localTargetDirExecfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">get_output_path</span><span class="p">(</span><span class="n">runid</span><span class="o">=</span><span class="n">maxRunId</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_execfile</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">scpstatement</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;scp -r &quot;</span>
+        <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">localTargetDirExecfile</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;/* &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot;:</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">get_cluster_output_path</span><span class="p">(</span>
+            <span class="n">runid</span><span class="o">=</span><span class="n">maxRunId</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_execfile</span>
+            <span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">scpstatement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">transferSlurmFile</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transfer slurm files...&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">scpstatement</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="transferSettingsFile">
+<a class="viewcode-back" href="../../application/api/experiments.html#experiments.slurm_management.transferSettingsFile">[docs]</a>
+<span class="k">def</span> <span class="nf">transferSettingsFile</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transfer settings.toml</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">settings_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AHID_SETTINGS_FILE_FOR_DYNACONF&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">settings_filename</span><span class="p">:</span>
+        <span class="c1"># if variable is not set, settings_filename will be None</span>
+        <span class="n">settings_filename</span> <span class="o">=</span> <span class="s2">&quot;settings_local_cluster.toml&quot;</span>
+    <span class="n">scpsettings</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;scp &quot;</span>
+        <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+        <span class="o">+</span> <span class="s2">&quot;/../settings/&quot;</span>
+        <span class="o">+</span> <span class="n">settings_filename</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot;:</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_cluster_modelbase</span>
+        <span class="o">+</span> <span class="s2">&quot;/settings/settings_local.toml&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">scpsettings</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">transferSettingsFile</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Transfer settings file...&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">scpsettings</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="transferScenarioFile">
+<a class="viewcode-back" href="../../application/api/experiments.html#experiments.slurm_management.transferScenarioFile">[docs]</a>
+<span class="k">def</span> <span class="nf">transferScenarioFile</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transfer Scenario Config Excel File</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sshCreateFolder</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;ssh &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\&quot;</span><span class="s2">mkdir -p &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_cluster_modelbase</span>
+        <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">excel_scenario_file</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sshCreateFolder</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">transferScenarioExcelFile</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create directories...&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">sshCreateFolder</span><span class="p">)</span>
+
+    <span class="n">scpsTransferFile</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;scp &quot;</span>
+        <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+        <span class="o">+</span> <span class="s2">&quot;/../&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">excel_scenario_file</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot;:</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_cluster_modelbase</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">excel_scenario_file</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">scpsTransferFile</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">transferScenarioExcelFile</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Transfer scenario file...&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">scpsTransferFile</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="executeSlurmScript">
+<a class="viewcode-back" href="../../application/api/experiments.html#experiments.slurm_management.executeSlurmScript">[docs]</a>
+<span class="k">def</span> <span class="nf">executeSlurmScript</span><span class="p">(</span><span class="n">execScriptFilename</span><span class="p">,</span> <span class="n">maxRunId</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute slurm batch runs on cluster via SSH</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    execScriptFilename: str</span>
+<span class="sd">        Script file to execute</span>
+<span class="sd">    maxRunId: int</span>
+<span class="sd">        maximum Run ID to enter correct folder</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">scriptfile</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">get_cluster_output_path</span><span class="p">(</span>
+            <span class="n">runid</span><span class="o">=</span><span class="n">maxRunId</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_execfile</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="o">+</span> <span class="n">execScriptFilename</span>
+    <span class="p">)</span>
+
+    <span class="n">sshstatement</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;ssh &quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">username</span>
+        <span class="o">+</span> <span class="s2">&quot;@&quot;</span>
+        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">host</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">bash -l -c &#39;cd &quot;</span>
+        <span class="o">+</span> <span class="n">get_cluster_output_path</span><span class="p">(</span>
+            <span class="n">runid</span><span class="o">=</span><span class="n">maxRunId</span><span class="p">,</span> <span class="n">subfolder</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">target_execfile</span>
+        <span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;; &quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;chmod u+x &quot;</span>
+        <span class="o">+</span> <span class="n">scriptfile</span>
+        <span class="o">+</span> <span class="s2">&quot;; &quot;</span>
+        <span class="o">+</span> <span class="n">scriptfile</span>
+        <span class="o">+</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sshstatement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">slurm</span><span class="o">.</span><span class="n">executeSLURMscripts</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Execute slurm script on cluster (max runID: </span><span class="si">%d</span><span class="s2">)...&quot;</span><span class="p">,</span> <span class="n">maxRunId</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sshstatement</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">sshstatement</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="generateAndTransfer">
+<a class="viewcode-back" href="../../application/api/experiments.html#experiments.slurm_management.generateAndTransfer">[docs]</a>
+<span class="k">def</span> <span class="nf">generateAndTransfer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates required files, transfers these to the cluster and executes the SLURM script on the cluster.</span>
+<span class="sd">    In particular:</span>
+
+<span class="sd">    * generate SLURM scripts</span>
+<span class="sd">    * transfer SLURM scripts to cluster</span>
+<span class="sd">    * transfer settings file to cluster</span>
+<span class="sd">    * transfer scenario file to cluster</span>
+<span class="sd">    * execute SLURM scripts on cluster</span>
+
+<span class="sd">    Particular steps can be enabled/disabled by parameter settings (see below).</span>
+
+<span class="sd">    Considered parameters:</span>
+
+<span class="sd">    * settings.slurm.batchconfig_file</span>
+<span class="sd">    * settings.slurm.batchconfig_sheetname</span>
+<span class="sd">    * settings.slurm.batchconfig_rows</span>
+<span class="sd">    * settings.slurm.editbatchConfigFile (default: True)</span>
+<span class="sd">    * settings.slurm.generateSlurmFile (default: True)</span>
+<span class="sd">    * settings.slurm.transferSlurmFile (default: True)</span>
+<span class="sd">    * settings.slurm.transferSettingsFile (default: True)</span>
+<span class="sd">    * settings.slurm.transferScenarioExcelFile (default: True)</span>
+<span class="sd">    * settings.slurm.executeSLURMscripts (default: False)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generate and transfer...&quot;</span><span class="p">)</span>
+    
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running in BATCH mode (1:N config_id:run_id)&quot;</span><span class="p">)</span>
+
+    <span class="n">base_run_id</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">run_id</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using dynamically loaded base run_id: </span><span class="si">{</span><span class="n">base_run_id</span><span class="si">}</span><span class="s2"> for all operations.&quot;</span><span class="p">)</span>
+
+    <span class="n">execScriptFilename</span> <span class="o">=</span> <span class="n">generate_script</span><span class="p">()</span>
+    <span class="n">transferSlurmFiles</span><span class="p">(</span><span class="n">base_run_id</span><span class="p">)</span>
+    <span class="n">transferSettingsFile</span><span class="p">()</span>
+    <span class="n">transferScenarioFile</span><span class="p">()</span>
+    <span class="n">executeSlurmScript</span><span class="p">(</span><span class="n">execScriptFilename</span><span class="p">,</span> <span class="n">base_run_id</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
+
+
+        
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">generateAndTransfer</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

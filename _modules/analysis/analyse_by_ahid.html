@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>analysis.analyse_by_ahid &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">analysis.analyse_by_ahid</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for analysis.analyse_by_ahid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Performs analysis and visualisation of model outputs using methods </span>
+<span class="sd">of AgentHomeID (ahid) by Fraunhofer IEE.</span>
+
+<span class="sd">This script acts as a bridge to reuse visualisation capabilities. </span>
+<span class="sd">It loads and transforms the output data from the</span>
+<span class="sd">current model into a format compatible with the &#39;ahid&#39; plotting functions.</span>
+<span class="sd">Using Python&#39;s &#39;mock&#39; library, it intercepts data loading calls within the</span>
+<span class="sd">&#39;ahid&#39; functions, injects the transformed data, and generates the desired plots.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span>  <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span><span class="p">,</span> <span class="n">get_output_path</span><span class="p">,</span> <span class="n">config_logging</span>
+<span class="kn">from</span> <span class="nn">helpers.utils</span> <span class="kn">import</span> <span class="n">files_name</span><span class="p">,</span> <span class="n">get_file_name</span>
+<span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">mock</span><span class="p">,</span> <span class="n">main</span>
+<span class="kn">import</span> <span class="nn">analysis.dynaconf_filter</span>
+
+<span class="n">settings</span><span class="o">.</span><span class="n">execute_loaders</span><span class="p">(</span><span class="n">loaders</span><span class="o">=</span><span class="p">[</span><span class="n">analysis</span><span class="o">.</span><span class="n">dynaconf_filter</span><span class="p">])</span>
+<span class="kn">from</span> <span class="nn">building_stock_model.config.config</span> <span class="kn">import</span> <span class="n">set_settings</span>
+<span class="n">set_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">building_stock_model.locale_figures.i18n</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">building_stock_model.evaluation.constants</span> <span class="kn">import</span> <span class="n">GT_RB</span><span class="p">,</span> <span class="n">GT_NRB</span><span class="p">,</span> <span class="n">BAC_RB</span><span class="p">,</span> <span class="n">BAC_NRB</span>
+<span class="kn">from</span> <span class="nn">building_stock_model.evaluation.figure_utils</span> <span class="kn">import</span> <span class="n">getLabels</span>
+<span class="kn">from</span> <span class="nn">building_stock_model.evaluation.heatingsystems</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">plot_total_num_heatingsystems</span><span class="p">,</span>
+    <span class="n">plot_share_heatingsystems__sns</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cachetools.func</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<div class="viewcode-block" id="read_output_data">
+<a class="viewcode-back" href="../../application/api/analysis.html#analysis.analyse_by_ahid.read_output_data">[docs]</a>
+<span class="k">def</span> <span class="nf">read_output_data</span><span class="p">(</span><span class="n">run_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads the agent output DataFrame from a pickle file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    run_id : int, optional</span>
+<span class="sd">        The ID of the simulation run from which to load the data. </span>
+<span class="sd">        If None, it uses the default path settings.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        A DataFrame containing the agent data for the specified run.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agent_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_output_path</span><span class="p">(</span><span class="n">runid</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span><span class="w"> </span><span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;pickles&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/agent_df_</span><span class="si">{</span><span class="n">get_file_name</span><span class="p">()</span><span class="si">}</span><span class="s2">.pkl&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">agent_df</span></div>
+
+
+<div class="viewcode-block" id="convert_output_data">
+<a class="viewcode-back" href="../../application/api/analysis.html#analysis.analyse_by_ahid.convert_output_data">[docs]</a>
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">convert_output_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts and reformats the model&#39;s output data for &#39;ahid&#39; compatibility.</span>
+
+<span class="sd">    This function fetches the raw agent data and applies several transformations</span>
+<span class="sd">    to make it suitable for the &#39;building_stock_model&#39; evaluation functions.</span>
+<span class="sd">    Transformations include adding a scale factor, renaming columns to match</span>
+<span class="sd">    the expected schema, adding a placeholder ID, and converting simulation</span>
+<span class="sd">    steps into calendar years. The result is cached to avoid redundant processing.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        The transformed and analysis-ready DataFrame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_df</span> <span class="o">=</span> <span class="n">read_output_data</span><span class="p">()</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_scalefactor</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Step&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_step</span><span class="p">,</span>
+                            <span class="s1">&#39;Heating&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_heating</span><span class="p">,</span>
+                            <span class="s2">&quot;Emissions&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_ghgemissions_demand</span><span class="p">,</span>
+                            <span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">eval</span><span class="o">.</span><span class="n">colname_step</span><span class="p">]</span><span class="o">/</span><span class="mi">52</span> <span class="o">+</span> <span class="mi">2025</span>
+    <span class="k">return</span> <span class="n">data_df</span></div>
+
+    
+<div class="viewcode-block" id="ahoi_plot_total_num_heatingsystems">
+<a class="viewcode-back" href="../../application/api/analysis.html#analysis.analyse_by_ahid.ahoi_plot_total_num_heatingsystems">[docs]</a>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;building_stock_model.evaluation.heatingsystems.get_data&quot;</span><span class="p">)</span>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;building_stock_model.evaluation.figure_utils.get_output_path&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ahoi_plot_total_num_heatingsystems</span><span class="p">(</span><span class="n">mocked_path</span><span class="p">,</span> <span class="n">mocked_data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a plot of the total number of heating systems using an &#39;ahid&#39; function.</span>
+
+<span class="sd">    This wrapper uses mocking to inject the model&#39;s converted data into the</span>
+<span class="sd">    `plot_total_num_heatingsystems` function from the &#39;building_stock_model&#39;.</span>
+<span class="sd">    It bypasses that function&#39;s data loading and path discovery mechanisms,</span>
+<span class="sd">    allowing it to work directly with the local model&#39;s output.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mocked_path : unittest.mock.MagicMock</span>
+<span class="sd">        A mock object that replaces `get_output_path` in the target module.</span>
+<span class="sd">    mocked_data : unittest.mock.MagicMock</span>
+<span class="sd">        A mock object that replaces `get_data` in the target module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mocked_data</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span>  <span class="n">convert_output_data</span><span class="p">()</span>
+    <span class="n">mocked_path</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">get_output_path</span><span class="p">()</span>
+    <span class="n">plot_total_num_heatingsystems</span><span class="p">(</span><span class="n">multiplyflats</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ahoi_plot_share_heatingsystems__sns">
+<a class="viewcode-back" href="../../application/api/analysis.html#analysis.analyse_by_ahid.ahoi_plot_share_heatingsystems__sns">[docs]</a>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;building_stock_model.evaluation.heatingsystems.get_data&quot;</span><span class="p">)</span>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;building_stock_model.evaluation.figure_utils.get_output_path&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ahoi_plot_share_heatingsystems__sns</span><span class="p">(</span><span class="n">mocked_path</span><span class="p">,</span> <span class="n">mocked_data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a plot of the market share of heating systems using an &#39;ahid&#39; function.</span>
+
+<span class="sd">    Similar to `ahoi_plot_total_num_heatingsystems`, this wrapper uses</span>
+<span class="sd">    mocking to inject this model&#39;s data into the `plot_share_heatingsystems__sns`</span>
+<span class="sd">    visualisation function from the &#39;building_stock_model&#39;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mocked_path : unittest.mock.MagicMock</span>
+<span class="sd">        A mock object that replaces `get_output_path` in the target module.</span>
+<span class="sd">    mocked_data : unittest.mock.MagicMock</span>
+<span class="sd">        A mock object that replaces `get_data` in the target module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mocked_data</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">convert_output_data</span><span class="p">()</span>
+    <span class="n">mocked_path</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">get_output_path</span><span class="p">()</span>
+    <span class="n">plot_share_heatingsystems__sns</span><span class="p">(</span><span class="n">multiplyflats</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+        
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">config_logging</span><span class="p">()</span>
+    
+
+    <span class="n">ahoi_plot_total_num_heatingsystems</span><span class="p">()</span>
+    <span class="n">ahoi_plot_share_heatingsystems__sns</span><span class="p">()</span>
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

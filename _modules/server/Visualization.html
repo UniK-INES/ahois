@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>server.Visualization &mdash; AHOIS-pro 0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=088b4015" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=db78e746"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">server.Visualization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for server.Visualization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the visualisation components for the Mesa server.</span>
+
+<span class="sd">This module creates all the necessary elements for the browser-based</span>
+<span class="sd">visualisation of the simulation. It includes several agent portrayal functions</span>
+<span class="sd">that define how agents are coloured and described on the map based on their</span>
+<span class="sd">current state (e.g., heating system type, energy demand, knowledge). It</span>
+<span class="sd">also sets up chart modules for plotting time-series data and configures</span>
+<span class="sd">the main map visualisation.</span>
+
+<span class="sd">Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">mesa</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">server.additional_methods</span> <span class="kn">import</span> <span class="n">rgb_to_hex</span><span class="p">,</span> <span class="n">subsidy_overspread_portrayal</span><span class="p">,</span> <span class="n">heating_system_overspread_portrayal</span>
+
+
+
+<span class="c1"># Create agent portrayals</span>
+<div class="viewcode-block" id="HS_portrayal">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.HS_portrayal">[docs]</a>
+<span class="k">def</span> <span class="nf">HS_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the portrayal for visualising the distribution of heating systems.</span>
+
+<span class="sd">    This function colours agents on the map based on the type of heating</span>
+<span class="sd">    system currently installed in their house. Colours are defined in the</span>
+<span class="sd">    global settings file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary specifying the agent&#39;s &#39;size&#39; and &#39;color&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">heating_systems_colors</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems_colors</span>
+    <span class="n">heating_system_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">heating_systems_colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">heating_system_type</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="energy_demand_portrayal">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.energy_demand_portrayal">[docs]</a>
+<span class="k">def</span> <span class="nf">energy_demand_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the portrayal for visualising the distribution of energy demand.</span>
+
+<span class="sd">    This function colours agents on a yellow-to-red gradient based on their</span>
+<span class="sd">    total energy demand. The colour intensity is scaled relative to the</span>
+<span class="sd">    maximum energy demand observed in the model for normalisation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary specifying the agent&#39;s &#39;size&#39; and &#39;color&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">total_energy_demand</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">total_energy_demand</span>
+    <span class="p">)</span>  <span class="c1"># Total demand of a house</span>
+    <span class="n">max_demand</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">max_total_energy_demand</span>  <span class="c1"># Max possible demand for scaling</span>
+    <span class="n">color_intensity</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+        <span class="n">total_energy_demand</span> <span class="o">/</span> <span class="n">max_demand</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">)</span>  <span class="c1"># Define colour intensity depending on the energy demand</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">rgb_to_hex</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">color_intensity</span><span class="p">),</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="emissions_portrayal">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.emissions_portrayal">[docs]</a>
+<span class="k">def</span> <span class="nf">emissions_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the portrayal for visualizing the distribution of CO2 emissions.</span>
+
+<span class="sd">    This function colours agents on a green-to-red gradient based on their</span>
+<span class="sd">    annual CO2 emissions. The colour intensity is scaled relative to the</span>
+<span class="sd">    maximum emissions observed in the model for normalisation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary specifying the agent&#39;s &#39;size&#39; and &#39;color&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">emissions</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;emissions&quot;</span><span class="p">][</span>
+        <span class="mi">0</span>
+    <span class="p">]</span>  <span class="c1"># Total emissions of a house</span>
+    <span class="n">max_emissions</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">max_emissions</span>  <span class="c1"># Max possible demand for scaling</span>
+    <span class="n">color_intensity</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+        <span class="n">emissions</span> <span class="o">/</span> <span class="n">max_emissions</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">)</span>  <span class="c1"># Define colour intensity depending on the energy demand</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">rgb_to_hex</span><span class="p">([</span><span class="mi">255</span> <span class="o">*</span> <span class="n">color_intensity</span><span class="p">,</span> <span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">color_intensity</span><span class="p">),</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="information_overspread_middleware">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.information_overspread_middleware">[docs]</a>
+<span class="k">def</span> <span class="nf">information_overspread_middleware</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Acts as a dispatcher to select the active information-spread portrayal.</span>
+
+<span class="sd">    Based on a global setting, this function calls the appropriate portrayal</span>
+<span class="sd">    method to visualise either the spread of subsidy knowledge, heating</span>
+<span class="sd">    system knowledge, or the probability of installing a target system.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        The portrayal dictionary from the selected function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">selected_option</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_overspread</span><span class="o">.</span><span class="n">selected_option</span>
+    <span class="k">if</span> <span class="n">selected_option</span> <span class="o">==</span> <span class="s2">&quot;subsidy_to_observe&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">subsidy_overspread_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">selected_option</span> <span class="o">==</span> <span class="s2">&quot;known_hs_to_observe&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">heating_system_overspread_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">probability_of_installing_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="probability_of_installing_portrayal">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.probability_of_installing_portrayal">[docs]</a>
+<span class="k">def</span> <span class="nf">probability_of_installing_portrayal</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the portrayal for visualising the likelihood of installing a target system.</span>
+
+<span class="sd">    This function colours an agent based on the comparison between the rating</span>
+<span class="sd">    of their current heating system and their rating for a scenario-defined</span>
+<span class="sd">    target system. The colour indicates how favourably the agent views the</span>
+<span class="sd">    target system relative to their own.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary specifying the agent&#39;s &#39;color&#39; and &#39;description&#39; (tooltip).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">portrayal</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_heating_rating</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">rating</span>
+    <span class="n">current_heating</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">target_heatings</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems</span><span class="o">.</span><span class="n">compare_scenario</span><span class="p">[</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="p">]</span>
+    <span class="n">target_heating_ratings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span>
+
+    <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">target_heating</span> <span class="ow">in</span> <span class="n">target_heatings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">hs</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">target_heating</span> <span class="ow">and</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">target_heating_ratings</span><span class="p">[</span><span class="n">target_heating</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heating_ratings</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">current_heating_rating</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">color_intensity</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="n">current_heating_rating</span> <span class="o">/</span> <span class="n">target_heating_ratings</span><span class="p">[</span><span class="n">target_heatings</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">rgb_to_hex</span><span class="p">([</span><span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">color_intensity</span><span class="p">),</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">color_intensity</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">target_heating_ratings</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">target_heating_ratings</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heating_ratings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># If there are multiple target heatings everything is white, but we want to see</span>
+    <span class="c1"># changes in the color of the agents when they are get some rating information</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">target_heating_ratings</span> <span class="o">!=</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+
+    <span class="c1"># If the agent has the target heating, it will be purple</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">current_heating</span> <span class="o">==</span> <span class="n">target_heatings</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+    
+    <span class="n">portrayal</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="n">portrayal</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Person&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="p">,</span>
+        <span class="s2">&quot;Current heating&quot;</span><span class="p">:</span> <span class="n">current_heating</span><span class="p">,</span>
+        <span class="s2">&quot;Rating&quot;</span><span class="p">:</span> <span class="n">current_heating_rating</span> <span class="k">if</span> <span class="n">current_heating_rating</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Target heating&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">target_heating</span> <span class="k">for</span> <span class="n">target_heating</span> <span class="ow">in</span> <span class="n">target_heatings</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;Target heating ratings&quot;</span><span class="p">:</span> <span class="n">target_heating_ratings</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">portrayal</span></div>
+
+
+<div class="viewcode-block" id="best_system_rating">
+<a class="viewcode-back" href="../../application/api/server.html#server.Visualization.best_system_rating">[docs]</a>
+<span class="k">def</span> <span class="nf">best_system_rating</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the portrayal for visualising the rating of the target system vs. </span>
+<span class="sd">    the best-known alternative.</span>
+
+<span class="sd">    This function colours an agent based on the ratio between their rating for a</span>
+<span class="sd">    target heating system and the rating of the best alternative system they know.</span>
+<span class="sd">    This helps to visualise the competitiveness of the target system from the</span>
+<span class="sd">    agent&#39;s perspective.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : mesa_geo.GeoAgent</span>
+<span class="sd">        The House agent to be portrayed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary specifying the agent&#39;s &#39;color&#39; and &#39;description&#39; (tooltip).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">portrayal</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_heating</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">target_heatings</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems</span><span class="o">.</span><span class="n">compare_scenario</span><span class="p">[</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="p">]</span>
+    <span class="n">target_heating_ratings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span>
+    <span class="n">best_heating_rating</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">best_heating_system</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">target_heating</span> <span class="ow">in</span> <span class="n">target_heatings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">hs</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">target_heating</span><span class="p">:</span>
+                    <span class="n">target_heating_ratings</span><span class="p">[</span><span class="n">target_heating</span><span class="p">]</span> <span class="o">=</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span> <span class="o">&gt;</span> <span class="n">best_heating_rating</span><span class="p">:</span>
+                        <span class="n">best_heating_rating</span> <span class="o">=</span> <span class="n">hs</span><span class="o">.</span><span class="n">rating</span>
+                        <span class="n">best_heating_system</span> <span class="o">=</span> <span class="n">hs</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heating_ratings</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">best_heating_system</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">color_intensity</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="n">target_heating_ratings</span><span class="p">[</span><span class="n">target_heatings</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">/</span> <span class="n">best_heating_rating</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">rgb_to_hex</span><span class="p">([</span><span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">color_intensity</span><span class="p">),</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">color_intensity</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    
+    <span class="n">target_heating_ratings</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">target_heating_ratings</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heating_ratings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># If there are multiple target heatings everything is white, but we want to see</span>
+    <span class="c1"># changes in the color of the agents when they are get some rating information</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">target_heating_ratings</span> <span class="o">!=</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+
+    <span class="c1"># If the agent has the target heating, it will be purple</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_heatings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">best_heating_system</span> <span class="o">==</span> <span class="n">target_heatings</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;purple&quot;</span>
+
+    <span class="n">portrayal</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="n">portrayal</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Person&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="p">,</span>
+        <span class="s2">&quot;Current heating&quot;</span><span class="p">:</span> <span class="n">current_heating</span><span class="p">,</span>
+        <span class="s2">&quot;Best heating&quot;</span><span class="p">:</span> <span class="n">best_heating_system</span> <span class="k">if</span> <span class="n">best_heating_system</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Best Rating&quot;</span><span class="p">:</span> <span class="n">best_heating_rating</span> <span class="k">if</span> <span class="n">best_heating_rating</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Target heating&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">target_heating</span> <span class="k">for</span> <span class="n">target_heating</span> <span class="ow">in</span> <span class="n">target_heatings</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;Target heating ratings&quot;</span><span class="p">:</span> <span class="n">target_heating_ratings</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">portrayal</span></div>
+
+
+
+<span class="c1"># Data charts</span>
+<span class="n">replacements_chart</span> <span class="o">=</span> <span class="n">mesa</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">ChartModule</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;Label&quot;</span><span class="p">:</span> <span class="s2">&quot;Replacements&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">:</span> <span class="s2">&quot;#0000FF&quot;</span><span class="p">}],</span> <span class="n">data_collector_name</span><span class="o">=</span><span class="s2">&quot;datacollector&quot;</span>
+<span class="p">)</span>
+
+<span class="n">emissions_chart</span> <span class="o">=</span> <span class="n">mesa</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">ChartModule</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;Label&quot;</span><span class="p">:</span> <span class="s2">&quot;Emissions&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">:</span> <span class="s2">&quot;#00FF00&quot;</span><span class="p">}],</span> <span class="n">data_collector_name</span><span class="o">=</span><span class="s2">&quot;datacollector&quot;</span>
+<span class="p">)</span>
+
+<span class="n">scenario_fulfilment_chart</span> <span class="o">=</span> <span class="n">mesa</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">ChartModule</span><span class="p">(</span>
+    <span class="p">[{</span><span class="s2">&quot;Label&quot;</span><span class="p">:</span> <span class="s2">&quot;Scenario fulfilment&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">:</span> <span class="s2">&quot;#00FF88&quot;</span><span class="p">}],</span>
+    <span class="n">data_collector_name</span><span class="o">=</span><span class="s2">&quot;datacollector&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Create the map (insert HS_portrayal, energy_demand_portrayal, or emissions_portrayal)</span>
+<span class="c1"># map_visualization = MapModule(</span>
+<span class="c1">#     portrayal_method=information_overspread_middleware,</span>
+<span class="c1">#     view=None,</span>
+<span class="c1">#     zoom=None,</span>
+<span class="c1">#     map_width=800,</span>
+<span class="c1">#     map_height=800,</span>
+<span class="c1">#     scale_options=None,</span>
+<span class="c1"># )</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
