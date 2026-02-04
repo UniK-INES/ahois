@@ -14,7 +14,18 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../../src/"))
 
-autodoc_mock_imports = ['building_stock_model', 'tests.conftest', 'server.Launch']
+autodoc_mock_imports = [
+    'building_stock_model',
+    'tests.conftest',
+    'server.Launch',
+    'mesa_geo',
+    'geopandas',
+    'dotenv',
+    'plotly',
+    'dill',
+    'statsmodels',
+    'SALib',
+    ]
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information

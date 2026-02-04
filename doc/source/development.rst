@@ -53,7 +53,12 @@ public repository, proceed as follows:
 	::
 		
 		git checkout public_main
-		git merge -s ort -Xtheirs main --allow-unrelated-histories
+		git merge --squash -s ort -Xtheirs main --allow-unrelated-histories
+		git commit -m "merge feature xy"
+	
+	
+	Merge strategy "theirs" is unproblematic because there should be no
+	development in `public_main`.
 
 2. Push `public_main` to the public repository:
 

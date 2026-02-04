@@ -1,3 +1,5 @@
+--extra-index-url https://gitlab.uni-kassel.de/api/v4/projects/30/packages/pypi/simple
+
 argparse
 cachetools
 docxbuilder
@@ -17,6 +19,7 @@ python-git-info
 sqlalchemy>=2.0
 scipy
 seaborn>=0.13
+shobnetpy
 sphinx
 sphinx_rtd_theme
 sphinxcontrib-excel-table
