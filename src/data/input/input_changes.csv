@@ -1,0 +1,11 @@
+variable,basic,emissions_-20%,price_-20%
+operation,5,5,5
+fuel,0.0934,0.07472,0.07472
+emissions,560,448,560
+price,2314,2314,1851
+installation,1,1,1
+opex,0.025,0.025,0.025
+knowledge,1,1,1
+distortion,1,1,1
+savings,1,1,1
+queue,1,1,1

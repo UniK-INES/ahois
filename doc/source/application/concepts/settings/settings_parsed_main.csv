@@ -1,0 +1,17 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+current_scenario,,, "Scenario_heat_pumps",,,
+project,,, "AHOI",,,
+run_id,,, "0",,,
+task,,, "",,,
+start_year,,, 2025,,,
+end_year,,, 2045,,,
+number_of_plumbers,,, 10,,,
+number_of_energy_advisors,,, 10,,,
+steps,,, 1040,,,
+serialization_function,,, "to_excel",,,
+files_prefix,,, "",,,
+input_path,,, "./data/input/",,,
+output_path,,, "./src/data/output",,,'Output ''root'' for logs, settings history, graphml files etc. Absolute or relative to working dir.'
+excel_scenario_file,,, "settings/settings.xlsx",,,
+config_id_start,,, 0,,,
+config_id_end,,, 0,,,

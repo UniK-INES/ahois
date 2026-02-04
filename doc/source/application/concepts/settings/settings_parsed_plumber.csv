@@ -1,0 +1,11 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+aspiration,,, 100,,,
+perception,,, 0.1,,,
+cognitive_resource,,, 20,,,
+hs_budget,,, 200,,,
+cons_duration,,, 1,,,
+ins_duration,,, 1,,,
+share_systems,,, true,,,
+assume_area_avg,,, 106,,,
+assume_energydemand_avg,,, 147,,,
+assume_heatload_avg,,, 19,,,

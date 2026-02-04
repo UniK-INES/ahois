@@ -1,0 +1,4 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+Heating_system_heat_pump,,, 10,,,
+Heating_system_pellet,,, 30,,,
+Heating_system_network_local,,, 60,,,

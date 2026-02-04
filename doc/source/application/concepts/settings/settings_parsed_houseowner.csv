@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+aspiration,,, 1,,,
+overload,,, 2,,,
+perception,,, 0.1,,,
+budget_limit,,, 104,,,
+risk_tolerance_std,,, 0.19,,,
+random_risk_tolerance,,, true,,,
+loan_taking_probability,,, 0.32,,,
+tpb_weights_std,,, [],,,xactly three numbers

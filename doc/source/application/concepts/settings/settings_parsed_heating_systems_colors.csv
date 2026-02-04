@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+heating_system_electricity,,, "red",,,
+heating_system_gas,,, "blue",,,
+heating_system_heat_pump,,, "yellow",,,
+heating_system_heat_pump_brine,,, "purple",,,
+heating_system_oil,,, "black",,,
+heating_system_pellet,,, "brown",,,
+heating_system_network_district,,, "pink",,,
+heating_system_network_local,,, "orange",,,

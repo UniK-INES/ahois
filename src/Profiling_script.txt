@@ -1,0 +1,5 @@
+https://jiffyclub.github.io/snakeviz/
+
+cd C:\Users\IvanDigel\git\ahois-pro\src
+py -m cProfile -o program.prof Run.py
+snakeviz program.prof

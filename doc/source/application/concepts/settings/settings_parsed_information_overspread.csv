@@ -1,0 +1,6 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+selected_optio,,,"subsidy_to_observe",,,'choices: subsidy_to_observe, known_hs_to_observe'
+subsidies_list,,,' ["Climate_speed", "Heat_pump", "Income"]',,,
+subsidies_current,,, "Climate_speed",,,
+known_hs_list,,, [,,,
+known_hs_current,,, "Heating_system_heat_pump",,,

@@ -1,0 +1,555 @@
+# dynaconf_include = ["settings_database_vae_pr_ost.toml"]
+dynaconf_include = ["settings_database_mz_suf.toml", "settings_scenario_regulations_defaults.toml"]
+# dynaconf_include = ["settings_database_vae.toml"]
+
+[main]
+project = "Template"
+startyear = 2015
+stepsize = 5
+finalyear = 2050
+# relative to folder "building-stock-model" or absolute:
+input_path = "./input_data"
+# Used as target for output files (specified excluding task but including project):
+output_path =  "@format ./output_data/{this.main.project}"
+# if set (and not false) used instead of output_path/task/runjobid (but exluding subfolder). Relative to folder "building-stock-model" or absolute.
+output_path_custom = false
+# Used to group tasks of a project:
+task = false
+# relative to input_path or absolute
+excel_scenario_file = "Scenario_Template.xlsx"
+excel_scenario_sheetname = "Parameter"
+scenario_id = 1
+simulation_nrb = false
+# choose region for general parameter
+region_new_construction_rate_rb = "berlin"
+region_demolish_rate_rb = "berlin"
+region_basic_rent_cost_nrb = "berlin"
+region_initial_probs_heating_system_nrb = "berlin"
+region_shares_new_owners_rb = "berlin"
+region_shares_of_building_class_nrb = "berlin"
+runid = false
+job_numsamplesets = 1
+job_sampleset = false
+use_mz_2018 = false
+
+[sampling]
+samplesize_rb = 30
+samplesize_rb_new = 50 
+samplesize_nrb = 0
+
+#use_all_data_rb = false
+#use_all_data_rb_new = false
+
+# currently, the method retrieve_defined_sample only works for nrb using all data. Sub-samples are retreived randomly
+# by setting num_nwg_buildings in run.py
+
+#use_all_data_nrb = true
+
+use_es_shares = false
+# if the number of sampled rows < sample_size, duplicate random rows:
+fill = false
+colname_scalingfactor = "weight_factor_flats"
+colname_nflats = "n_flats_binned"
+considersf = false
+
+[demolish]
+age_treshold = 40
+
+[format]
+digits_runid = 4
+digits_job = 2
+
+[logging]
+# relative to folder 'building-stock-model' or absolute:
+configfile = "./building_stock_model/config/config_logging.conf"
+# relative to output_path:
+subfolder = "logs"
+subfolder_decisions = "decision"
+
+[input_generalparameterstable]
+filename = "Allgemeine_Annahmen.xlsx"
+sheet_name = "general_parameters"
+
+[input_buildingstatetable]
+filename = "Datengrundlage_Energieverbrauch_aus_Gebäudedaten.xlsx"
+sheet_const_pars = "konst_Parameter"
+sheet_monthly_pars = "monatl_Daten_meteorolog"
+sheet_bac_pars = "BAK_spez_Parameter"
+sheet_bc_pars = "GebKlassen_spez_Parameter"
+sheet_bc_ot_pars = "GebKlassen_spez_Parameter"
+sheet_bc_ot_pars_new="GebKlassen_spez_ParameterNeubau"
+# Column name for building class shares of stock buildings:
+colname_share_bc = "share_flats"
+# Column name for building class shares of new buildings:
+colname_share_bc_new = "share_flats"
+sheet_ins_win_pars = "Sanierung_Fenster_GebKlassen"
+sheet_ins_roof_pars = "Sanierung_Dach_GebKlassen"
+sheet_ins_wall_pars = "Sanierung_AW_GebKlassen"
+sheet_ins_ground_pars = "Sanierung_Keller_GebKlassen"
+sheet_final_energy_heat_val = "Endenergiebedarf_Wärme"
+sheet_final_energy_aux_val = "Endenergiebedarf_Hilfsenergie"
+sheet_fuel_costs_old = "Brennstoffkosten_old"
+sheet_fuel_costs_BAU_1 = "Brennstoffkosten_BAU_1"
+sheet_fuel_costs_BAU_2 = "Brennstoffkosten_BAU_2"
+sheet_fuel_costs_regulation = "Brennstoffkosten_regulation"
+sheet_fuel_costs_market = "Brennstoffkosten_Markt"
+sheet_fuel_costs_policy_mix = "Brennstoffkosten_PolicyMix"
+sheet_construction_price_index = "Baupreisindex"
+sheet_consumption_demand_ratio = "Verbrauchs-Bedarfsabgleich"
+
+[input_co2emissionstable]
+filename = "CO2_emissions.xlsx"
+sheet_emission_factors_GEG = "CO2_Emissionen_GEG"
+sheet_emission_factors_SCOPE = "CO2_Emissionen_SCOPE"
+sheet_emission_factors_mixGEG23 = "CO2_Emissionen_mixGEG23"
+sheet_emission_price_path = "CO2_Preispfad"
+sheet_emission_cost_distribution = "CO2_Kostenaufteilung"
+sheet_primary_energy_factors = "Primärenergiefaktoren"
+sheet_share_re = "share_re"
+
+[input_consumptionratiotable]
+filename = "Bedarfs_Verbrauchsabgleich.xlsx"
+sheet_consumption_ratio = "Bedarfs_Verbrauchsabgleich"
+sheet_heat_consumption_ratio = "Heizenergiebedarf"
+
+[input_buildingrhezfhtable]
+filename = "Zensus2011_Gebäude_RH_EZFH.xlsx"
+sheet_name = "bedingte W'keit RH EZFH MZ"
+
+[input_buildingnumberofflatstable]
+filename = "destatis_Wohnungsanzahl_pro_Gebaeude.xlsx"
+sheet_name = "Anteile"
+sheet_name_2018 = "Anteile2018"
+
+[input_buildingownershiptable]
+filename = "Zensus2011_Gebäude_BAK_AnzWhg_Eigentümer.xlsx"
+sheet_name = "bedingte W'keit Eig. Mietwhng"
+
+[input_buildingpartsagetables]
+filename = "building_parts_age.xlsx"
+sheet_name_yoc = "year of construction"
+sheet_name_yoc_heatsys = "year_of_construction_heatsys"
+sheet_name_pl = "parts lifetime"
+sheet_name_plc = "parts lifetime_Klimaschutz"
+sheet_name_weibull_params = "Weibull params fit function"
+sheet_name_weibull_params_KS = "Weibull params fit function_KS"
+sheet_name_monument_protection = "monument protection"
+
+[input_buildingpartsagetablesweibullfit]
+filename = "building_parts_age_no_fit_params.xlsx"
+sheet_name_pl = "parts lifetime"
+sheet_name_plc = "parts lifetime_Klimaschutz"
+
+[input_landlordtypologytable]
+filename = "Vermietertypologie_aus_Mikrozensus.xlsx"
+sheet_name = "Zusammensetzung_roh"
+sheet_name_age = "Altersvert_pro_Klasse"
+sheet_name_income = "Einkommensvert_pro_Klasse"
+
+[input_tenancydurationtable]
+filename = "Bewohndauern_Mieter_Eigentümer.xlsx"  # "Bewohndauern_Mieter_Eigentümer_MZ_2018.xlsx"
+sheet_name = "bedingte Auszugsw'keit"
+
+[input_inhabitantwealthtable]
+filename = "Vermögensverteilung_SOEP_2017.xlsx"
+sheet_name = "Sheet1"
+
+[input_newtenantstable]
+filename = "Neumietertypologie_MZ.xlsx"
+sheet_name = "Zusammensetzung_kurz"
+
+[input_newselfusertable]
+filename = "Neueigentümertypologie_MZ.xlsx"
+sheet_name = "Zusammensetzung_kurz"
+sheet_name_age = "Altersvert_pro_Klasse"
+sheet_name_income = "Einkommensvert_pro_Klasse"
+
+[input_econometricdatatables]
+filename = "latent_class_mixed_logit.xlsx"
+sheet_name_lc_su_req = "latent class SU required"
+# latent class self-users required (building part broken)
+sheet_name_wtp_su_req = "WTPs SU required"
+# WTP self-users required
+sheet_name_lc_su_unf = "latent class SU unforced"
+# latent class self-users unforced (no building part broken)
+sheet_name_wtp_su_unf = "WTPs SU unforced"
+# WTP self-users unforced
+sheet_name_lc_ll_req = "latent class LL required"
+# latent class landlords required
+sheet_name_wtp_ll_req = "WTPs LL required"
+# WTPs landlords required
+sheet_name_lc_ll_unf = "latent class LL unforced"
+# latent class landlords unforced
+sheet_name_wtp_ll_unf = "WTPs LL unforced"
+# WTPs landlords unforced
+sheet_name_wtp_ca_req = "WTPs WEG SU req"
+sheet_name_wtp_ca_unf_SU = "WTPs WEG SU unf"
+sheet_name_wtp_ca_unf_LL = "WTPs WEG LL unf"
+
+[input_heatingsystemcomp]
+filename = "Heizsystem_Wahrscheinlichkeiten.xlsx"
+sheet_burner = "bedingte W'keit Kessel"
+sheet_heat_pumps = "bedingte W'keit WP"
+sheet_new_buildings = "Neubau"
+sheet_threshold_heat_pumps = "Schwellwert_WP"
+sheet_availability_ground_hp = "Verfügbarkeit Erd-WP"
+sheet_availability_gas = "Verfügbarkeit Gas"
+sheet_availability_h2 = "Verfügbarkeit H2_Plan"
+sheet_availability_district_heating = "Verfügbarkeit FW"
+sheet_availability_district_heating_cum = "Verfügbarkeit FW_kumuliert"
+sheet_es_shares = "ES_DBsampling"
+sheet_es_shares_new = "ES_DBsampling_new"
+sheet_decommissioning_gas = "Stilllegung Gasleitung"
+
+[input_h2_biomass_budget]
+filename = "h2_biomass_budget_buildings.xlsx"
+sheet_h2_biomethane_budget = "h2_biomethane_budget_market"
+sheet_biomass_budget = "biomass_budget"
+
+[input_envelopetargetoptionstable]
+filename = "envelope_options.xlsx"
+sheet_name = "envelope_options"
+
+[input_insulationcosttable]
+filename = "Gebäudebestand2016_forgeschr_saniert_master.xlsx"
+sheet_cost_data = "Kosten_Kopie_gekürzt"
+sheet_learn_rate = "Lernraten"
+sheet_building_data = "Gebäudebestand_16_Kopie_kurz"
+sheet_insulation_param = "Sanierungsstand_2016_Kopie_kurz"
+
+[input_institutionalownertable]
+filename = "Datengrundlage_wirtschaftlichkeitsberechnung_institutionellerEntscheider.xlsx"
+sheet_const_param = "Fixe_Parameter"
+sheet_owner_param = "Entscheidertyp_spez_Parameter"
+sheet_componenet_param = "Bauteilspez_Parameter"
+
+[input_heatingsystemtable]
+filename = "Datengrundlage_Heizsysteme.xlsx"
+sheet_const_data = "konst_Param"
+sheet_vent_construction_data = "WRG_Bauweise_abh"
+sheet_system_var_data = "systemabh_Param"
+
+[input_beg24subsidiestable]
+filename = "Förderungen_Bundesebene.xlsx"
+sheet_name = "BEG Bauteile"
+
+[input_beg23subsidiestable]
+filename = "Förderungen_Bundesebene_Pre2023-12.xlsx"
+sheet_name = "BEG Bauteile"
+
+[input_tgstable]
+filename = "GHD.xlsx"
+sheet_name = "GHD"
+
+[input_refurbcancelratetable]
+filename = "CancellationRatesRefurbishment.xlsx"
+sheet_name = "RatesPerTrigger"
+
+[input_nwgbuildingstatetable]
+filename = "Datengrundlage_NWG.xlsx"
+sheet_bc_params = "GebKlassen_spez_Param"
+sheet_win_refurb = "win_refurb"
+sheet_wall_refurb = "wall_refurb"
+sheet_roof_refurb = "roof_refurb"
+sheet_rooftransp_refurb = "rooftransp_refurb"
+sheet_g_refurb = "g_refurb"
+
+[input_nwgfunctionclasssharetable]
+filename = "Anteile_NWG_Klassen.xlsx"
+sheet_shares_nwg = "AnteileNWGKlassen"
+
+[input_nwgownertypetable]
+filename = "Anteile_NWG_Eigentümertypen.xlsx"
+sheet_shares_ot = "share_ownertypes_fc"
+sheet_shares_market = "share_r_ll_market"
+
+[input_nwgrentcost]
+filename = "NWG_rent_cost.xlsx"
+sheet_rent_cost_mean_perGT = "rent_cost_mean_per_GT"
+
+[input_nwginputprecalcresultstable]
+filename = "Input_Erg_NWG_nachSanierungsoptionUndHeizsystem.xlsx"
+sheet_heat_demand = "Heizenergiebedarf"
+sheet_P_installed = "P_installiert"
+sheet_final_energy_demand = "Endenergiebedarf"
+sheet_final_main_energy_demand = "Endenergiebedarf_prim"
+sheet_final_sec_energy_demand = "Endenergiebedarf_sek"
+sheet_aux_energy = "Hilfsenergiebedarf"
+sheet_P_installed_sec = "P_installiert_sec"
+
+[input_nwgenvelopetargetoptionstable]
+filename = "envelope_options_nwg.xlsx"
+sheet_name = "envelope_options"
+
+[input_nwgheatsupplyoptionstable]
+filename = "Heating_system_options_and_probs_NWG.xlsx"
+sheet_heating_opt = "Heating_system_options"
+sheet_prob_initial_state = "prob_initial_state"
+sheet_prob_target_opt = "availability_prob"
+sheet_prob_gas_oil = "prob_gas_oil"
+
+[decision]
+selector = "WoF"
+track_decisions = true
+attempts_max = 10
+
+[input_pvselfconsumptiontable]
+filename = "ownpv-tool_V10.xlsm"
+#sheet_hp = "self_consumption_shares_hp"
+sheet_all = "PV-Nutzungsanteile"
+
+[eval]
+# output folder for comparison figures etc.
+output_path_compare = "./compare_output_data"
+# compare with this task; if list, only list items are applied
+task_compare = "CompareTask"
+# compare with this runid for given task_compare; if list, only list items are applied
+runid_compare = 1
+id = "Trend"
+# Name for the compared scenario; if list, only list items are applied
+id_compare = "Klimaschutz"
+group_by_id = "Gebäude-ID"
+# Split district heating in local heat (lh) and long-distance heating (ldh) depending on 
+# 'Verfügbarkeit Nahwärme' and 'Verfügbarkeit Fernwärme'
+split_dh = false
+compare_legend_title = "Szenario"
+# 18.73 Mio buildings in 2015 (19.3 Mio in 2020) | source: destatis
+target_samplesize = 18.73e6
+start_year = 2020
+target_year = 2045
+# default value for parameter `consumption` in all plotting functions
+plot_consumption_default = true
+colname_step = "Projektionsjahr"
+colname_id = "ID"
+colname_scalefactor = "Hochrechnungsfaktor_Geb"
+colname_gt = "GT"
+colname_gt_coarse = "GT grob"
+colname_bak = "BAK"
+colname_bak_coarse = "Altbau/Neubau"
+colname_ot = "Eigentumsform"
+colname_area_use = "Nutzfläche in m²"
+colname_installedpower = "installierte Leistung in W"
+colname_energydemand = "spez. Endenergiebedarf in kWh/(m2*a)"
+colname_energydemand_tot = "ges. Endenergiebedarf in kWh/a"
+colname_energyconsumption = "spez. Endenergieverbrauch in kWh/(m²*a)"
+colname_energyconsumption_tot = "ges. Endenergieverbrauch in kWh/a"
+colname_demand_consumption_ratio = "Verbrauchs-Bedarfsabgleich Endenergie"
+colname_heatdemand = "spez. Heizenergiebedarf in kWh/(m²*a)"
+colname_heatdemand_tot = "ges. Heizenergiebedarf in kWh/a"
+colname_heatconsumption = "spez. Heizenergieverbrauch in kWh/(m²*a)"
+colname_heatconsumption_tot = "ges. Heizenergieverbrauch in kWh/a"
+colname_heatdemand_consumption_ratio = "Verbrauchs-Bedarfsabgleich Heizenergie"
+colname_es = "Energieträger"
+colname_share_re = "Anteil EE"
+colname_ghgemissions_demand_spec = "CO2-Emissionen (Bedarf) in kg CO2/(m²*a)"
+colname_ghgemissions_consumption_spec = "CO2-Emissionen (Verbrauch) in kg CO2/(m²*a)"
+colname_ghgemissions_demand = "CO2-Emissionen (Bedarf) in kg CO2/a"
+colname_ghgemissions_consumption = "CO2-Emissionen (Verbrauch) in kg CO2/a"
+colname_ghgemissions_sector_demand = "CO2-Emissionen Gebäudesektor (Bedarf) in kg CO2/a"
+colname_ghgemissions_sector_consumption = "CO2-Emissionen Gebäudesektor (Verbrauch) in kg CO2/a"
+colname_heattype = "Heiztyp"
+colname_hp_type = "WP-Typ"
+colname_ghgreduction = "Reduktion CO2 in kg CO2/a"
+colname_energreduction_tot = "Reduktion ges. Endenergiebedarf in kWh/a"
+colname_investcost = "Investkosten Sanierung (Vollkosten) in €_2015*Baupreisindex"
+colname_investcost_spec = "Spezifische Investkosten Sanierung (Vollkosten) in €_2015*Baupreisindex"
+colname_investcost_supply = "Investkosten Heizsystem (Vollkosten) in €_2015*Baupreisindex"
+colname_investcost_envelope = "Investkosten Hülle (Vollkosten) in €_2015*Baupreisindex"
+# colname_annuity_tot = "Gesamte Annuitäten in €"
+colname_investcost_spec_cum = "Spezifische kummulierte Investkosten Sanierung (Vollkosten) in €_2015*Baupreisindex"
+colname_investcost_netto = "Investkosten Sanierung (abzgl. Förderung) in €_2015*Baupreisindex"
+colname_investcost_netto_spec = "Spezifische Investkosten Sanierung (abzgl. Förderung) in €_2015*Baupreisindex"
+colname_investcost_netto_spec_cum = "Spezifische kummulierte Investkosten Sanierung (abzgl. Förderung) in €_2015*Baupreisindex"
+colname_annuity_tot = "Kumulierte Annuitäten in €"
+# `colname_annuity_tot` was originally ""net invest in €""
+colname_financing_gap = "Kreditlücke (Hülle) in €"
+colname_financing_gap_cum = "Kreditlücke (Hülle), kumuliert in €"
+colname_funding = "Förderhöhe in €"
+colname_funding_cum = "Förderhöhe, kumuliert in €"
+colname_num_buildings = "Number of Buildings"
+
+# originally ""net invest in €""
+colname_efficiency_class = "energy_efficiency_class"
+colname_efficiency_class4 = "energy_efficiency_class4"
+colname_efficiency_class3 = "energy_efficiency_class3"
+colname_efficiency_class3_orig = "orig_energy_efficiency_class3"
+colname_initial_efficiency_class = "initial_energy_efficiency_class"
+colname_initial_efficiency_class4 = "initial_energy_efficiency_class4"
+colname_origin_heatsys_coarse = "origin_heatsys_coarse"
+colname_target_heatsys_coarse = "target_heatsys_coarse"
+colname_target_refurb_level = "Zielzustand_Sanierungsumfang"
+colname_current_refurb_level = "Sanierungszustand"
+colname_inhabitant_income = "inhabitant_income"
+colname_inhabitant_income_coarse = "inhabitant_income_coarse"
+colname_inhabitant_wealth = "inhabitant_wealth"
+colname_inhabitant_wealth_coarse = "inhabitant_wealth_coarse"
+colname_owner_income = "owner_income"
+colname_owner_income_coarse = "owner_income_coarse"
+colname_owner_wealth = "owner_wealth"
+colname_owner_wealth_coarse = "owner_wealth_coarse"
+colname_marker = "marker_devision"
+output_extension = "png"
+language = ["de_degeb"]
+seaborn_style = "whitegrid"
+fig_height = 6
+fig_aspect = 1.3
+fig_height_facet = 3
+fig_aspect_facet = 0.8
+# figure resolution
+dpi = 100
+pie_size_share = 0.2
+# https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+linestyles = ['solid', 'dotted', 'dashed', 'dashdotted', 'densely dashed']
+labels_file = "FigureLabels.xlsx"
+labels_sheet_parts = "parts_labels"
+labels_sheet_owner = "owner_labels"
+labels_sheet_sources = "sources_labels"
+labels_sheet_heatsys = "heatsys_labels"
+labels_sheet_heattype = "heattype_labels"
+labels_sheet_gt = "gt_labels"
+labels_sheet_bak = "bak_labels"
+labels_sheet_eff_classes = "eff_class_labels"
+labels_sheet_eff_classes4 = "eff_class4_labels"
+labels_sheet_income = "income_labels"
+xticks = "@none"
+# relative to folder 'building-stock-model' or absolute:
+plt_config_file = "./building_stock_model/config/config_plt.yaml"
+twoaxis_adjust_right = 0.75
+scatterplot_adjust_top = 0.87
+scatterplot_adjust_left = 0.07
+scatterplot_adjust_right = 0.85
+inset_pie_height = "20%"
+inset_pie_width = "20%"
+inset_pie_title_size = 5
+inset_pie_title_alpha = 0.6
+
+[merge_output]
+filename = "tables_df.xlsx"
+filename_pkl = "tables_df.pkl"
+filename_aggregated = "measures_agg.pkl"
+filename_agent_pkl = "agent_vars_df.pkl"
+fetch_pattern = "*.pkl"
+sheet_name = "Sheet1"
+# relative to main.output_path:
+folder_ls = []
+joined_folder_name = "joined_output_test"
+update_data = false
+old_data_folder = "WG_berlin_offset_0to15_v4"
+new_data_folder = "WG_berlin_offset_0to15_v4_update"
+runids_to_analyse = []
+
+[output]
+subfolder = "output"
+output_settings = true
+output_settings_path = "conf"
+output_settings_filename = "settings.toml"
+output_settingshistory_filename = "settings_history.json"
+output_settingshistory_key = "@none"
+output_db_cache = false
+cprofile = false
+cprofile_subfolder = "profiles"
+cprofile_write_profile = false
+cprofile_filename_profile = "ahid_profile.prof"
+cprofile_write_csv = false
+cprofile_filename_csv = "ahid_profile.csv"
+pyinstrument = false
+pyinstrument_filename_html = "ahid_pyinstrument.html"
+
+[debug]
+# see tests/test_rng.py
+output_randomstreaminvocations = false
+# number of stack trace entries to cut at the end (usually 2, for tests often more)
+randomstream_cutentries = 2
+output_comparetables = false
+# show warnings with origin in source
+output_detailed_warnings = false
+output_warnings_as_errors = false
+# often used: "FutureWarning" to locate origin in source code
+warningsforerrors = "Warning"
+
+[rng]
+seed_buildinginit = 1
+seed_buildingnew = 1
+seed_building_nrb_init = 1
+seed_building_nrb_new = 1
+seed_lifetimeparts = 1
+seed_demolish = 1
+seed_agentinit = 1
+seed_trigger = 1
+seed_invest = 1
+# Used to convert seed to [-1.0,1.0] in SQL. Seeds may not excced this value.
+# Changing this value means different RNG for otherwise same seeds in SQL!
+max_seed = 100000
+logger_buildinginit = "test_buildinginit_"
+logger_buildingnew = "test_buildingnew_"
+logger_buildingnwginit = "test_buildingnwginit_"
+logger_buildingnwgnew = "test_buildingnwgnew_"
+logger_lifetimeparts = "test_lifetimeparts_"
+logger_demolish = "test_demolish_"
+logger_agentinit = "test_agentinit_"
+logger_trigger = "test_trigger_"
+logger_invest = "test_invest_"
+
+[slurm]
+# relative to get_input_path:
+batchconfig_file = "../slurm/BatchConfigs_Template.ods"
+batchconfig_sheetname = "Runs"
+# rows in batch config excel sheet:
+batchconfig_rows = "@none"
+# relative to get_input_path:
+template_file = "../cluster/run_slurm_v01.sh"
+# relative to get_batchconfig_path:
+target_execfile = "slurm"
+# relative to get_batchconfig_path (should be subfolder of target_execfile):
+target_batchfiles = "slurm/batchfiles"
+# project root path on cluster
+target_cluster_mainpath = "~/agenthomeid/"
+# path to agenthomid code at cluster
+target_cluster_modelbase = "@format {this.slurm.target_cluster_mainpath}/git/building-stock-model"
+# relative to target_excefiles
+target_cluster_batchfiles = "./batchfiles"
+# path to store slurm log files at cluster (needs to correspond with the pattern defined in template_file -
+# the part before the RunID / Job which are added programmaatically):
+target_cluster_logfiles = "@format {this.slurm.target_cluster_mainpath}/{this.main.project}/{this.main.task}"
+host = "fricco.iee.fraunhofer.de"
+username = "username"
+
+editbatchConfigFile = true
+generateSlurmFile = true
+transferSlurmFile = true
+transferSettingsFile = true
+transferScenarioExcelFile = true
+executeSLURMscripts = false
+
+[cache]
+maxsize_calc_cost_part = 5000
+maxsize_calc_discount_factor = 1000
+maxsize_calc_domestic_hot_water__heat_demand_and_gains = 5000
+maxsize_calc_effort_coefficient_heat_supply = 5000
+maxsize_calc_energy_demand_space = 5000
+maxsize_calc_final_energy_demand_domestic = 5000
+maxsize_calc_final_energy_demand_space = 5000
+maxsize_calc_heating_load_design = 5000
+maxsize_calc_heat_demand_spec = 5000
+maxsize_calc_insulation_cost = 5000
+maxsize_calc_invest_cost = 5000
+maxsize_calc_heat_demand = 5000
+maxsize_calc_heat_gains = 5000
+maxsize_calc_heating_inst_cost = 5000
+maxsize_calc_night_setback = 5000
+maxsize_calc_subsidies = 5000
+maxsize_calc_trans_vent_losses = 5000
+maxsize_calc_warmwater_heat_demand = 25
+maxsize_calc_target_cost_envelope = 5000
+maxsize_calc_fuel_cost = 5000
+maxsize_calc_share_and_finalenergy_main_sec_supply = 5000
+maxsize_calc_final_aux_energy_demand = 5000
+maxsize_calc_co2_emissions_building = 5000
+
+[refurb]
+prob_weg = 0.6
+maxage = 100
+
+[test]
+# relative to folder 'building-stock-model' or absolute:
+settingsfile = "./building_stock_model/tests/test_settings.toml"

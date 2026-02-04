@@ -1,0 +1,7 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+dynamic,,, false,,,
+heat_demand,,, "eqcity",,,
+milieu_params,,, "milieu_parameters.csv",,,
+heat_sys_params,,, "heating_parameters.csv",,,
+heat_sys_params_dynamics,,, "heating_params_dynamics.csv",,,
+plt_settings,,, "plotting/config_plt_unik.yaml",,,

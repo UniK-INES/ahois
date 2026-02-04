@@ -1,0 +1,18 @@
+.wy-table-responsive {
+    margin-bottom: 24px;
+    max-width: 100%;
+    overflow: scroll;
+    background-color:#000000;
+}
+
+.rst-content table.docutils {
+  background-color: white;
+}
+
+.wy-table-responsive table td, .wy-table-responsive table th {
+  white-space: normal;
+}
+
+.rst-content .code-block-caption {
+  text-align: left;
+}

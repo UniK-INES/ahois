@@ -1,0 +1,47 @@
+dynaconf_include = ["./data/input/network/settings_local.toml"]
+#dynaconf_include = ["/home/sascha/git/ahois-pro/src/data/input/network/settings_local.toml"]
+
+[main]
+# Output 'root' for logs, settings history, graphml files etc. Absolute or relative to home dir.
+output_dir = "./data/input/network/output"
+# Appended to output directory to separate different projects
+project = "AHOI"
+# Appended to output path (see below) to separate different tasks of a project
+task = "basic"
+# Scenario ID that is looked up in excel_scenario_file
+scenario_id = 0
+runid = 0
+# Excel file to look up parameters by ScenarioID (in input folder):
+excel_scenario_file = "Scenario_Template.xlsx"
+# Used for parameter files. Relative to working directory or absolute. If "@none", package default is applied
+input_path = "./data/input/network"
+# Used as target for output files (specified excluding task but including project):
+output_path =  "@format {this.main.output_dir}/{this.main.project}"
+
+[input]
+param_file_agent = "param_agents.xlsx"
+
+[geo]
+hexagon_initialiser= "onelayer"
+hexagon_upper_shapefile = "shapes/hexagonsUpper/hexagonsUpper"
+hexagon_lower_shapefile = "shapes/hexagonsLower/hexagonsLower"
+hexagon_upper_shapefile_select = "shapes/hexagonsSelectedUpper/selectedUpper"
+hexagon_lower_shapefile_select = "shapes/hexagonsSelectedLower/selectedLower"
+crs = "epsg:4647"
+hexagon_upper_width = 3000
+hexagon_lower_width = 1500
+removeshapefiles = false
+
+[network]
+restore = true
+
+[output]
+output_settings = true
+output_graphml = true
+output_edgescsv = false
+output_agentshapes = false
+simplenames = false
+
+[logging]
+# absolute or relativ to home dir. If "@none", package default is applied
+configfile = "./data/input/network/config_logging.conf"

@@ -1,0 +1,8 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+config,,, "AHOI_SlideGeneration.xlsx",,,
+template,,, "/plotting/DT2_Slides_Template_Interventions.pptx",,,
+sections,,, true,,,
+section_title_variants,,, false,,,
+font,,, "Frutiger LT 45 Light",,,
+fontface_bold,,, true,,,
+fontsize_pt,,, 6,,,

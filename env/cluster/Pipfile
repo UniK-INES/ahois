@@ -1,0 +1,35 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://gitlab.uni-kassel.de/api/v4/projects/30/packages/pypi/simple"
+verify_ssl = true
+name = "gitlabuni-kassel"
+
+[[source]]
+url = "gitlabunik"
+verify_ssl = true
+name = ""
+
+[packages]
+mesa = "==2.4.0"
+mesa-geo = "==0.8.1"
+load_dotenv = "*"
+numpy = "*"
+openpyxl = "*"
+pandas = "*"
+geopandas = "*"
+networkx = "*"
+dynaconf-ahid = {git = "ssh://git@github.com/Holzhauer/dynaconf.git"}
+shobnetpy = {version="*", index="gitlabuni-kassel"}
+python-git-info = "*"
+pytest = "*"
+patsy = "*"
+statsmodels = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"

@@ -1,0 +1,4 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+mean_savings,,, 142,,,
+stdev_savings,,, 62,,,
+risk_tolerance,,, 0.7,,,

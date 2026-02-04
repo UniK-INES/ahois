@@ -1,0 +1,7 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+evaluate,,, 1,,,
+get_data,,, 2,,,
+define_choice,,, 1,,,
+compare_hs,,, 1,,,
+install,,, 1,,,
+calculate_satisfaction,,, 1,,,

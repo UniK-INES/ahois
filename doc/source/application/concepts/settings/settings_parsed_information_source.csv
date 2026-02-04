@@ -1,0 +1,4 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+distortion,,, 0.5,,,
+uncertainty_lower,,, 0.2,,,
+uncertainty_upper,,, 0.5,,,

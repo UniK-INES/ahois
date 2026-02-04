@@ -1,0 +1,105 @@
+DYNACONF_INCLUDE = [
+    "./data/input/network/settings_local.toml",
+]
+
+[MAIN]
+qgis = "/usr/lib/python3/dist-packages"
+qt5 = "/usr/lib/python3/dist-packages"
+runid = 0
+output_dir = "./data/input/network/output"
+project = "AHOI"
+task = "basic"
+scenario_id = 0
+excel_scenario_file = "Scenario_Template.xlsx"
+input_path = "./data/input/network"
+output_path = "./data/input/network/output/AHOI"
+excel_scenario_sheetname = "Parameter"
+
+[INPUT]
+param_file_agent = "param_agents.xlsx"
+sheetname_degree = "degree"
+sheetname_distance = "distance"
+sheetname_milieucomposition = "milieucomposition"
+sheetname_params = "params"
+
+[PARAM]
+colname_probag_forw = "probag_forw"
+colname_probag_back = "probag_back"
+colname_dim_weight_milieu = "dim_weight_milieu"
+colname_dim_weight_geo = "dim_weight_geo"
+colname_distribution = "distribution"
+colname_dist_xmin = "xmin"
+
+[PREPROCESS]
+output_dir_hexagon = "./data/input/network/output/hexagons"
+source_dir_boundaryShapes = "./data/input/network/output/boundaryShapes"
+
+[GEO]
+hexagon1_width = 3000
+hexagon2_width = 1000
+hexagon_initialiser = "onelayer"
+hexagon1_shapefile = "./data/input/network/shapes/hexagons1/hexagons1"
+hexagon2_shapefile = "./data/input/network/shapes/hexagons2/hexagons2"
+hexagon1_shapefile_select = "./data/input/network/shapes/hexagonsSelected1/selected1"
+hexagon2_shapefile_select = "./data/input/network/shapes/hexagonsSelected2/selected2"
+crs = "epsg:4647"
+removeshapefiles = false
+
+[NETWORK]
+restore = true
+deg_dist = "nbinom"
+deg_dist_param1 = 3.11
+deg_dist_param2 = 0.17
+distance_dist = "weibull_min"
+distance_dist_param1 = 1.02
+distance_dist_param2 = 174.24
+distance_xmin = 20.0
+distance_plocal = 0.7
+distance_factor_for_distribution = 1000
+max_search_radius = inf
+prob_burning_forward = 0.0
+prob_burning_backward = 0.2
+dim_weight_geo = 0.5
+dim_weight_milieu = 0.5
+attempts_ambassador = 15
+agent_shuffle_interval = inf
+
+[RNG]
+seed_degree = 1
+seed_milieu = 2
+seed_distance = 3
+seed_shuffle = 4
+seed_explore = 5
+agent_shuffle_interval = 100
+logger_degree = "test_degree_"
+logger_milieu = "test_milieu_"
+logger_distance = "test_distance_"
+logger_shuffle = "test_shuffle_"
+logger_explore = "test_explore_"
+
+[OUTPUT]
+output_settings = true
+output_graphml = true
+output_edgescsv = false
+output_agentshapes = false
+subfolder = "output"
+output_settings_path = "conf"
+output_settings_filename = "settings.toml"
+output_settingshistory_filename = "settings_history.json"
+output_settingshistory_key = "@none "
+output_agentshapes_folder = "agentsshapes"
+output_agentshapes_file = "agents.geojson"
+output_edgescsv_folder = "edgecsv"
+output_edgescsv_filename = "edges.csv"
+output_graphml_folder = "graphml"
+output_graphml_filename = "network.graphml"
+
+[DEBUG]
+output_randomstreaminvocations = false
+
+[LOGGING]
+configfile = "./data/input/network/config_logging.conf"
+log_path = "log"
+
+[TESTING]
+agentshapefile = "testdata/agents.geojson"

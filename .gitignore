@@ -1,0 +1,208 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+env/upgrade/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+**/data/output
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+/.project
+/.pydevproject
+/poetry.lock
+/pyproject.toml
+
+#Run results
+*.png
+*.xlsx
+*.xls
+*.pkl
+*.csv
+model.txt
+profiling_script.txt
+**/sandbox/**
+
+# Ignore dynaconf secret files
+*.secrets.*
+
+!doc/**/*.xlsx
+!doc/**/*.csv
+src/settings/settings_local.toml
+src/settings/settings_local_cluster.toml
+src/data/input/network/settings_local.toml
+src/data/input/network/output/**/*.*
+!src/data/input/network/output/AHOI/basic/0/graphml/network.graphml
+!src/data/input/network/output/AHOI/basic/S*/graphml/network.graphml
+
+!src/settings/settings_sh.xlsx
+!src/data/input/network/*.xlsx
+!src/data/input/*.csv
+!src/data/input/FigureLabels*.*
+!src/settings/figure_labels*.xlsx
+
+src/data/input/Articles/DissertationAngelikaGellrich.pdf
+src/data/input/Articles/krebs2016.pdf
+src/data/input/Articles/s11027-010-9274-6.pdf
+src/data/input/Articles/schwarz2009.pdf
+
+src/data/input/20240215_Erklärtexte_DT ru.docx
+src/data/input/Ergebnisse der Haushaltsbefragung in Kiel.pdf
+src/data/input/Regressionsergebnisse.pdf
+src/data/input/Scenario_description_20240215.docx
+src/data/input/WAERMER_ClosenessForProducts_MilieusAlteri.pdf
+
+src/data/input/WAERMER_mileu/.RData
+src/data/input/WAERMER_mileu/.Rhistory
+src/data/input/WAERMER_mileu/Anfrage Ivan.docx
+src/data/input/WAERMER_mileu/Mileu_script.R
+src/data/input/WAERMER_mileu/Variablen-Übersicht.pdf
+src/data/input/WAERMER_mileu/WAERMER_AP2_Recoded_DTapplied_v02.csv
+src/data/input/WAERMER_mileu/WAERMER_AP2_Recoded_DTapplied_v02.sav
+src/data/input/WAERMER_mileu/WAERMER_mileu.Rproj
+src/data/input/WAERMER_mileu/daten.RData
+src/data/input/WAERMER_mileu/Age_script.R
+
+src/data/input/WAERMER_mileu/.Rproj.user/shared/notebooks/patch-chunk-names
+src/data/input/WAERMER_mileu/.Rproj.user/shared/notebooks/paths
+
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/persistent-state
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/rmd-outputs
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/saved_source_markers
+
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/pcs/debug-breakpoints.pper
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/pcs/files-pane.pper
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/pcs/source-pane.pper
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/pcs/windowlayoutstate.pper
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/pcs/workbench-pane.pper
+
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/3A778FD8
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/3A778FD8-contents
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/9302D3E5
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/9302D3E5-contents
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/BF0F3157
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/per/t/BF0F3157-contents
+
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/prop/74760DBE
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/prop/D8E8C2AB
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/sources/prop/INDEX
+
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/viewer-cache/023ED67C.Rdata
+src/data/input/WAERMER_mileu/.Rproj.user/C8F8D950/viewer-cache/8341FB38.Rdata
+

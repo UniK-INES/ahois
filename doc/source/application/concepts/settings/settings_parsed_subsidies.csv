@@ -1,0 +1,10 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+district,,, 0.3,,,
+heat_pump,,, 0.3,,,
+heat_pump_brine,,, 0.3,,,
+pellet,,, 0.3,,,
+network_local_hot,,, 0.3,,,
+GP_Joule,,, 0.3,,,
+climate_speed,,, 0.2,,,
+income,,, 0.3,,,
+efficiency,,, 0.05,,,

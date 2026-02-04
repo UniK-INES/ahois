@@ -1,0 +1,60 @@
+[geo]
+coordinate_reference_system = "epsg:4647"
+geojson_file_path = "data/GIS/GIS_Oppendorf/Oppendorf_Gebaeude_MikromSubareaUbemAP3Heizlast.geojson"
+
+
+[heating_systems]
+list = [
+    "Heating_system_oil",
+    "Heating_system_gas",
+    "Heating_system_heat_pump",
+    "Heating_system_electricity",
+    "Heating_system_pellet",
+    "Heating_system_network_district",
+    "Heating_system_network_local",
+    "Heating_system_heat_pump_brine",
+    "Heating_system_GP_Joule",
+]
+parameters = [
+    "operation_effort",
+    "fuel_cost",
+    "emissions",
+    "price",
+    "installation_effort",
+    "opex",
+]
+comprehensive_metrics = [
+    "social_norm",
+    "affordability",
+    "integral_rating",
+    "behavioural_control",
+    "income_ratio"
+]
+compare_scenario.Scenario_heat_pumps = ["Heating_system_heat_pump"]
+compare_scenario.Scenario_heat_pumps_campaign = ["Heating_system_heat_pump"]
+compare_scenario.Scenario_network_district = ["Heating_system_network_district"]
+compare_scenario.Scenario_network_local_hot = ["Heating_system_network_local"]
+compare_scenario.Scenario_network_local_cold = ["Heating_system_heat_pump_brine"]
+compare_scenario.Scenario_mix_pellet_heat_pump = ["Heating_system_heat_pump", "Heating_system_pellet"]
+compare_scenario.Scenario_mix_pellet_heat_pump_network = ["Heating_system_heat_pump", "Heating_system_pellet", "Heating_system_network_local"]
+compare_scenario.Scenario_pellets = ["Heating_system_pellet"]
+compare_scenario.Scenario_mix_heat_pump_network_cold = ["Heating_system_heat_pump", "Heating_system_heat_pump_brine"]
+compare_scenario.Scenario_mix_GP_Joule = ["Heating_system_heat_pump", "Heating_system_pellet", "Heating_system_GP_Joule"]
+
+[milieu]
+groups = ["Leading", "Mainstream", "Traditionals", "Hedonists"]
+
+[decision_making]
+stages = ["No stage", "Predecisional", "Preactional", "Actional", "Postactional"]
+
+[decision_making.stages_numerical]
+"1" = "1 - evaluating"
+"12" = "1-2 - realized that system is bad and started research"
+"123" = "1-2-3 - research, found system, installed it or waiting for plumber"
+"2" = "2 - on research"
+"23" = "2-3 - Started research and found system"
+"232" = "2-3-2 - started research, found system, but it didn't work out"
+"3" = "3 - installing system"
+"32" = "3-2 something went wrong during installation"
+"33" = "3-3 still installing"
+"34" = "3-4 - installed and evaluated system"

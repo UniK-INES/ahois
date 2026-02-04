@@ -1,0 +1,63 @@
+### Uni Kassel Corporate Design Code ###
+## SPDX-FileCopyrightText: : 2025 Integrierte Energiesysteme, Uni Kassel
+### SPDX-License-Identifier: GPL
+## Contact: Sascha.Holzhauer@uni-kassel.de
+
+Layout:
+  ############        Figure           ############
+  figure.autolayout: True
+
+  ############        LINES           ############
+  lines.linewidth: 2.0
+  lines.linestyle: "-"
+
+  ############        FONT           ############
+  font.family: Frutiger LT 45 Light, Arial
+  font.weight: normal
+  font.size: 16
+  text.color: "#595959"
+  
+  ############        AXES           ############
+  axes.facecolor: "#ffffff"
+  axes.edgecolor: "#ffffff"
+  axes.linewidth: 1.0
+  axes.titlesize: 20
+  axes.titleweight: bold
+  axes.labelcolor: "#575757"
+  axes.labelweight: regular
+  axes.spines.left: True
+  axes.spines.right: False
+  axes.spines.top: False
+  axes.spines.bottom: True
+  axes.grid: True
+  axes.grid.axis: y # both
+  axes.grid.which: major
+  grid.color: "#D9D9D9"
+  grid.linewidth: 1.0
+  grid.linestyle: solid
+  axes.ymargin: 0
+  axes.axisbelow: True
+
+  ############        TICKS           ############
+  xtick.color: "#575757"
+  ytick.color: "#575757"
+  # xtick.direction: out
+  ytick.left: False
+  ytick.direction: in
+  
+  ############        HATCH            ############
+  hatch.color: "#FFFFFF"
+
+  ############        LEGEND           ############
+  legend.facecolor: inherit
+  legend.fontsize: 14
+  legend.labelcolor: "#575757"
+  legend.facecolor: "#f8f8f8"
+  legend.edgecolor: "#575757"
+  legend.loc: "lower center"
+  legend.frameon: True
+  legend.handleheight: 2.0
+  
+  ############        FIGURE           ############
+  figure.facecolor: "#ffffff"
+  figure.edgecolor: "#ffffff"

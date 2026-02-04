@@ -1,0 +1,10 @@
+Term,Description
+YOC,Year Of Construction
+es,Energy Source
+hp,Heat Pump
+cond_boiler,Condensing Boiler (Brennwertkessel)
+dh,District Heating/Fernwärmenetz
+lh,Local Heating/Nahwärmenetz
+ht,Heating Type
+BEG,Bundesförderung für effiziente Gebäude
+GEG,Gebäude-Energie-Gesetz

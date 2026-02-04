@@ -1,0 +1,18 @@
+﻿matplotlib==3.8.3
+Mesa==2.1.5
+Mesa-Geo==0.7.1
+numpy==1.23.5
+openpyxl==3.1.2
+pandas==1.5.2
+geopandas==0.14.4
+networkx==3.1
+solara==1.25.1
+dynaconf_ahid @ git+https://github.com/Holzhauer/dynaconf.git
+black==24.2.0
+pre-commit==3.6.1
+pytest==8.1.1
+plotly==5.20.0
+patsy==0.5.6
+statsmodels==0.14.4
+seaborn==0.13.2
+sphinxcontrib-excel-table

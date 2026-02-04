@@ -1,0 +1,17 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+template_file,,, "src/experiments/slurm_script_template.sh",,,relative to get_input_path:
+target_execfile,,, "slurm",,,relative to get_batchconfig_path:
+target_batchfiles,,, "slurm/batchfiles",,,relative to get_batchconfig_path (should be subfolder of target_execfile):
+target_cluster_mainpath,,, "~/ahoi/",,,project root path on cluster
+target_cluster_modelbase,,, "@format {this.slurm.target_cluster_mainpath}/ahois-pro/src/",,,path to agenthomid code at cluster
+target_cluster_batchfiles,,, "./batchfiles",,,relative to target_excefiles
+target_cluster_logfiles,,, "@format {this.slurm.target_cluster_mainpath}/{this.main.task}",,,'path to store slurm log files at cluster (needs to correspond with the pattern defined in template_file -
+the part before the RunID / Job which are added programmaatically):'
+host,,, "its-cs1.its.uni-kassel.de",,,
+username,,, "uk093483",,,
+num_runs_per_batch,,, 1,,,
+config_id_start,,, 0,,,
+config_id_end,,, 0,,,
+fetch_pattern,,, "pickles/*.*",,,
+partitio,,,"FB16",,,
+duratio,,, 300,,,

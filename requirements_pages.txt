@@ -1,0 +1,24 @@
+argparse
+cachetools
+docxbuilder
+dynaconf>= 3.2.4
+immutabledict
+matplotlib>=3.8.3
+mementos
+mesa==2.1.5
+numpy>=1.21.6
+numpydoc
+openpyxl
+pandas>=2.1.0
+pip
+psycopg2-binary
+pytest
+python-git-info
+sqlalchemy>=2.0
+scipy
+seaborn>=0.13
+sphinx
+sphinx_rtd_theme
+sphinxcontrib-excel-table
+sphinx-copybutton
+stevedore

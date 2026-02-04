@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+model_init,,, 0,,,
+model_run,,, 0,,,
+house_init,,, 0,,,
+milieu_init,,, 0,,,
+heating_init,,, 0,,,
+information_source_run,,, 0,,,
+houseowner_run,,, 0,,,
+plumber_run,,, 0,,,

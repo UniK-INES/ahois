@@ -1,0 +1,1133 @@
+# Translations template for AHOI.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the AHOI project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AHOI 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 09:27+0100\n"
+"PO-Revision-Date: 2026-01-23 09:28+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.11.0\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: src/plotting/Heatmaps.py:104
+msgid "Sum of Replacements"
+msgstr "Summe der Ersetzungen"
+
+#: src/plotting/Heatmaps.py:107 src/plotting/Heatmaps.py:200
+#, python-brace-format
+msgid "Heatmap for {year}"
+msgstr "Heatmap für {year}"
+
+#: src/plotting/Heatmaps.py:108 src/plotting/Heatmaps.py:201
+msgid "Advisors"
+msgstr "Berater"
+
+#: src/plotting/Heatmaps.py:109 src/plotting/Heatmaps.py:202
+msgid "Plumbers"
+msgstr "Installateure"
+
+#: src/plotting/Plots.py:193
+msgid "ratio"
+msgstr "Anteil"
+
+#: src/plotting/Plots.py:194
+msgid "Euro"
+msgstr "Euro"
+
+#: src/plotting/Plots.py:195
+msgid "tons of CO2 equivalent per year"
+msgstr "Tonnen CO2eq pro Jahr"
+
+#: src/plotting/Plots.py:196 src/plotting/Scenario_comparator.py:2084
+#: src/plotting/Scenario_comparator.py:2109
+msgid "MWh per year"
+msgstr "MWh pro Jahr"
+
+#: src/plotting/Plots.py:212 src/plotting/Plots.py:1654
+msgid "Predecisional"
+msgstr "Vor der Entscheidung"
+
+#: src/plotting/Plots.py:212 src/plotting/Plots.py:1654
+msgid "Preactional"
+msgstr "Vorbereitend"
+
+#: src/plotting/Plots.py:212 src/plotting/Plots.py:1654
+msgid "Actional"
+msgstr "Aktiv"
+
+#: src/plotting/Plots.py:212 src/plotting/Plots.py:1654
+msgid "Postactional"
+msgstr "Nachbereitend"
+
+#: src/plotting/Plots.py:331 src/plotting/Scenario_comparator.py:1375
+#: src/plotting/Scenario_comparator.py:1451
+#: src/plotting/Scenario_comparator.py:1591
+#: src/plotting/Scenario_comparator.py:1677
+msgid "Obstacles"
+msgstr "Hürden"
+
+#: src/plotting/Plots.py:332 src/plotting/Scenario_comparator.py:1771
+msgid "Agents"
+msgstr "Agenten"
+
+#: src/plotting/Plots.py:455 src/plotting/Scenario_comparator.py:1333
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1537
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Triggered"
+msgstr "Unzufrieden"
+
+#: src/plotting/Plots.py:456 src/plotting/Scenario_comparator.py:1334
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1537
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Deciding"
+msgstr "entscheidend"
+
+#: src/plotting/Plots.py:457 src/plotting/Scenario_comparator.py:1335
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1537
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Knowing"
+msgstr "wissend"
+
+#: src/plotting/Plots.py:458 src/plotting/Scenario_comparator.py:1336
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1538
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Can afford"
+msgstr "finanzierbar"
+
+#: src/plotting/Plots.py:459
+msgid "Certain"
+msgstr "Sicher"
+
+#: src/plotting/Plots.py:460 src/plotting/Scenario_comparator.py:1338
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1538
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Like"
+msgstr "favorisiert"
+
+#: src/plotting/Plots.py:461 src/plotting/Scenario_comparator.py:1339
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1539
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Installed"
+msgstr "installiert"
+
+#: src/plotting/Plots.py:491
+#, python-brace-format
+msgid ""
+"{imagename} Decision conversion numbers while deciding for {system_name}"
+msgstr ""
+"{imagename} Anzahl der Entscheidungen während Entscheidung für {system_name}"
+
+#: src/plotting/Plots.py:493 src/plotting/Plots.py:530
+msgid "Periods"
+msgstr "Zeitspanne"
+
+#: src/plotting/Plots.py:494
+msgid "Counts"
+msgstr "Anzahl"
+
+#: src/plotting/Plots.py:529
+msgid "Decision conversion efficiency while deciding for"
+msgstr "Ergebnisse während der Entscheidung für"
+
+#: src/plotting/Plots.py:531
+msgid "Shares (%)"
+msgstr "Anteile (%)"
+
+#: src/plotting/Plots.py:582
+#, python-brace-format
+msgid "{imagename}Information overspreading of subsidies"
+msgstr "{imagename}Wissensverbreitung zu Förderungen"
+
+#: src/plotting/Plots.py:584 src/plotting/Plots.py:635
+#: src/plotting/Plots.py:1649 src/plotting/Plots.py:2167
+#: src/plotting/Plots.py:2197 src/plotting/Plots.py:2274
+#: src/plotting/Plots.py:2345 src/plotting/Plots.py:2433
+#: src/plotting/Plots.py:2693 src/plotting/Plots.py:2794
+msgid "Weeks"
+msgstr "Wochen"
+
+#: src/plotting/Plots.py:585 src/plotting/Plots.py:636
+msgid "Number of agents"
+msgstr "Anzahl der Agenten"
+
+#: src/plotting/Plots.py:633
+#, python-brace-format
+msgid "{imagename}Information outspreading of heating systems"
+msgstr "{imagename}Informationausbreitung zu Heizsystemen"
+
+#: src/plotting/Plots.py:697
+msgid "Avg Budget"
+msgstr "Durchschn. Budget"
+
+#: src/plotting/Plots.py:704
+msgid "Budget Range (±1 SD)"
+msgstr "Budgetspanne (±1 SD)"
+
+#: src/plotting/Plots.py:706 src/plotting/Plots.py:708
+msgid "Average Budget"
+msgstr "Durchschnittsbudget"
+
+#: src/plotting/Plots.py:707 src/plotting/Plots.py:722
+#: src/plotting/Plots.py:1358 src/plotting/Plots.py:1415
+#: src/plotting/Plots.py:1472
+msgid "Step"
+msgstr "Schritt"
+
+#: src/plotting/Plots.py:712
+msgid "Avg Weekly Expenses"
+msgstr "Durchschn. wöchentliche Ausgaben"
+
+#: src/plotting/Plots.py:719
+msgid "Expenses Range (±1 SD)"
+msgstr "Ausgabenspanne (±1 SD)"
+
+#: src/plotting/Plots.py:721 src/plotting/Plots.py:723
+msgid "Average Weekly Expenses, EUR"
+msgstr "Durchschn. wöchentliche Ausgaben (EUR)"
+
+#: src/plotting/Plots.py:781
+#, python-brace-format
+msgid "{imagename}Average time on stage 0"
+msgstr "{imagename}Durchschnittliche Verweildauer in Phase 0"
+
+#: src/plotting/Plots.py:782
+msgid "Stage 0"
+msgstr "Phase 0"
+
+#: src/plotting/Plots.py:783 src/plotting/Plots.py:789
+#: src/plotting/Plots.py:796 src/plotting/Plots.py:1223
+#: src/plotting/Plots.py:1518 src/plotting/Plots.py:1698
+#: src/plotting/Plots.py:1771 src/plotting/Plots.py:1813
+#: src/plotting/Plots.py:1847 src/plotting/Plots.py:1886
+#: src/plotting/Plots.py:1931 src/plotting/Plots.py:1962
+#: src/plotting/Plots.py:1991 src/plotting/Plots.py:2090
+#: src/plotting/Plots.py:2455
+msgid "Week"
+msgstr "Woche"
+
+#: src/plotting/Plots.py:787
+#, python-brace-format
+msgid "{imagename}Average time on other stages"
+msgstr "{imagename}Durchschnittliche Verweildauer in anderen Phasen"
+
+#: src/plotting/Plots.py:788 src/plotting/Plots.py:795
+msgid "Stage"
+msgstr "Phase"
+
+#: src/plotting/Plots.py:793
+#, python-brace-format
+msgid "{imagename}Average time on other stages (no outliers)"
+msgstr ""
+"{imagename}Durchschnittliche Verweildauer in anderen Phasen (ohne Ausreißer)"
+
+#: src/plotting/Plots.py:900 src/plotting/Plots.py:1030
+#, python-brace-format
+msgid "{comparesysname} vs {system_name}"
+msgstr "{comparesysname} vs {system_name}"
+
+#: src/plotting/Plots.py:904 src/plotting/Plots.py:1034
+#: src/plotting/Plots.py:1175
+msgid "Category"
+msgstr "Kategorie"
+
+#: src/plotting/Plots.py:905 src/plotting/Plots.py:1176
+msgid "Difference"
+msgstr "Differenz"
+
+#: src/plotting/Plots.py:1035
+msgid "Median Difference"
+msgstr "Differenz"
+
+#: src/plotting/Plots.py:1171
+#, python-brace-format
+msgid "{compare_system_name} - {metrics_name}"
+msgstr "{compare_system_name} - {metrics_name}"
+
+#: src/plotting/Plots.py:1222 src/plotting/Plots.py:1519
+#, python-brace-format
+msgid "{imagename}Distribution of agents among stages"
+msgstr "{imagename}Verteilung der Agenten auf Phasen"
+
+#: src/plotting/Plots.py:1224 src/plotting/Plots.py:1518
+#: src/plotting/Plots.py:2091
+msgid "Percentage, %"
+msgstr "Prozentsatz"
+
+#: src/plotting/Plots.py:1273
+#, python-brace-format
+msgid "{image_name}Heating distribution of advised houseowners"
+msgstr "{image_name}Verteilung der Heizsysteme bei Agenten mit Energieberatung"
+
+#: src/plotting/Plots.py:1359
+msgid "Aggregated Queue Length"
+msgstr "Aggregierte Wartedauer"
+
+#: src/plotting/Plots.py:1360
+#, python-brace-format
+msgid "{imagename} Aggregated Queue Length by {intermediary_type} and Step"
+msgstr ""
+"{imagename} Aggregierte Wartedauer nach {intermediary_type} und Zeitschritt"
+
+#: src/plotting/Plots.py:1411
+#, python-brace-format
+msgid "{intermediary}"
+msgstr "{intermediary}"
+
+#: src/plotting/Plots.py:1416
+msgid "Aggregated Queue Length (Moving Average)"
+msgstr "Aggregierte Wartelänge (gleitender Durchschnitt)"
+
+#: src/plotting/Plots.py:1417
+#, python-brace-format
+msgid ""
+"{imagename} Aggregated Queue Length (Moving Average) by Intermediary and Step"
+msgstr ""
+"{imagename} Aggregierte Wartelänge (gleitender Durchschnitt) nach "
+"Intermediär und Zeitschritt"
+
+#: src/plotting/Plots.py:1419
+msgid "Intermediary"
+msgstr "Intermediär"
+
+#: src/plotting/Plots.py:1440 src/plotting/Plots.py:1461
+msgid "Amount"
+msgstr "Anzahl"
+
+#: src/plotting/Plots.py:1469
+#, python-brace-format
+msgid "{imagename} Number of completed jobs"
+msgstr "{imagename} Anzahl erledigter Arbeiten"
+
+#: src/plotting/Plots.py:1577
+msgid "Step (Week)"
+msgstr "Schritt (Woche)"
+
+#: src/plotting/Plots.py:1579
+msgid "Houseowners"
+msgstr "Hausbesitzer"
+
+#: src/plotting/Plots.py:1581
+msgid " progression over Steps for multiple Houseowners"
+msgstr "Fortschritt für mehrere Hausbesitzer"
+
+#: src/plotting/Plots.py:1647
+#, python-brace-format
+msgid ""
+"{imagename}Generalized Distribution of Agents in Decision-Making Process"
+msgstr "{imagename}Allgemeine Verteilung der Agenten im Entscheidungsprozess"
+
+#: src/plotting/Plots.py:1650
+msgid "Percentage of the deciding population, %"
+msgstr "Prozentsatz der entscheidenden Agenten"
+
+#: src/plotting/Plots.py:1696
+#, python-brace-format
+msgid "{imagename}Percentage of deciding agents"
+msgstr "{imagename}Prozentsatz der entscheidenden Agenten"
+
+#: src/plotting/Plots.py:1699
+msgid "Percentage of deciding agents, %"
+msgstr "Anteil der entscheidenden Agenten"
+
+#: src/plotting/Plots.py:1769
+#, python-brace-format
+msgid "{imagename}Distribution of heating systems among agents"
+msgstr "{imagename}Verteilung der Heizsysteme unter Agenten"
+
+#: src/plotting/Plots.py:1772
+msgid "Systems, units"
+msgstr "Systeme"
+
+#: src/plotting/Plots.py:1811
+#, python-brace-format
+msgid "{imagename}Average system age"
+msgstr "{imagename}Durchschnittliches Heizsystemalter"
+
+#: src/plotting/Plots.py:1814 src/plotting/Plots.py:1887
+#: src/plotting/Plots.py:2594
+msgid "Years"
+msgstr "Jahre"
+
+#: src/plotting/Plots.py:1845
+#, python-brace-format
+msgid "{imagename}Average total operating expenses"
+msgstr "{imagename}Durchschnitt der vollständigen Betriebskosten"
+
+#: src/plotting/Plots.py:1848
+msgid "EUR"
+msgstr "EUR"
+
+#: src/plotting/Plots.py:1884
+#, python-brace-format
+msgid "{imagename}Average System Age per Heating System"
+msgstr "{imagename}Durchschnittsalter nach Heizsystem"
+
+#: src/plotting/Plots.py:1929
+#, python-brace-format
+msgid "{imagename}Average satisfaction by HS"
+msgstr "{imagename}Durchschnittliche Zufriedenheit nach Heizsystemen"
+
+#: src/plotting/Plots.py:1932
+msgid "Satisfied_ratio"
+msgstr "Verhältnis der Zufriedenen"
+
+#: src/plotting/Plots.py:1961
+#, python-brace-format
+msgid "{imagename}Average emissions"
+msgstr "{imagename}Durchschnittliche Emissionen"
+
+#: src/plotting/Plots.py:1963
+msgid "Average Emissions, tons of CO2 equivalent per year"
+msgstr "Durchschnittsemissionen (Tonnen CO2eq pro Jahr)"
+
+#: src/plotting/Plots.py:1989
+#, python-brace-format
+msgid "{imagename}Average energy demand"
+msgstr "{imagename}Durchschnittlicher Energiebedarf"
+
+#: src/plotting/Plots.py:1992
+msgid "Energy demand, MWh per year"
+msgstr "Energiebedarf, MWh pro Jahr"
+
+#: src/plotting/Plots.py:2024 src/plotting/Plots.py:2086
+msgid "Scenario fulfillment"
+msgstr "Szenarioerfüllung"
+
+#: src/plotting/Plots.py:2025
+msgid "Year"
+msgstr "Jahr"
+
+#: src/plotting/Plots.py:2026
+msgid "Percentage"
+msgstr "Prozentsatz"
+
+#: src/plotting/Plots.py:2032 src/plotting/Scenario_comparator.py:794
+#: src/plotting/Scenario_comparator.py:1625
+#: src/plotting/Scenario_comparator.py:1705
+msgid "Scenario"
+msgstr "Szenario"
+
+#: src/plotting/Plots.py:2075 src/plotting/Plots.py:2078
+msgid "Rate of Change"
+msgstr "Veränderungsrate"
+
+#: src/plotting/Plots.py:2088
+#, python-brace-format
+msgid "{imagename} Scenario fulfillment"
+msgstr "{imagename} Zielerfüllung"
+
+#: src/plotting/Plots.py:2163
+#, python-brace-format
+msgid "Avarage {imagename}{column_name} for individual agents"
+msgstr "Durchschnitt {imagename}{column_name} für einzelne Agenten"
+
+#: src/plotting/Plots.py:2168
+#, python-brace-format
+msgid "{column_name}, {ylabel}"
+msgstr "{column_name}, {ylabel}"
+
+#: src/plotting/Plots.py:2196
+#, python-brace-format
+msgid "{imagename}Optimality"
+msgstr "{imagename}Optimalität"
+
+#: src/plotting/Plots.py:2198 src/plotting/Scenario_comparator.py:2188
+#: src/plotting/Scenario_comparator.py:2210
+#: src/plotting/Scenario_comparator.py:2235
+msgid "Optimality, ratio"
+msgstr "Verhältnis der Optimalität"
+
+#: src/plotting/Plots.py:2247
+#, python-brace-format
+msgid "{imagename}Distribution of Preferences of Houseowners"
+msgstr "{imagename}Verteilung der Hauseigentümer-Präferenzen"
+
+#: src/plotting/Plots.py:2250
+msgid "Value"
+msgstr "Wert"
+
+#: src/plotting/Plots.py:2272
+#, python-brace-format
+msgid "{imagename} Amount of triggers"
+msgstr "{imagename} Anzahl der Auslöser"
+
+#: src/plotting/Plots.py:2275
+msgid "Number of triggers, units"
+msgstr "Anzahl der Auslöser"
+
+#: src/plotting/Plots.py:2343
+#, python-brace-format
+msgid "{imagename}Cumulative Trigger Types Over Time"
+msgstr "{imagename}Kumulative Auslöser über die Zeit"
+
+#: src/plotting/Plots.py:2346 src/plotting/Plots.py:2347
+msgid "Trigger Types"
+msgstr "Auslöser"
+
+#: src/plotting/Plots.py:2384
+#, python-brace-format
+msgid "{imagename}Frequency of information source calls"
+msgstr "{imagename}Häufigkeit der Informationssuche"
+
+#: src/plotting/Plots.py:2387
+msgid "Type of source"
+msgstr "Art der Quelle"
+
+#: src/plotting/Plots.py:2388
+msgid "Calls, units"
+msgstr "Anzahl der Aufsuchungen"
+
+#: src/plotting/Plots.py:2428
+msgid "Replacements"
+msgstr "Ersetzungen"
+
+#: src/plotting/Plots.py:2429
+msgid "Changes"
+msgstr "Änderungen"
+
+#: src/plotting/Plots.py:2431
+#, python-brace-format
+msgid "{imagename}Changes and replacements"
+msgstr "{imagename}Wechsel und Ersetzungen"
+
+#: src/plotting/Plots.py:2434
+msgid "Number of events, units"
+msgstr "Anzahl der Auslöser"
+
+#: src/plotting/Plots.py:2453
+#, python-brace-format
+msgid "{imagename}Houses with a subsidised system installed"
+msgstr "{imagename}Gebäude mit gefördertem Heizsystem"
+
+#: src/plotting/Plots.py:2456
+msgid "Houses"
+msgstr "Gebäude"
+
+#: src/plotting/Plots.py:2532 src/plotting/Plots.py:2595
+msgid "Decisions"
+msgstr "Entscheidungen"
+
+#: src/plotting/Plots.py:2534
+msgid "Drop outs for "
+msgstr "Abbruch von "
+
+#: src/plotting/Plots.py:2592
+#, python-brace-format
+msgid "{imagename}Drop-Outs for {option}"
+msgstr "{imagename}Abbrüche von {option}"
+
+#: src/plotting/Plots.py:2597
+msgid "Decision Type"
+msgstr "Entscheidung"
+
+#: src/plotting/Plots.py:2682
+msgid "Mean Ratio"
+msgstr "Durchschnittsanteil"
+
+#: src/plotting/Plots.py:2689
+msgid "±1 Std Dev"
+msgstr "±1 Std Dev"
+
+#: src/plotting/Plots.py:2691
+msgid "Affordability Threshold (1.0)"
+msgstr "Erschwinglichkeits-Grenzwert (1.0)"
+
+#: src/plotting/Plots.py:2694
+msgid "Budget / Installation Cost Ratio"
+msgstr "Budget/Installationskosten-Verhältnis"
+
+#: src/plotting/Plots.py:2781
+msgid "Not affordable"
+msgstr "Nicht erschwinglich"
+
+#: src/plotting/Plots.py:2789
+msgid "Affordable"
+msgstr "erschwinglich"
+
+#: src/plotting/Plots.py:2795
+msgid "Count of Agents"
+msgstr "Agentenzahl"
+
+#: src/plotting/Scenario_comparator.py:595
+msgid "Fulfillment of target scenario"
+msgstr "Szenario-Zielerfüllung"
+
+#: src/plotting/Scenario_comparator.py:596
+#: src/plotting/Scenario_comparator.py:652
+msgid "Fulfillment, %"
+msgstr "Zielerfüllung (%)"
+
+#: src/plotting/Scenario_comparator.py:629
+msgid "Share (%)"
+msgstr "Anteile (%)"
+
+#: src/plotting/Scenario_comparator.py:632
+msgid "Network quota fulfillment"
+msgstr "Anschlussquote"
+
+#: src/plotting/Scenario_comparator.py:650
+msgid "Fulfillment Comparison"
+msgstr "Vergleich der Zielerreichung"
+
+#: src/plotting/Scenario_comparator.py:651
+#: src/plotting/Scenario_comparator.py:1410
+#: src/plotting/Scenario_comparator.py:1484
+#: src/plotting/Scenario_comparator.py:1885
+#: src/plotting/Scenario_comparator.py:1918
+#: src/plotting/Scenario_comparator.py:2083
+#: src/plotting/Scenario_comparator.py:2108
+#: src/plotting/Scenario_comparator.py:2209
+#: src/plotting/Scenario_comparator.py:2234
+#: src/plotting/Scenario_comparator.py:2335
+#: src/plotting/Scenario_comparator.py:2361
+#: src/plotting/Scenario_comparator.py:2449
+#: src/plotting/Scenario_comparator.py:2721
+msgid "Scenario and Run"
+msgstr "Szenario"
+
+#: src/plotting/Scenario_comparator.py:753
+msgid "Relative Fulfillment vs Baseline"
+msgstr "Zielerfüllung im Vergleich zur Baseline"
+
+#: src/plotting/Scenario_comparator.py:755
+msgid "Difference to Baseline (pp)"
+msgstr "Differenz zur Baseline (Prozentpunkte)"
+
+#: src/plotting/Scenario_comparator.py:793
+msgid "Final Fulfillment Difference vs Baseline"
+msgstr "Unterschied zur Szenario-Zielerfüllung (Baseline)"
+
+#: src/plotting/Scenario_comparator.py:795
+msgid "Difference (pp)"
+msgstr "Differenz (Prozentpunkte)"
+
+#: src/plotting/Scenario_comparator.py:1149
+msgid "Agent Count"
+msgstr "Durchschn. Anzahl"
+
+#: src/plotting/Scenario_comparator.py:1151
+msgid "Comparison of Stage Flows (Final Step)"
+msgstr "Vergleich der Phasenübergänge (letzter Zeitschritt)"
+
+#: src/plotting/Scenario_comparator.py:1152
+#: src/plotting/Scenario_comparator.py:1257
+msgid "Scenario / Run"
+msgstr "Szenario / Run"
+
+#: src/plotting/Scenario_comparator.py:1153
+#: src/plotting/Scenario_comparator.py:1258
+msgid "Stage Outcome"
+msgstr "Phase Outcome"
+
+#: src/plotting/Scenario_comparator.py:1254
+msgid "Difference vs Baseline"
+msgstr "Differenz zur Baseline"
+
+#: src/plotting/Scenario_comparator.py:1256
+msgid "Relative Stage Flows (Scenario - Baseline)"
+msgstr "Phasenübergänge im Vergleich zur Baseline"
+
+#: src/plotting/Scenario_comparator.py:1337
+#: src/plotting/Scenario_comparator.py:1429
+#: src/plotting/Scenario_comparator.py:1538
+#: src/plotting/Scenario_comparator.py:1648
+msgid "Accepted"
+msgstr "akzeptiert"
+
+#: src/plotting/Scenario_comparator.py:1372
+msgid "Passed Obstacles Comparison for "
+msgstr "Vergleich der Hürden für "
+
+#: src/plotting/Scenario_comparator.py:1373
+#: src/plotting/Scenario_comparator.py:1449
+#, python-brace-format
+msgid " in {years} years"
+msgstr " in {years} Jahren"
+
+#: src/plotting/Scenario_comparator.py:1376
+msgid "Passed Agents' Count"
+msgstr "Anzahl Agenten"
+
+#: src/plotting/Scenario_comparator.py:1448
+msgid "Passed Obstacles Percentages Comparison for "
+msgstr "Vergleich der Hürden (prozentual) für "
+
+#: src/plotting/Scenario_comparator.py:1452
+msgid "Share of agents at previous level (%)"
+msgstr ""
+"Anteil an den Agenten\n"
+"auf vorheriger Stufe (%)"
+
+#: src/plotting/Scenario_comparator.py:1589
+msgid "Obstacle Count Difference vs Baseline for "
+msgstr "Unterschied zur Bseline bei Hindernissen"
+
+#: src/plotting/Scenario_comparator.py:1592
+msgid "Difference in Agent Count"
+msgstr "Unterschied in Zahl der Agenten"
+
+#: src/plotting/Scenario_comparator.py:1675
+msgid "Conversion Rate Difference vs Baseline for "
+msgstr "Unterschied in Wechselrate zur Baseline"
+
+#: src/plotting/Scenario_comparator.py:1678
+msgid "Difference in Conversion Rate (pp)"
+msgstr "Unterschied in Wechselrate (Prozentpunkte)"
+
+#: src/plotting/Scenario_comparator.py:1770
+msgid "Agents' knowledge about heating technologies"
+msgstr "Agentenwissen über Heiztechnologien"
+
+#: src/plotting/Scenario_comparator.py:1858
+msgid "Total Emissions Comparison"
+msgstr "Vergleich der Gesamtemissionen"
+
+#: src/plotting/Scenario_comparator.py:1859
+#: src/plotting/Scenario_comparator.py:1886
+#: src/plotting/Scenario_comparator.py:1983
+msgid "Tons of CO2 equivalent per building"
+msgstr "Tonnen CO2eq pro Gebäude"
+
+#: src/plotting/Scenario_comparator.py:1884
+msgid "Average Emissions Comparison"
+msgstr "Vergleich der durchschn. Emissionen"
+
+#: src/plotting/Scenario_comparator.py:1917
+msgid "Average Emissions Comparison - Boxplot"
+msgstr "Vergleichender Boxplot durchschnittlicher Emissionen"
+
+#: src/plotting/Scenario_comparator.py:1919
+msgid "Tons of CO2 equivalent"
+msgstr "Tonnen CO2eq"
+
+#: src/plotting/Scenario_comparator.py:1982
+msgid "Yearly Average Emissions Comparison"
+msgstr "Vergleich der durchschn. Emissionen pro Jahr"
+
+#: src/plotting/Scenario_comparator.py:2060
+#: src/plotting/Scenario_comparator.py:2082
+msgid "Average House Energy Demand Comparison"
+msgstr "Vergleich des durchschn. Gebäudeenergiebedarfs"
+
+#: src/plotting/Scenario_comparator.py:2061
+msgid "MWh per year per building"
+msgstr "MWh pro Jahr pro Gebäude"
+
+#: src/plotting/Scenario_comparator.py:2107
+msgid "Energy Demand Comparison - Boxplot"
+msgstr "Vergleichende Boxplots zum Energiebedarf"
+
+#: src/plotting/Scenario_comparator.py:2187
+#: src/plotting/Scenario_comparator.py:2208
+msgid "Optimality Comparison"
+msgstr "Vergleich der Optimalität"
+
+#: src/plotting/Scenario_comparator.py:2233
+msgid "Optimality Comparison - Boxplot"
+msgstr "Vergleichende Boxplots zur Optimalität"
+
+#: src/plotting/Scenario_comparator.py:2313
+#: src/plotting/Scenario_comparator.py:2334
+msgid "Average Operating Expenses Comparison"
+msgstr "Vergleich der durchschn. Betriebsausgaben"
+
+#: src/plotting/Scenario_comparator.py:2314
+#: src/plotting/Scenario_comparator.py:2336
+#: src/plotting/Scenario_comparator.py:2362
+msgid "Thousands of EUR"
+msgstr "Tausend EUR"
+
+#: src/plotting/Scenario_comparator.py:2360
+msgid "Operating Expenses Comparison - Boxplot"
+msgstr "Vergleichende Boxplots zu Betriebskosten"
+
+#: src/plotting/Scenario_comparator.py:2422
+msgid "Annual total expenses per household"
+msgstr "Jährliche Gesamtkosten pro Gebäude"
+
+#: src/plotting/Scenario_comparator.py:2423
+#: src/plotting/Scenario_comparator.py:2450
+msgid "Expenses, EUR"
+msgstr "Durchschn. wöchentliche Ausgaben (EUR)"
+
+#: src/plotting/Scenario_comparator.py:2448
+msgid "Annual Total Expenses per Household comparison"
+msgstr "Vergleich der jährlichen Gesamtkosten pro Gebäude"
+
+#: src/plotting/Scenario_comparator.py:2519
+msgid "Total Effort Comparison"
+msgstr "Vergleich des Gesamtaufwandes"
+
+#: src/plotting/Scenario_comparator.py:2613
+msgid "Relative Effort Comparison (Baseline = 1.0)"
+msgstr "Relativer Vergleich des Aufwandes (Baseline=1.0)"
+
+#: src/plotting/Scenario_comparator.py:2685
+msgid "Final Heating Distribution Comparison"
+msgstr "Verteilung der Heizsysteme"
+
+#: src/plotting/Scenario_comparator.py:2687
+msgid "Heating System"
+msgstr "Typ des Heizsystems"
+
+#: src/plotting/Scenario_comparator.py:2688
+msgid "Average Count"
+msgstr "Durchschn. Anzahl"
+
+#: src/plotting/Scenario_comparator.py:2885
+msgid "Difference Value"
+msgstr "Differenz"
+
+#: src/plotting/Scenario_comparator.py:2887
+msgid " (Aggregated)"
+msgstr "(aggregiert)"
+
+#: src/plotting/Scenario_comparator.py:2887
+msgid " (Decomposed)"
+msgstr " (disaggregiert)"
+
+#: src/plotting/Scenario_comparator.py:2890
+msgid "Attribute Differences for "
+msgstr "Bewertungsunterschiede pro "
+
+#: src/plotting/Scenario_comparator.py:2890
+msgid " vs "
+msgstr " gegenüber "
+
+#: src/plotting/Scenario_comparator.py:2891
+msgid "Scenario/Run"
+msgstr "Szenario"
+
+#: src/plotting/plot_preferences_means.py:48
+#: src/plotting/plot_preferences_means.py:64
+msgid "LEA"
+msgstr "LEI"
+
+#: src/plotting/plot_preferences_means.py:49
+#: src/plotting/plot_preferences_means.py:64
+msgid "MAI"
+msgstr "MAI"
+
+#: src/plotting/plot_preferences_means.py:50
+#: src/plotting/plot_preferences_means.py:64
+msgid "HED"
+msgstr "HED"
+
+#: src/plotting/plot_preferences_means.py:51
+#: src/plotting/plot_preferences_means.py:64
+msgid "TRA"
+msgstr "TRA"
+
+#: src/plotting/plot_preferences_means.py:74
+msgid "Preference value"
+msgstr "Präferenz (Durchschn.)"
+
+#: src/plotting/slide_maker.py:410
+msgid "Baseline + "
+msgstr "Basel. &"
+
+#: src/plotting/slide_maker.py:411
+msgid "Maßnahmen "
+msgstr " "
+
+#: src/plotting/slide_maker.py:412
+msgid "Maßnahme "
+msgstr " "
+
+msgid "attitude"
+msgstr "Einstellung"
+
+msgid "behavioural_control"
+msgstr "Finanzierbarkeit"
+
+msgid "social_norm"
+msgstr "Soziale Norm"
+
+msgid "Suboptimality"
+msgstr "Suboptimalität"
+
+msgid "Opex"
+msgstr "OPEX"
+
+msgid "opex"
+msgstr "Betriebskosten"
+
+msgid "Emissions"
+msgstr "Emissionen"
+
+msgid "Energy demand"
+msgstr "Energiebedarf"
+
+msgid "Loan"
+msgstr "Kredite"
+
+msgid "Cognitive resource"
+msgstr "Kognitive Ressourcen"
+
+msgid "Scenario fulfilment"
+msgstr "Szenarioerfüllung"
+
+msgid "Budget"
+msgstr "Budget"
+
+msgid "Information_sources"
+msgstr "Informationsquellen"
+
+msgid "Internet"
+msgstr "Internet"
+
+msgid "Magazine"
+msgstr "Magazine"
+
+msgid "Plumber"
+msgstr "Installateur"
+
+msgid "Neighbours"
+msgstr "Nachbarn"
+
+msgid "Energy advisor"
+msgstr "Energieberater"
+
+msgid "operation_effort"
+msgstr "Betriebsaufwand"
+
+msgid "fuel_cost"
+msgstr "Energieträgerkosten"
+
+msgid "emissions"
+msgstr "Emissionen"
+
+msgid "installation_effort"
+msgstr "Installationsaufwand"
+
+msgid "Heating_system_oil"
+msgstr "Ölheizung"
+
+msgid "Heating_system_gas"
+msgstr "Gastherme"
+
+msgid "Heating_system_heat_pump"
+msgstr "Luft-Wasser-WP"
+
+msgid "Heating_system_GP_Joule"
+msgstr "Nahwärme GP Joule"
+
+msgid "Heating_system_electricity"
+msgstr "Elektroheizung"
+
+msgid "Heating_system_pellet"
+msgstr "Pelletkessel"
+
+msgid "Heating_system_network_district"
+msgstr "Fernwärme"
+
+msgid "Heating_system_network_local"
+msgstr "Nahwärme"
+
+msgid "Heating_system_heat_pump_brine"
+msgstr "Kalte Nahwärme"
+
+msgid "Trigger_neighbour_jealousy"
+msgstr "Neidisch auf Nachbarn"
+
+msgid "Trigger_lifetime"
+msgstr "Lebensdauer"
+
+msgid "Trigger_adoptive_comparsion"
+msgstr "Adoptiver Vergleich"
+
+msgid "Trigger_asked_by_neighbour"
+msgstr "Anfrage durch Nachbarn"
+
+msgid "Trigger_breakdown"
+msgstr "Heizungsausfall"
+
+msgid "Trigger_consulted"
+msgstr "Beratung"
+
+msgid "Trigger_risk_targeting_campaign"
+msgstr "Kampagne zur Risikobewertung"
+
+msgid "Trigger_availability"
+msgstr "Verfügbarkeit"
+
+msgid "Trigger_fuel_price"
+msgstr "Energiepreis"
+
+msgid "Trigger_information_campaign"
+msgstr "Informationskampagne"
+
+msgid "EnergyAdvisor"
+msgstr "Energieberater"
+
+msgid "District"
+msgstr "Fernwärme"
+
+msgid "Heat_pump"
+msgstr "Wärmepumpe"
+
+msgid "Heat_pump_brine"
+msgstr "Kalte Nahwärme"
+
+msgid "Pellet"
+msgstr "Pelletkessel"
+
+msgid "Network_local_hot"
+msgstr "Warmes Nahwärmenetz"
+
+msgid "Climate_speed"
+msgstr "Klimabonus"
+
+msgid "Income"
+msgstr "Einkommensbonus"
+
+msgid "Efficiency"
+msgstr "Effizienzbonus"
+
+msgid "Take_Unsubsidised"
+msgstr "Annehmen (ungefördert)"
+
+msgid "Take_Unsubsidised+Loan"
+msgstr "Annehmen (ungefördert mit Kredit)"
+
+msgid "Drop_Unsubsidised"
+msgstr "Verwerfen (ungefördert)"
+
+msgid "Take_Subsidised"
+msgstr "Annehmen (gefördert)"
+
+msgid "Take_Subsidised+Loan"
+msgstr "Annehmen (gefördert mit Kredit)"
+
+msgid "Drop_Subsidised"
+msgstr "Verwerfen (gefördert)"
+
+msgid "effort"
+msgstr "Aufwand"
+
+msgid "price"
+msgstr "Installationskosten"
+
+msgid "Subsidies"
+msgstr "Förderung"
+
+msgid "DEZ_Basislinie"
+msgstr "DEZ (1): ohne Maßnahme"
+
+msgid "KWN_Basislinie"
+msgstr "KWN (2): ohne Maßnahme"
+
+msgid "MIX_Basislinie"
+msgstr "WWN (3): ohne Maßnahme"
+
+msgid "GPJ_Basislinie"
+msgstr "GPJ (4): ohne Maßnahme"
+
+msgid "DEZ_Wärmeliefervertrag"
+msgstr "DEZ (1): Wärmeliefervertrag"
+
+msgid "KWN_Wärmeliefervertrag"
+msgstr "KWN (2): Wärmeliefervertrag"
+
+msgid "MIX_Wärmeliefervertrag"
+msgstr "WWN (3): Wärmeliefervertrag"
+
+msgid "GPJ_Wärmeliefervertrag"
+msgstr "GPJ (4): Wärmeliefervertrag"
+
+msgid "DEZ"
+msgstr "DEZ (1)"
+
+msgid "KWN"
+msgstr "KWN (2)"
+
+msgid "MIX"
+msgstr "WWN (3)"
+
+msgid "GPJ"
+msgstr "GPJ (4)"
+
+msgid "Baseline"
+msgstr "Baseline"
+
+msgid "Preissenkung"
+msgstr "Red. Inst.kosten"
+
+msgid "Risikokampagne"
+msgstr "Risikokampagne"
+
+msgid "Weiterbildung Installateure"
+msgstr "Weiterbildung"
+
+msgid "Beraterkampagne"
+msgstr "EB-Kampagne"
+
+msgid "Eneriepreissenkung"
+msgstr "Red. En.kosten"
+
+msgid "Ersatzmandate"
+msgstr "Restriktion HS"
+
+msgid "Kreditlinie"
+msgstr "Kreditlinie"
+
+msgid "Auswahlbeschränkung"
+msgstr "Anschlusszwang"
+
+msgid "Aufwandsreduzierung"
+msgstr "Red. Inst.aufwand"
+
+msgid "Wärmeliefervertrag"
+msgstr "Wärmekontrakt"
+
+msgid "Aufwandsreduzierung-Beraterkampagne"
+msgstr "Red. Inst.aufw. & EB-Kamp."
+
+msgid "Energiepreissenkung-Ersatzmandate"
+msgstr "Red. E.Kost. & Restrikt. HS"
+
+msgid "Preissenkung-Risikokampagne"
+msgstr "Red. Inst.kos. & Risikokamp."
+
+msgid "Wärmeliefervertrag-Ersatzmandate"
+msgstr "Wärmekon. & Restrikt. HS"
+
+#~ msgid "Preference"
+#~ msgstr "Präferenz"
+
+#~ msgid " (mean)"
+#~ msgstr " (Durchschnitt)"
+
+#~ msgid "Comparison of Heating System Distributions Across Scenarios/Runs"
+#~ msgstr "Vergleich der Heizsystemverteilung zwischen Szenarien"
+
+#~ msgid "Share, %"
+#~ msgstr "Anteil (%)"
+
+#~ msgid "Heating System Type"
+#~ msgstr "Typ des Heizsystems"
+
+#~ msgid "Percentage (%)"
+#~ msgstr "Prozentsatz"
+
+#~ msgid "Final agents' knowledge about heating technologies"
+#~ msgstr "Finales Agentenwissen über Heiztechnologien"
+
+#~ msgid "Drop-Outs for"
+#~ msgstr "Abbruch von"

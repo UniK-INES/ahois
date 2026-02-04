@@ -1,0 +1,589 @@
+[main]
+# Specifies which experimental scenario from Scenario.py to run.
+current_scenario = "Scenario_heat_pumps"
+# A name for the project, used for organizational purposes.
+project = "AHOI"
+# A unique identifier for the simulation run, used in naming output folders.
+run_id = 0
+# A sub-identifier for a task within a project, can be used for organizing outputs.
+task = ""
+# The starting year of the simulation, used to calculate the initial age of heating systems.
+start_year = 2025
+# The end year of the simulation, defining the overall time frame.
+end_year = 2045
+# The total number of Plumber agents to create in the model.
+number_of_plumbers = 5
+# The total number of Energy Advisor agents to create in the model.
+number_of_energy_advisors = 5
+# The total number of steps (weeks) the simulation will run for.
+steps = 1040
+# Specifies the function for serializing data.
+serialization_function = "to_excel"
+# A prefix added to all output file names for better identification of experimental sets.
+files_prefix = ""
+# The directory path where input data files are located.
+input_path = "./data/input/"
+# The root directory path where all simulation outputs will be saved.
+output_path = "./src/data/output"
+# The path to an Excel file that contains sets of scenario settings.
+excel_scenario_file = "settings/settings.xlsx"
+# The starting ID for running a batch of simulations from settings.xlsx.
+config_id_start = 0
+# The ending ID for running a batch of simulations (+1).
+config_id_end = 0
+
+[experiments]
+# If true, activates a training program for Plumber agents.
+plumber_training = false
+# Specifies the heating system that Plumbers will learn about in the training program.
+plumber_training_system = "Heating_system_heat_pump_brine"
+# If true, activates an information campaign targeting Houseowners.
+information_campaign = false
+# A list of heating systems to be promoted during the information campaign.
+inf_campaign_systems = []
+# A list of simulation steps (weeks) during which the information campaign is active.
+inf_campaign_duration = []
+# The number of Houseowner agents the information campaign will target at each active step.
+inf_campaign_reach = 0
+# Defines the strategy of the campaign ('Direct_informing', 'Energy_advisor', 'Risk_targeting').
+inf_campaign_mode = "Risk_targeting"
+# The degree to which the campaign mitigates perceived risk.
+inf_campaign_risk_mitigation = 0
+# If true, activates a policy that bans all heating systems except those specified in 'enforcement_systems'.
+enforcement = false
+# A list of heating system names that are PERMITTED when 'enforcement' is active. All others are banned.
+enforcement_systems = []
+# If true, activates policies that mandate the replacement of heating systems according to emissions_mandate or systems_mandate.
+replacement_mandates = false
+# The emissions threshold (in kg CO2/year). Systems exceeding this are subject to mandatory replacement.
+emissions_mandate = 1000000000
+# A list of heating system names that are mandated for replacement, regardless of performance.
+systems_mandate = []
+# If true, activates policies that encourage users of stated HS to share their decisions, satisfactions and knowledge.
+open_house_measure = false
+# The list of HS to promote during open house events
+open_house_systems = []
+# Milieus to participate in the open house events
+open_house_milieus = []
+# Fregueqncy of open house events in steps (i.e. weeks)
+open_house_freq = 0
+# A boolean to use the variable set for sensitivity analysis.
+sa_active = false
+# String to manage the method - "morris", "sobol", "lhs"
+sa_method = "morris"
+# Number of samples
+sa_nsamples = 8
+# Number of replications with different random seeds
+sa_nreplications = 2
+# Number of trajectories for Morris analysis
+sa_ntrajectories = 20
+# Number of levels for Morris analysis
+sa_nlevels = 5
+# Specific system to alter parameters in the Morris sample.
+sa_system = "Heating_system_heat_pump"
+# Installation time for all systems in weeks.
+sa_installation_time = 0
+# Operation effort for all systems in hours.
+sa_operation_effort = 0
+# Fuel cost for all systems in EUR.
+sa_fuel_cost = 0
+# Emissions for all systems in g/kWh.
+sa_emissions = 0
+# Price for systems for area based calculation in EUR.
+sa_price = 0
+# Price for systems for heat load based calculation in EUR.
+sa_heat_load_price = 0
+# Availability of systems in weeks from the beginning of the model run.
+sa_availability = 0
+# installation effort in hours.
+sa_installation_effort = 0
+# Seed for SensA (SA_SAMPLING_SEED)
+sa_seed = 0
+# Defines lifetime-related assessment during stage 1 evaluation.
+sa_standard_lifetime = 0
+# Risk tolerance for all agents.
+sa_risk_tolerance = 1
+# Cognitive resource for all agents.
+sa_cognitive_resource = 2
+
+[data]
+# If true, enables dynamic changes to some heating parameters during the simulation based on the 'heat_sys_params_dynamics' file.
+dynamic = true
+# Specifies the dataset and method used for determining the heat demand of houses.
+heat_demand = "eqcity"
+# The filename for the CSV file containing parameters for different milieus.
+milieu_params = "milieu_parameters.csv"
+# The filename for the CSV file containing the parameters for all heating systems.
+heat_sys_params = "heating_parameters.csv"
+# The filename for the CSV file that defines time-series changes for heating system parameters.
+heat_sys_params_dynamics = "heating_params_dynamics.csv"
+# The path to the YAML configuration file for post-simulation plotting settings.
+plt_settings = "plotting/config_plt_unik.yaml"
+# Defines whether the lifetime of a system will be generated by Weibull.
+heat_sys_weibull_generation = false
+
+[scenario_comparison]
+# If true, uses scenario_comparator.py instead of plot.py for visualization.
+active = false
+# A list of scenario names to be included in the comparison.
+scenarios = []
+# A list of file prefixes to be included in the comparison.
+files_prefixes = []
+# A list of run_ids corresponding to the specific simulation runs to be compared.
+run_ids = []
+
+[seeds]
+# The random seed for initializing the model's environment and agent population.
+model_init = 0
+# The random seed for stochastic processes operated by the model during a run.
+model_run = 0
+# The random seed for any stochastic elements in the initialization of House agents.
+house_init = 0
+# The random seed for initalizing agent-specific properties.
+milieu_init = 0
+# The random seed for any stochastic elements in the initialization of Heating System objects.
+heating_init = 0
+# The random seed for stochastic events in the information gathering process.
+information_source_run = 0
+# The random seed for all stochastic decisions made by Houseowner agents during a simulation step.
+houseowner_run = 0
+# The random seed for stochastic events related to Plumber agents.
+plumber_run = 0
+
+[output]
+# If true, enables logging of every call to the random number generators for debugging.
+randomstreaminvocations = false
+# The directory where the random number generator invocation logs will be saved.
+randomstreaminvocations_folder = "@format ./data/output/rng/{this.main.run_id}/"
+# An option to trim entries from the random stream logs for readability.
+randomstream_cutentries = 2
+# The prefix for the log file tracking the 'model_init' random number stream.
+logger_model_init = "test_model_init_"
+# The prefix for the log file tracking the 'model_run' random number stream.
+logger_model_run = "test_model_run_"
+# The prefix for the log file tracking the 'house_init' random number stream.
+logger_house_init = "test_house_init_"
+# The prefix for the log file tracking the 'milieu_init' random number stream.
+logger_milieu_init = "test_milieu_init_"
+# The prefix for the log file tracking the 'houseowner_run' random number stream.
+logger_houseowner_run = "test_houseowner_run_"
+# The prefix for the log file tracking the 'plumber_run' random number stream.
+logger_plumber_run = "test_plumber_run_"
+# The prefix for the log file tracking the 'information_source_run' random number stream.
+logger_information_source_run = "test_information_source_run_"
+# The prefix for the log file tracking the 'heating_init' random number stream.
+logger_heating_init = "test_heating_init_"
+# If true, saves the main model and agent results dataframes as CSV files.
+resultdata_as_csv = false
+# If true, saves the detailed agent-level results dataframe as a Python Pickle file.
+agentdata_as_pickle = true
+# If true, saves the intermediary job data as a Python Pickle file.
+intermediarydata_as_pickle = true
+# If true, attempts to increment the run_id for subsequent runs, simplifying file naming for local tests.
+simplenames = false
+# If true, saves a copy of the settings file used for the run.
+output_settings = true
+# The sub-directory where the settings snapshot will be saved.
+output_settings_path = "conf"
+# The filename for the saved settings snapshot.
+output_settings_filename = "settings.toml"
+# The filename for a JSON file that tracks the history of settings changes.
+output_settingshistory_filename = "settings_history.json"
+# A key for managing the settings history file.
+output_settingshistory_key = "@none"
+# The filename for saving results in the HDF5 format.
+hdf5_filename = "AHOI.h5"
+# The format option for the HDF5 file.
+hdf5_format = "fixed"
+
+[debug]
+# If true, shows detailed warnings that include the source code origin.
+output_detailed_warnings = false
+# If true, treats all warnings as exceptions, causing the program to stop.
+output_warnings_as_errors = false
+# Specifies the category of warnings to be treated as errors when 'output_warnings_as_errors' is true.
+warningsforerrors = "Warning"
+
+[logging]
+# The path to the configuration file for Python's logging module, which sets up log formats and outputs.
+configfile = "../settings/config_logging.conf"
+
+[information_source]
+# The base factor for distorting a heating system's true parameters to simulate imperfect information.
+distortion = 0.5
+# The lower bound for the uncertainty range multiplier used in relative agreement algorithms.
+uncertainty_lower = 0.2
+# The upper bound for the uncertainty range multiplier used in relative agreement algorithms.
+uncertainty_upper = 0.5
+# Defines the complete list of available information sources in the model.
+list = ["internet", "magazine", "plumber", "neighbours", "energy_advisor"]
+# Probability to find subsidies during infromation search
+subsidy_finding_prob = 1
+
+[subsidies]
+# Subsidy rate for district heating networks.
+district = 0.3
+# Subsidy rate for air-source heat pumps.
+heat_pump = 0.3
+# Subsidy rate for brine-source heat pumps.
+heat_pump_brine = 0.3
+# Subsidy rate for pellet heating systems.
+pellet = 0.3
+# Subsidy rate for local hot networks.
+network_local_hot = 0.3
+# Subsidy rate for the GP Joule heating system.
+GP_Joule = 0.3
+# An additional subsidy bonus for early replacement of fossil fuel systems.
+climate_speed = 0.2
+# An additional subsidy bonus for low-income households.
+income = 0.3
+# An additional subsidy bonus for achieving a certain efficiency standard.
+efficiency = 0.05
+# A threshold of savings to define who gets the low_income subsidy
+low_income_threshold = 9000
+
+[houseowner]
+# The weekly probability that a houseowner agent is replaced by a new one, simulating a change in home ownership.
+ownership_change_probability = 0.001
+# The initial value for the agent's aspiration counter, which determines when they are satisfied with the information they have gathered.
+aspiration = 1
+# The initial value for the agent's information overload counter. If it reaches zero during information search, the process stops.
+overload = 2
+# The maximum budget an agent can accumulate, expressed as a multiple of their weekly income (e.g., 104 weeks of income).
+budget_limit = 104
+# The standard deviation used for generating randomized risk tolerance values for agents if 'random_risk_tolerance' is true.
+risk_tolerance_std = 0.19
+# If true, each agent's risk tolerance is a random value drawn from a distribution; if false, it is a fixed value based on their milieu.
+random_risk_tolerance = true
+# The probability that a newly created agent will be willing to take out a loan.
+loan_taking_probability = 0.32
+# A list of three floats representing the standard deviations for randomizing the Theory of Planned Behaviour weights.
+tpb_weights_std = [0.05, 0.05, 0.05]
+# Probability to meet other agents when not in the decision-making
+meeting_prob = 0.57
+# Multipliers to apply to TPB weights
+attitude_multiplier = 1
+social_norm_multiplier = 1
+pbc_multiplier = 1
+
+[houseowner.leading]
+# The mean weekly savings (income) for agents in the 'Leading' milieu.
+mean_savings = 178
+# The standard deviation of weekly savings for agents in the 'Leading' milieu.
+stdev_savings = 66
+# The base risk tolerance (on a scale of 0 to 1) for agents in the 'Leading' milieu.
+risk_tolerance = 1
+# The base cognitive resource (effort points per step) for agents in the 'Leading' milieu.
+cognitive_resource = 5
+# Defines the weight of the unknown satisfaction of neighbours during risk assessment
+uncertainty_factor = 0.25
+
+[houseowner.mainstream]
+# The mean weekly savings (income) for agents in the 'Mainstream' milieu.
+mean_savings = 142
+# The standard deviation of weekly savings for agents in the 'Mainstream' milieu.
+stdev_savings = 62
+# The base risk tolerance for agents in the 'Mainstream' milieu.
+risk_tolerance = 0.7
+# The base cognitive resource for agents in the 'Mainstream' milieu.
+cognitive_resource = 3
+# Defines the weight of the unknown satisfaction of neighbours during risk assessment
+uncertainty_factor = 0.75
+
+[houseowner.traditionals]
+# The mean weekly savings (income) for agents in the 'Traditionals' milieu.
+mean_savings = 158
+# The standard deviation of weekly savings for agents in the 'Traditionals' milieu.
+stdev_savings = 69
+# The base risk tolerance for agents in the 'Traditionals' milieu.
+risk_tolerance = 0.5
+# The base cognitive resource for agents in the 'Traditionals' milieu.
+cognitive_resource = 4
+# Defines the weight of the unknown satisfaction of neighbours during risk assessment
+uncertainty_factor = 1
+
+[houseowner.hedonists]
+# The mean weekly savings (income) for agents in the 'Hedonists' milieu.
+mean_savings = 158
+# The standard deviation of weekly savings for agents in the 'Hedonists' milieu.
+stdev_savings = 58
+# The base risk tolerance for agents in the 'Hedonists' milieu.
+risk_tolerance = 0.6
+# The base cognitive resource for agents in the 'Hedonists' milieu.
+cognitive_resource = 2
+# Defines the weight of the unknown satisfaction of neighbours during risk assessment
+uncertainty_factor = 0.5
+
+[information_overspread]
+# Defines which parameter is currently being observed for MESA portrayal ('subsidy_to_observe' or 'known_hs_to_observe').
+selected_option = "subsidy_to_observe"
+# A list of specific subsidies available for observation in a visualization.
+subsidies_list = ["Climate_speed", "Heat_pump", "Income"]
+# The specific subsidy from the list that is currently selected for observation.
+subsidies_current = "Climate_speed"
+# A list of heating systems given as initial knowledge to certain agents at the start of the simulation.
+known_hs_list = [
+    "Heating_system_oil",
+    "Heating_system_gas",
+    "Heating_system_heat_pump",
+    "Heating_system_electricity",
+    "Heating_system_pellet",
+    "Heating_system_network_district",
+    "Heating_system_network_local",
+    "Heating_system_heat_pump_brine",
+    "Heating_system_GP_Joule",
+]
+# The specific heating system from the list that is currently selected for observation.
+known_hs_current = "Heating_system_heat_pump"
+
+[decision_making_costs]
+# The cognitive resource cost for a Houseowner to perform the 'evaluate'.
+evaluate = 1
+# The cognitive resource cost for a Houseowner to perform one 'get_data'.
+get_data = 2
+# The cognitive resource cost for a Houseowner to perform the 'define_choice'.
+define_choice = 1
+# The cognitive resource cost for a Houseowner to perform the 'compare_hs'.
+compare_hs = 1
+# The cognitive resource cost for a Houseowner to perform the 'install'.
+install = 1
+# The cognitive resource cost for a Houseowner to perform the 'calculate_satisfaction'.
+calculate_satisfaction = 1
+
+[intermediary]
+# A general default duration in weeks for any intermediary job.
+job_duration = 1
+
+[plumber]
+# The following four parameters are included for compatibility with the data collector but are not used in the Plumber agent's core logic.
+aspiration = 1
+cognitive_resource = 20
+hs_budget = 200
+# The base duration in weeks for a Plumber's consultation job.
+cons_duration = 1
+# The base duration in weeks for a Plumber's installation job, before system-specific time is added.
+ins_duration = 1
+# If true, the Plumber will share information about their other clients' installed systems during a consultation.
+share_systems = true
+# The average house area (m²) the Plumber assumes when calculating default system parameters for their knowledge base.
+assume_area_avg = 106
+# The average energy demand (kWh/m²/a) the Plumber assumes for default calculations.
+assume_energydemand_avg = 147
+# The average heat load (kW) the Plumber assumes for default calculations.
+assume_heatload_avg = 19
+# The energy demand threshold (kWh/m²/a). Houses exceeding this are considered poorly insulated.
+insulation_threshold = 180
+# A list of heating systems that are considered infeasible or not recommended for houses exceeding the 'insulation_threshold'.
+insulation_list = [
+    "Heating_system_heat_pump", 
+    "Heating_system_heat_pump_brine"
+]
+# Controls whether plumbers apply subsidies automatically during consultations
+apply_subsidies = true
+
+[energy_advisor]
+# The duration in weeks for an Energy Advisor's consultation job.
+cons_duration = 1
+
+[heating_systems_colors]
+# This section defines the color-coding for different heating systems, used for creating consistent visualizations.
+heating_system_electricity = "red"
+heating_system_gas = "blue"
+heating_system_heat_pump = "yellow"
+heating_system_heat_pump_brine = "purple"
+heating_system_oil = "black"
+heating_system_pellet = "brown"
+heating_system_network_district = "pink"
+heating_system_network_local = "orange"
+
+# This section defines the target or "reference" market shares (in percent) for heating systems for each specific scenario.
+[reference.Scenario_heat_pumps]
+Heating_system_heat_pump = 100
+
+[reference.Scenario_network_district]
+Heating_system_network_district = 100
+
+[reference.Scenario_network_local_hot]
+Heating_system_network_local = 100
+
+[reference.Scenario_network_local_cold]
+Heating_system_heat_pump_brine = 100
+
+[reference.Scenario_mix_pellet_heat_pump]
+Heating_system_heat_pump = 80
+Heating_system_pellet = 20
+
+[reference.Scenario_mix_pellet_heat_pump_network]
+Heating_system_heat_pump = 10
+Heating_system_pellet = 30
+Heating_system_network_local = 60
+
+[network]
+# An ID passed to the 'shobnetpy' library to select a specific social network structure for the agents.
+scenario_id = 0
+
+[milieu]
+# Defines the complete list of milieu types used to categorize agents in the model.
+groups = ["Generalized", "Leading", "Mainstream", "Traditionals", "Hedonists"]
+
+[triggers]
+# Specifies which heating system, when installed, might trigger an "adoptive" social influence on neighbours.
+adoptive_trigger = "Heating_system_heat_pump"
+
+[slurm]
+# The local path to the template shell script used for generating Slurm batch jobs. Relative to get_input_path.
+template_file = "src/experiments/slurm_script_template.sh"
+# The local directory where the main Slurm execution scripts will be saved. Relative to get_batchconfig_path.
+target_execfile = "slurm"
+# The local sub-directory where individual batch files, generated from the template, will be stored. Relative to get_batchconfig_path (should be subfolder of target_execfile):
+target_batchfiles = "slurm/batchfiles"
+# The absolute root path of the project on the remote HPC cluster.
+target_cluster_mainpath = "~/ahoi/"
+# The path to the model's source code on the cluster, from where the simulation will be executed.
+target_cluster_modelbase = "@format {this.slurm.target_cluster_mainpath}/ahois-pro/src/"
+# The path to the batch files relative to target_excefiles. 
+target_cluster_batchfiles = "./batchfiles"
+# The path on the cluster where Slurm will store log and output files for the submitted jobs.
+# (needs to correspond with the pattern defined in template_file -
+# the part before the RunID / Job which are added programmatically):
+target_cluster_logfiles = "@format {this.slurm.target_cluster_mainpath}/{this.main.task}"
+# The hostname or IP address of the Slurm cluster's login node.
+host = "its-cs1.its.uni-kassel.de"
+# The username for logging into the Slurm cluster.
+username = "uk093483"
+# The number of individual simulation runs to be grouped into a single Slurm batch job.
+num_runs_per_batch = 1
+# The starting configuration ID for the batch of Slurm jobs to be generated.
+config_id_start = 0
+# The ending configuration ID for the batch of Slurm jobs to be generated.
+config_id_end = 0
+# A file pattern used to identify and retrieve result files from the cluster after jobs are complete.
+fetch_pattern = "pickles/*.*"
+# The name of the Slurm partition to which the jobs will be submitted.
+partition="FB16"
+# The maximum requested runtime for each job in minutes. Slurm will terminate jobs exceeding this limit.
+duration= 300
+# Switch to define whether all config_ids will be under one run_id (false), or different (true).
+individual_runs = false
+
+[eval]
+# Specifies the language for plot labels, used to select the correct version of the 'labels_file'.
+language = ["en_GB"]
+# The column name for heating systems in a German-language context.
+colname_heating = "Heizsystem"
+# A list of settings files for the 'ahid' analysis toolkit.
+ahid_settings_files = ["ahid_settings_default.toml"]
+# If true, the Scenario_comparator will load and process the large agent-level data files.
+process_agent_files = true
+# The target sample size for a specific analysis, likely for the 'ahid' tool.
+target_samplesize = 1000
+# The start year for plotting axes.
+start_year = 2025
+# The target year for plotting axes.
+target_year = 2045
+# A global switch to enable or disable titles on generated plots.
+plot_title = false
+# A list of years to be used as major ticks on the x-axis of plots.
+xticks = [2025, 2030, 2035, 2040, 2045]
+# The number of years to group together when creating plots that analyze data in periods.
+years_in_period = 5
+# The default width of generated plot figures in inches.
+width= 12
+# A factor to adjust the width of specific box plots or bar charts.
+widthfactorbox = 0.6
+# The default height of generated plot figures in inches.
+height = 7
+# The dots-per-inch (DPI) for saving plot figures.
+dpi = 192
+# The resolution for plot figures, often the same as DPI.
+resolution = 192
+# The interval for placing markers on line plots (e.g., 52 means one marker per year).
+markevery = 52
+# The size of markers on line plots.
+markersize = 10
+# The rotation angle for x-axis tick labels to prevent overlap.
+labelrotation = 30
+# A generic label, likely used as a placeholder.
+label = "NN"
+# If true, uses the 'adjust_text' library to prevent text annotations on plots from overlapping.
+use_adjust_text = false
+# A global switch to enable or disable legends on generated plots.
+show_legend = true
+# A master switch in Build_plots.py; if true, runs all standard plotting functions.
+process_all_outputs = true
+# If true, runs the detailed obstacle funnel analysis for a single run.
+analyze_obstacles = false
+# If true, runs the obstacle funnel analysis broken down by time periods.
+analyze_obstacles_by_period = false
+# If true, generates detailed plots for a specific list of individual agent IDs.
+individual_plots_by_ids = false
+# The path to the Excel file containing labels, colors, and other metadata for plotting.
+labels_file = "settings/figure_labels.xlsx"
+
+# The following 'compare_' settings are switches for the Scenario_comparator script.
+# If true, generates the scenario fulfillment comparison plot.
+compare_fulfillment = true
+# If true, generates the emissions comparison plots.
+compare_emissions = true
+# If true, generates the energy demand comparison plots.
+compare_energy_demand = true
+# If true, generates the choice optimality comparison plots.
+compare_optimality = true
+# If true, generates the operating expenses (OPEX) comparison plots.
+compare_opex = true
+# If true, generates the total expenses (LCOH) comparison plots.
+compare_total_expenses = true
+# If true, generates the total effort (subsidies, loans, cognitive resource) radar chart.
+compare_total_effort = true
+# If true, generates the final heating system distribution bar chart.
+compare_heating_systems_distribution = true
+# If true, generates the plot comparing knowledge spread of specific heating systems.
+compare_hs_knowledge = true
+# If true, generates the obstacle comparison plot showing absolute agent counts.
+compare_obstacles_counts = true
+# If true, generates the obstacle comparison plot showing percentage drop-offs.
+compare_obstacles_percentage = true
+# The simulation step at which to analyze obstacles (-1 means the final step).
+compare_obstacles_step = -1
+# If true, generates the detailed attribute rating comparison plots.
+compare_attributes = true
+# If true, generates a Sankey diagram of the Stage flows.
+compare_stage_flows = true
+
+# The following 'title_' and 'xlabel_' settings provide control over plot elements in the Scenario_comparator.
+# If true, displays the title on the fulfillment plot.
+title_fulfillment = true
+# If true, displays the title on the final heating system distribution plot.
+title_hs_distribution_final = true
+# If true, displays the title on the emissions comparison plots.
+title_emissions = true
+# If true, displays the title on the network quota fulfillment plot.
+title_quota = true
+# If true, displays the title on the obstacle comparison plots.
+title_obstacles = true
+# If true, displays the title on the attribute rating comparison plots.
+title_attributes = true
+# The font size for text annotations on bars in plots.
+textannot_fontsize = 9
+# If true, displays the x-axis label on the final heating system distribution plot.
+xlabel_hs_distribution_final = true
+# If true, displays the x-axis label on the absolute obstacle count plot.
+xlabel_obstacles = true
+# If true, displays the x-axis label on the percentage obstacle plot.
+xlabel_obstacles_percentage = true
+
+[slides]
+# The path to an Excel file that contains the configuration and content for slide generation.
+config = "AHOI_SlideGeneration.xlsx"
+# The path to a PowerPoint (.pptx) template file that defines the base design for the slides.
+template = "/plotting/DT2_Slides_Template_Interventions.pptx"
+# If true, the script will automatically generate section divider slides in the presentation.
+sections = true
+# If true, allows for different styles or variants for the section title slides.
+section_title_variants = false
+# The name of the default font to be used in the generated slides.
+font = "Frutiger LT 45 Light"
+# If true, applies a bold face to the specified font.
+fontface_bold = true
+# The font size in points, likely for main titles on the slides.
+fontsize_pt = 62

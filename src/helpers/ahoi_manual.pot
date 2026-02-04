@@ -1,0 +1,307 @@
+# Translations template for AgentHomeID.
+# Copyright (C) 2024 FhG IEE
+# This file is distributed under the same license as the AgentHomeID
+# project.
+# Sascha Holzhauer <sascha.holzhauer@iee-extern.fraunhofer.de>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: AgentHomeID 0.9\n"
+"Report-Msgid-Bugs-To: sascha.holzhauer@iee-extern.fraunhofer.de\n"
+"POT-Creation-Date: 2024-02-21 11:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Sascha Holzhauer <sascha.holzhauer@iee-extern.fraunhofer.de>\n"
+"Language-Team: Sascha Holzhauer <sascha.holzhauer@iee-extern.fraunhofer.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: manual!\n"
+
+msgid "attitude"
+msgstr ""
+
+msgid "behavioural_control"
+msgstr ""
+
+msgid "social_norm"
+msgstr ""
+
+msgid "Suboptimality"
+msgstr ""
+
+msgid "Opex"
+msgstr ""
+
+msgid "opex"
+msgstr ""
+
+msgid "Emissions"
+msgstr ""
+
+msgid "Energy demand"
+msgstr ""
+
+msgid "Stage"
+msgstr ""
+
+msgid "Loan"
+msgstr ""
+
+msgid "Cognitive resource"
+msgstr ""
+
+msgid "Scenario fulfilment"
+msgstr ""
+
+msgid "Budget"
+msgstr ""
+
+msgid "Information_sources"
+msgstr ""
+
+msgid "Internet"
+msgstr ""
+
+msgid "Magazine"
+msgstr ""
+
+msgid "Plumber"
+msgstr ""
+
+msgid "Neighbours"
+msgstr ""
+
+msgid "Energy advisor"
+msgstr ""
+
+msgid "Triggered"
+msgstr ""
+
+msgid "Deciding"
+msgstr ""
+
+msgid "Knowing"
+msgstr ""
+
+msgid "Can afford"
+msgstr ""
+
+msgid "Certain"
+msgstr ""
+
+msgid "Like"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "operation_effort"
+msgstr ""
+
+msgid "fuel_cost"
+msgstr ""
+
+msgid "emissions"
+msgstr ""
+
+msgid "installation_effort"
+msgstr ""
+
+msgid "Heating_system_oil"
+msgstr ""
+
+msgid "Heating_system_gas"
+msgstr ""
+
+msgid "Heating_system_heat_pump"
+msgstr ""
+
+msgid "Heating_system_GP_Joule"
+msgstr ""
+
+msgid "Heating_system_electricity"
+msgstr ""
+
+msgid "Heating_system_pellet"
+msgstr ""
+
+msgid "Heating_system_network_district"
+msgstr ""
+
+msgid "Heating_system_network_local"
+msgstr ""
+
+msgid "Heating_system_heat_pump"
+msgstr ""
+
+msgid "Heating_system_heat_pump_brine"
+msgstr ""
+
+msgid "Trigger_neighbour_jealousy"
+msgstr ""
+
+msgid "Trigger_lifetime"
+msgstr ""
+
+msgid "Trigger_adoptive_comparsion"
+msgstr ""
+
+msgid "Trigger_asked_by_neighbour"
+msgstr ""
+
+msgid "Trigger_breakdown"
+msgstr ""
+
+msgid "Trigger_consulted"
+msgstr ""
+
+msgid "Trigger_risk_targeting_campaign"
+msgstr ""
+
+msgid "Trigger_availability"
+msgstr ""
+
+msgid "Trigger_fuel_price"
+msgstr ""
+
+msgid "Trigger_information_campaign"
+msgstr ""
+
+msgid "EnergyAdvisor"
+msgstr ""
+
+msgid "District"
+msgstr ""
+
+msgid "Heat_pump"
+msgstr ""
+
+msgid "Heat_pump_brine"
+msgstr ""
+
+msgid "Pellet"
+msgstr ""
+
+msgid "Network_local_hot"
+msgstr ""
+
+msgid "Climate_speed"
+msgstr ""
+
+msgid "Income"
+msgstr ""
+
+msgid "Efficiency"
+msgstr ""
+
+msgid "Take_Unsubsidised"
+msgstr ""
+
+msgid "Take_Unsubsidised+Loan"
+msgstr ""
+
+msgid "Drop_Unsubsidised"
+msgstr ""
+
+msgid "Take_Subsidised"
+msgstr ""
+
+msgid "Take_Subsidised+Loan"
+msgstr ""
+
+msgid "Drop_Subsidised"
+msgstr ""
+
+msgid "effort"
+msgstr ""
+
+msgid "price"
+msgstr ""
+
+msgid "Subsidies"
+msgstr ""
+
+msgid "DEZ_Basislinie"
+msgstr ""
+
+msgid "KWN_Basislinie"
+msgstr ""
+
+msgid "MIX_Basislinie"
+msgstr ""
+
+msgid "GPJ_Basislinie"
+msgstr ""
+
+msgid "DEZ_Wärmeliefervertrag"
+msgstr ""
+
+msgid "KWN_Wärmeliefervertrag"
+msgstr ""
+
+msgid "MIX_Wärmeliefervertrag"
+msgstr ""
+
+msgid "GPJ_Wärmeliefervertrag"
+msgstr ""
+
+msgid "DEZ"
+msgstr ""
+
+msgid "KWN"
+msgstr ""
+
+msgid "MIX"
+msgstr ""
+
+msgid "GPJ"
+msgstr ""
+
+msgid "Baseline"
+msgstr ""
+
+msgid "Preissenkung"
+msgstr ""
+
+msgid "Risikokampagne"
+msgstr ""
+
+msgid "Weiterbildung Installateure"
+msgstr ""
+
+msgid "Beraterkampagne"
+msgstr ""
+
+msgid "Eneriepreissenkung"
+msgstr ""
+
+msgid "Ersatzmandate"
+msgstr ""
+
+msgid "Kreditlinie"
+msgstr ""
+
+msgid "Auswahlbeschränkung"
+msgstr ""
+
+msgid "Aufwandsreduzierung"
+msgstr ""
+
+msgid "Wärmeliefervertrag"
+msgstr ""
+
+msgid "Aufwandsreduzierung-Beraterkampagne"
+msgstr ""
+
+msgid "Energiepreissenkung-Ersatzmandate"
+msgstr ""
+
+msgid "Preissenkung-Risikokampagne"
+msgstr ""
+
+msgid "Wärmeliefervertrag-Ersatzmandate"
+msgstr ""
+
+
+
