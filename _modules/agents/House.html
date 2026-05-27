@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agents.House &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agents.House</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agents.House</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the House agent for the simulation.</span>
+
+<span class="sd">This module contains the `House` class, a GeoAgent that represents a physical </span>
+<span class="sd">building in the model. It holds attributes like construction year, area, and </span>
+<span class="sd">energy demand, and is directly linked to a `Houseowner` agent and a </span>
+<span class="sd">`Heating_system`. It also includes an Enum for different heating terminal types.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">mesa_geo</span> <span class="k">as</span> <span class="nn">mg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_house_init</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="kn">from</span> <span class="nn">modules.Excel_input_read</span> <span class="kn">import</span> <span class="n">Milieu_table</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<div class="viewcode-block" id="House">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House">[docs]</a>
+<span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">GeoAgent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A GeoAgent representing a single residential building in the model.</span>
+
+<span class="sd">    This agent models the physical characteristics of a building, including its</span>
+<span class="sd">    geographical footprint, age, size, and energy requirements. Each house is</span>
+<span class="sd">    associated with a `Houseowner` agent and contains the currently installed</span>
+<span class="sd">    heating system.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    milieu_table : Milieu_table</span>
+<span class="sd">        A table containing parameters for different socio-economic milieus.</span>
+<span class="sd">    milieu : Milieu</span>
+<span class="sd">        The milieu associated with the house&#39;s owner.</span>
+<span class="sd">    year : int</span>
+<span class="sd">        The year the house was constructed.</span>
+<span class="sd">    area : float</span>
+<span class="sd">        The living area of the house in square meters.</span>
+<span class="sd">    energy_demand : float</span>
+<span class="sd">        The annual energy demand for heating in kWh per sq.m. per year.</span>
+<span class="sd">    current_heating : Heating_system</span>
+<span class="sd">        The heating system currently installed in the house.</span>
+<span class="sd">    houseowner : Houseowner</span>
+<span class="sd">        The `Houseowner` agent who owns and lives in the house.</span>
+<span class="sd">    subarea : str</span>
+<span class="sd">        The name of the geographical subarea where the house is located.</span>
+<span class="sd">    heat_load : float</span>
+<span class="sd">        The heating load of the house in kW.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="n">current_heating</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a House agent.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unique_id : int</span>
+<span class="sd">            A unique identifier for the agent, typically provided by MESA-Geo.</span>
+<span class="sd">        model : mesa.Model</span>
+<span class="sd">            The main model instance.</span>
+<span class="sd">        geometry : shapely.geometry.BaseGeometry</span>
+<span class="sd">            A Shapely object representing the house&#39;s geographical footprint.</span>
+<span class="sd">        crs : str or pyproj.CRS</span>
+<span class="sd">            The coordinate reference system of the geometry.</span>
+<span class="sd">        current_heating : Heating_system, optional</span>
+<span class="sd">            The heating system to be installed initially. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">unique_id</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">crs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">milieu_table</span> <span class="o">=</span> <span class="n">Milieu_table</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">milieu</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy_demand</span> <span class="o">=</span> <span class="kc">None</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_heating</span> <span class="o">=</span> <span class="n">current_heating</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">houseowner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subarea</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_load</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="House.set_house_owner">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House.set_house_owner">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_house_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">houseowner</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns a Houseowner agent to this house.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        houseowner : Houseowner</span>
+<span class="sd">            The `Houseowner` agent to be linked to this house.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">houseowner</span> <span class="o">=</span> <span class="n">houseowner</span></div>
+
+
+<div class="viewcode-block" id="House.knockknock">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House.knockknock">[docs]</a>
+    <span class="k">def</span> <span class="nf">knockknock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the owner of the house.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Houseowner</span>
+<span class="sd">            The `Houseowner` agent associated with this house.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">houseowner</span></div>
+
+
+<div class="viewcode-block" id="House.generate_area_distribution">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House.generate_area_distribution">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_area_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">deviation</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a living area value from a normal distribution.</span>
+
+<span class="sd">        This method is used for initializing house areas when specific data is</span>
+<span class="sd">        not available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mean : float</span>
+<span class="sd">            The mean living area in square meters.</span>
+<span class="sd">        deviation : float</span>
+<span class="sd">            The standard deviation from the mean in square meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            A randomly generated value for the living area.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">rng_house_init</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">deviation</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="House.generate_energy_demand_distribution">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House.generate_energy_demand_distribution">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_energy_demand_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">deviation</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates an energy demand value from a normal distribution.</span>
+
+<span class="sd">        This method is used for initializing energy demand when specific data</span>
+<span class="sd">        is not available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mean : float</span>
+<span class="sd">            The mean energy demand in kWh per square meter per year.</span>
+<span class="sd">        deviation : float</span>
+<span class="sd">            The standard deviation from the mean.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            A randomly generated value for the energy demand.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">rng_house_init</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">deviation</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="House.define_energy_demand">
+<a class="viewcode-back" href="../../application/api/agents.html#agents.House.House.define_energy_demand">[docs]</a>
+    <span class="k">def</span> <span class="nf">define_energy_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">heat_demand</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the specific energy demand based on construction year </span>
+<span class="sd">        and data source.</span>
+
+<span class="sd">        This method calculates the energy demand (in kWh/m²/a) based on one of</span>
+<span class="sd">        two modes defined in the model settings:</span>
+<span class="sd">        - &#39;eqcity&#39;: Uses a predefined lookup table based on building age classes.</span>
+<span class="sd">        - &#39;ubem&#39;: Calculates the demand by dividing the total annual heat demand</span>
+<span class="sd">                  by the house&#39;s area.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        year : int</span>
+<span class="sd">            The construction year of the house.</span>
+<span class="sd">        heat_demand : float</span>
+<span class="sd">            The total annual heat demand of the house in kWh, used in &#39;ubem&#39; mode.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The calculated specific energy demand in kWh per square meter per year.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_demand</span> <span class="o">==</span> <span class="s2">&quot;eqcity&quot;</span><span class="p">:</span>
+            <span class="n">classes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Start&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">1860</span><span class="p">,</span>
+                        <span class="mi">1919</span><span class="p">,</span>
+                        <span class="mi">1949</span><span class="p">,</span>
+                        <span class="mi">1958</span><span class="p">,</span>
+                        <span class="mi">1969</span><span class="p">,</span>
+                        <span class="mi">1979</span><span class="p">,</span>
+                        <span class="mi">1984</span><span class="p">,</span>
+                        <span class="mi">1995</span><span class="p">,</span>
+                        <span class="mi">2002</span><span class="p">,</span>
+                        <span class="mi">2010</span><span class="p">,</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;End&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1918</span><span class="p">,</span> <span class="mi">1948</span><span class="p">,</span> <span class="mi">1957</span><span class="p">,</span> <span class="mi">1968</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1983</span><span class="p">,</span> <span class="mi">1994</span><span class="p">,</span> <span class="mi">2001</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="mi">2050</span><span class="p">],</span>
+                    <span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">181</span><span class="p">,</span> <span class="mi">164</span><span class="p">,</span> <span class="mi">182</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">122</span><span class="p">,</span> <span class="mi">87</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">classes_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Start&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;End&quot;</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Demand&quot;</span><span class="p">]</span>
+                    <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_demand</span> <span class="o">==</span> <span class="s2">&quot;ubem&quot;</span><span class="p">:</span>
+            <span class="n">demand</span> <span class="o">=</span> <span class="n">heat_demand</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span>
+            <span class="k">return</span> <span class="n">demand</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

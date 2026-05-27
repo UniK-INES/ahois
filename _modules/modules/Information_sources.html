@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Information_sources &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Information_sources</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Information_sources</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides the classes and logic for how agents gather information.</span>
+<span class="sd">It features a base `Information_source` class that implements the core</span>
+<span class="sd">information-seeking process, where an agent receives potentially biased and</span>
+<span class="sd">uncertain data about a heating system.</span>
+
+<span class="sd">Specific subclasses, such as `Information_source_internet` and</span>
+<span class="sd">`Information_source_plumber`, represent different channels through which an</span>
+<span class="sd">agent can seek information. Each source has its own characteristics, including</span>
+<span class="sd">the scope of its knowledge (content), the cost to consult it, and the specific</span>
+<span class="sd">interaction mechanics.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_information_source_run</span>
+<span class="kn">from</span> <span class="nn">interventions.Subsidy</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="Information_source">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class for a generic source of information.</span>
+
+<span class="sd">    This class provides the structure and methods for all information</span>
+<span class="sd">    sources in the model. It defines standard attributes like search cost and</span>
+<span class="sd">    distortion levels and contains the core `data_search` method, which</span>
+<span class="sd">    simulates the process of an agent acquiring and perceiving information.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cost : int</span>
+<span class="sd">        The cognitive resource cost for an agent to perform one search action.</span>
+<span class="sd">    distortion : float</span>
+<span class="sd">        The base (maximum) factor for distorting a heating system&#39;s true parameters.</span>
+<span class="sd">    min_distortion : float</span>
+<span class="sd">        The minimum distortion (for a 100% market share system).</span>
+<span class="sd">    uncertainty_lower : float</span>
+<span class="sd">        The lower bound for the uncertainty range applied to parameters.</span>
+<span class="sd">    uncertainty_upper : float</span>
+<span class="sd">        The upper bound for the uncertainty range applied to parameters.</span>
+<span class="sd">    content : list or None</span>
+<span class="sd">        A list of heating system names that this source can provide information on.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a generic Information_source instance.</span>
+
+<span class="sd">        This constructor sets the default attributes for an information source,</span>
+<span class="sd">        such as cost and distortion levels, by loading them from the global</span>
+<span class="sd">        settings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Other params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">decision_making_costs</span><span class="o">.</span><span class="n">get_data</span>
+        
+        <span class="c1"># This is the worst max_distortion (for a 0% market share tech)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distortion</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">distortion</span> 
+        <span class="c1"># This is the best maximum distortion (for a 100% market share tech)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_distortion</span> <span class="o">=</span> <span class="mf">0.1</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">uncertainty_lower</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_lower</span>  <span class="c1"># To be used for uncertainty ranges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uncertainty_upper</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Default content is None, subclasses can override</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidy_finding_prob</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">subsidy_finding_prob</span>
+
+    <span class="c1"># returns a list of all subclasses</span>
+<div class="viewcode-block" id="Information_source.instantiate_subclasses">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source.instantiate_subclasses">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">instantiate_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and returns an instance of each direct subclass.</span>
+
+<span class="sd">        This factory method is a convenient way to get a list of all available</span>
+<span class="sd">        information source objects in the simulation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Information_source]</span>
+<span class="sd">            A list containing one instance of each subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">subclass</span><span class="p">()</span> <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="Information_source.data_search">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source.data_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">data_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">cost</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates an agent&#39;s process of searching for information using</span>
+<span class="sd">        Internet or Magazine.</span>
+
+<span class="sd">        This method models an agent spending cognitive resources to acquire</span>
+<span class="sd">        information about a heating system. The process involves several steps:</span>
+<span class="sd">        1. A random heating system is selected from the source&#39;s content.</span>
+<span class="sd">        2. A &quot;perceived&quot; version of this system is created, where its true</span>
+<span class="sd">           parameters are distorted.</span>
+<span class="sd">        3. The distortion is &quot;pessimistic-only&quot; (&gt;= 1.0) and its</span>
+<span class="sd">           upper bound is based on the system&#39;s market share.</span>
+<span class="sd">           - New tech (low share) = wide range [0.0, MAX] -&gt; unpredictable</span>
+<span class="sd">           - Old tech (high share) = narrow range [0.0, MIN] -&gt; predictable</span>
+<span class="sd">        4. An uncertainty range is added to each perceived parameter.</span>
+<span class="sd">        5. If the system is new to the agent, it&#39;s added to their knowledge base.</span>
+<span class="sd">        6. If the agent already knows the system, their existing perception is</span>
+<span class="sd">           updated using a relative agreement mechanism.</span>
+<span class="sd">        The source also add knowledge about subsidies.</span>
+<span class="sd">        The search continues until the agent runs out of cognitive resources,</span>
+<span class="sd">        finds a satisfactory option, or becomes overloaded with information.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent performing the information search.</span>
+<span class="sd">        cost : int</span>
+<span class="sd">            The cognitive resource cost for this specific search action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the model&#39;s heating distribution</span>
+        <span class="n">distribution</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_distribution</span>
+        <span class="n">total_houses</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Define the min/max for distortion width</span>
+        <span class="n">max_distortion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distortion</span>     
+        <span class="n">min_distortion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_distortion</span> 
+        
+        <span class="k">while</span> <span class="p">(</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span>
+        <span class="p">):</span>  <span class="c1"># Repeat data search while having enough cognitive resource</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">agent</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="p">):</span>  <span class="c1"># The agent knows more than his own system and is aspired</span>
+                <span class="c1"># logger.info(&quot;I already have enough data! Proceed!&quot;)</span>
+                <span class="k">break</span>
+
+            <span class="n">randomizer</span> <span class="o">=</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>  <span class="c1"># Get data about random HS from the chosen source</span>
+            
+            <span class="c1"># 1. Get market share for the chosen system</span>
+            <span class="n">market_share</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">total_houses</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">market_share</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">randomizer</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_houses</span>
+            
+            <span class="c1"># 2. Calculate this system&#39;s dynamic *top* distortion</span>
+            <span class="n">dynamic_top_distortion</span> <span class="o">=</span> <span class="n">min_distortion</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">market_share</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_distortion</span> <span class="o">-</span> <span class="n">min_distortion</span><span class="p">)</span>
+            
+            
+            <span class="c1"># Corrects parameters of newly found HS with perception and distortion, thus forming &quot;expectations&quot;</span>
+            <span class="n">found_system</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">randomizer</span><span class="p">)</span>
+            <span class="n">found_system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span> <span class="n">heat_load</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+            <span class="p">)</span><span class="c1">#using tailored for system params</span>
+            <span class="c1">#if averaged info: area=106, energy_demand=147, heat_load=19</span>
+            <span class="c1"># logger.info(&quot;I got info about &quot; + str(type(found_system).__name__))</span>
+            
+            <span class="n">bot_distortion</span> <span class="o">=</span> <span class="o">-</span><span class="n">dynamic_top_distortion</span>
+            <span class="n">top_distortion</span> <span class="o">=</span> <span class="n">dynamic_top_distortion</span>
+            
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;installation_effort&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+            <span class="p">]:</span>
+                <span class="n">random_noise</span> <span class="o">=</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="n">bot_distortion</span><span class="p">,</span> <span class="n">top_distortion</span>
+                    <span class="p">)</span>
+                
+                <span class="n">distortion_factor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">random_noise</span><span class="p">)</span>
+
+                <span class="c1"># Multiply</span>
+                <span class="n">found_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">found_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">distortion_factor</span>
+            
+
+            <span class="c1"># Setting the uncertainty range</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">found_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uncertainty_lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">found_system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="p">:</span>
+                <span class="k">break</span>
+                <span class="c1"># logger.info(f&quot;I know that type(found_system).__name__ is infeasible!&quot;)</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">found_system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span>
+            <span class="p">):</span>  <span class="c1"># Checks whether the agent does not know this HS</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">-=</span> <span class="n">cost</span>
+                <span class="n">found_system</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Internet&quot;</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">found_system</span>
+                <span class="p">)</span>  <span class="c1"># Add system with &quot;expected&quot; parameters to the list of known HS</span>
+                <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">rating</span>
+
+                <span class="k">if</span> <span class="n">found_system</span><span class="o">.</span><span class="n">rating</span> <span class="o">&gt;</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">rating</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Get closer to the aspiration point</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">overload_value</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Get closer to the overload</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># logger.info(&quot;I obtained enough data!&quot;) #Marks aspiration</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">overload_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># logger.info(&quot;I am overloaded!&quot;) #Marks overload</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_2&quot;</span><span class="p">][</span><span class="s2">&quot;Overloaded&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Use relative agreement if the system is already known</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">-=</span> <span class="n">cost</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">relative_agreement</span><span class="p">(</span><span class="n">new_system</span> <span class="o">=</span> <span class="n">found_system</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+            
+            
+            <span class="c1">#Subsidies part</span>
+            <span class="k">if</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsidy_finding_prob</span><span class="p">:</span>
+                <span class="n">hs_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">found_system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="k">if</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">hs_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">hs_name</span><span class="p">])</span>
+            
+            <span class="c1">#Overload part</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">overload_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Marks information overload</span>
+                <span class="c1"># logger.info(&quot;I&#39;ve spent all my resource but found nothing good! I quit!&quot;)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stage_flows</span><span class="p">[</span><span class="s2">&quot;Stage_2&quot;</span><span class="p">][</span><span class="s2">&quot;Overloaded&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+                
+
+<div class="viewcode-block" id="Information_source_internet">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_internet">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_internet</span><span class="p">(</span><span class="n">Information_source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the Internet as a source of information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the Internet source.</span>
+<span class="sd">        The Internet is configured to have knowledge of all heating systems</span>
+<span class="sd">        and subsidies listed in the project settings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems</span><span class="o">.</span><span class="n">list</span>
+        <span class="p">)</span>  <span class="c1"># List of options to provide to an agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organize_subsidies</span><span class="p">()</span>
+        
+<div class="viewcode-block" id="Information_source_internet.organize_subsidies">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_internet.organize_subsidies">[docs]</a>
+    <span class="k">def</span> <span class="nf">organize_subsidies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populate the source&#39;s knowledge of available subsidies.</span>
+
+<span class="sd">        This method compiles a list of subsidies applicable to the heating</span>
+<span class="sd">        systems that the source provides information about.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subsidies_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Subsidy_pellet</span><span class="p">(),</span>
+                          <span class="n">Subsidy_heat_pump</span><span class="p">(),</span>
+                          <span class="n">Subsidy_heat_pump_brine</span><span class="p">(),</span>
+                          <span class="n">Subsidy_network_local</span><span class="p">(),</span>
+                          <span class="n">Subsidy_GP_Joule</span><span class="p">(),</span>
+                          <span class="n">Subsidy_climate_speed</span><span class="p">(),</span>
+                          <span class="n">Subsidy_income</span><span class="p">(),</span>
+                          <span class="n">Subsidy_efficiency</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">subsidy</span> <span class="ow">in</span> <span class="n">subsidies_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">deepcopy</span><span class="p">(</span>
+                                    <span class="n">Subsidy</span><span class="p">(</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                        <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                        <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                        <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                        <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                        <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                                    <span class="p">)</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span> <span class="o">==</span> <span class="s2">&quot;Any&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">deepcopy</span><span class="p">(</span>
+                            <span class="n">Subsidy</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">deepcopy</span><span class="p">(</span><span class="n">subsidy</span><span class="p">)</span>
+                <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Information_source_magazine">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_magazine">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_magazine</span><span class="p">(</span><span class="n">Information_source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a professional magazine as a source of information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the magazine source.</span>
+
+<span class="sd">        A magazine is configured with a limited set of conventional heating</span>
+<span class="sd">        systems that it can provide information about.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Heating_system_gas&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_electricity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">,</span>
+        <span class="p">]</span>  <span class="c1"># List of options to provide to an agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organize_subsidies</span><span class="p">()</span>
+        
+<div class="viewcode-block" id="Information_source_magazine.organize_subsidies">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_magazine.organize_subsidies">[docs]</a>
+    <span class="k">def</span> <span class="nf">organize_subsidies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populates the source&#39;s knowledge of available subsidies.</span>
+<span class="sd">        This method compiles a list of subsidies applicable to the heating</span>
+<span class="sd">        systems that the source provides information about.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subsidies_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Subsidy_pellet</span><span class="p">(),</span>
+                          <span class="n">Subsidy_heat_pump</span><span class="p">(),</span>
+                          <span class="n">Subsidy_heat_pump_brine</span><span class="p">(),</span>
+                          <span class="n">Subsidy_network_local</span><span class="p">(),</span>
+                          <span class="n">Subsidy_GP_Joule</span><span class="p">(),</span>
+                          <span class="n">Subsidy_climate_speed</span><span class="p">(),</span>
+                          <span class="n">Subsidy_income</span><span class="p">(),</span>
+                          <span class="n">Subsidy_efficiency</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">subsidy</span> <span class="ow">in</span> <span class="n">subsidies_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">deepcopy</span><span class="p">(</span>
+                                    <span class="n">Subsidy</span><span class="p">(</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                        <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                        <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                        <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                        <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                        <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                                    <span class="p">)</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span> <span class="o">==</span> <span class="s2">&quot;Any&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">deepcopy</span><span class="p">(</span>
+                            <span class="n">Subsidy</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">deepcopy</span><span class="p">(</span><span class="n">subsidy</span><span class="p">)</span>
+                <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Information_source_plumber">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_plumber">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_plumber</span><span class="p">(</span><span class="n">Information_source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a plumber as a source of information.</span>
+<span class="sd">    Not the plumber itself. This subclass facilitates</span>
+<span class="sd">    exclusively the data search part </span>
+<span class="sd">    of houseowner-plumber interaction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the plumber information source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Information_source_plumber.data_search">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_plumber.data_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">data_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">cost</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulate an agent consulting a plumber.</span>
+
+<span class="sd">        This method models the specific interaction of ordering a consultation</span>
+<span class="sd">        from a plumber. The agent finds a plumber (if they don&#39;t already have</span>
+<span class="sd">        one) and requests a service. The actual information exchange is then</span>
+<span class="sd">        handled by the plumber agent&#39;s logic.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent seeking a consultation.</span>
+<span class="sd">        cost : int</span>
+<span class="sd">            The cognitive resource cost of contacting the plumber.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">&gt;=</span> <span class="n">cost</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">-=</span> <span class="n">cost</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">plumber</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Finds a plumber if none has been found yet</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">find_plumber</span><span class="p">()</span>
+                <span class="c1"># logger.info(&quot;I have found a new plumber -- {}&quot;.format(self.plumber))</span>
+    
+            <span class="n">agent</span><span class="o">.</span><span class="n">order_plumber</span><span class="p">()</span>  <span class="c1"># Orders a consultation. The plumber will carry out the rest.</span>
+            <span class="c1"># logger.info(&quot;I have ordered a consultation from my plumber!&quot;)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="mi">0</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Information_source_neighbours">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_neighbours">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_neighbours</span><span class="p">(</span><span class="n">Information_source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents neighbours as a source of information.</span>
+<span class="sd">    Not the neighbours themselves. This subclass facilitates</span>
+<span class="sd">    exclusively the information search among neighbours.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the neighbours information source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Information_source_neighbours.data_search">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_neighbours.data_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">data_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">cost</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulate an agent asking their neighbours for information.</span>
+
+<span class="sd">        This method triggers the agent&#39;s behaviour to interact with their</span>
+<span class="sd">        neighbours to gather opinions and information about their heating</span>
+<span class="sd">        systems. The information exchange is handled by the agent&#39;s</span>
+<span class="sd">        `ask_neighbours` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent asking neighbors.</span>
+<span class="sd">        cost : int</span>
+<span class="sd">            The cognitive resource cost (not used in this implementation).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">&gt;=</span> <span class="n">cost</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">ask_neighbours</span><span class="p">(</span><span class="n">coverage</span> <span class="o">=</span> <span class="mi">514</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="mi">0</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Information_source_energy_advisor">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_energy_advisor">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_energy_advisor</span><span class="p">(</span><span class="n">Information_source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an energy advisor as a source of information.</span>
+<span class="sd">    Not the EA itself. This subclass facilitates</span>
+<span class="sd">    exclusively the data search part </span>
+<span class="sd">    of houseowner-EA interaction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the energy advisor information source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Information_source_energy_advisor.data_search">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.Information_source_energy_advisor.data_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">data_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">cost</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates an agent consulting an energy advisor.</span>
+<span class="sd">        This method models the agent finding and ordering a consultation from</span>
+<span class="sd">        an energy advisor. The detailed information exchange is subsequently</span>
+<span class="sd">        handled by the energy advisor agent&#39;s logic.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent seeking a consultation.</span>
+<span class="sd">        cost : int</span>
+<span class="sd">            The cognitive resource cost of contacting the advisor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">energy_advisor</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">find_energy_advisor</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">&gt;=</span> <span class="n">cost</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">order_energy_advisor</span><span class="p">()</span>
+            <span class="c1"># logger.info(&quot;I have ordered a consultation from my energy advisor!&quot;)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span> <span class="o">=</span> <span class="mi">0</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="generate_imperfect_system">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Information_sources.generate_imperfect_system">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_imperfect_system</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">system_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a perceived, imperfect representation of a heating system.</span>
+
+<span class="sd">    This function simulates an agent&#39;s imperfect perception of a heating</span>
+<span class="sd">    system. It takes a system name, creates an instance with its &quot;true&quot;</span>
+<span class="sd">    attributes calculated for the agent&#39;s house, and then applies a random</span>
+<span class="sd">    &quot;pessimistic-only&quot; distortion and an uncertainty range to its parameters.</span>
+<span class="sd">    </span>
+<span class="sd">    The distortion&#39;s upper bound is based on the system&#39;s market share.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : Houseowner</span>
+<span class="sd">        The agent for whom the system perception is being generated.</span>
+<span class="sd">    system_name : str</span>
+<span class="sd">        The name of the heating system class to generate.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Heating_system</span>
+<span class="sd">        The newly created `Heating_system` object with distorted and</span>
+<span class="sd">        uncertain parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get distortion bounds</span>
+    <span class="n">max_distortion</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">distortion</span> <span class="c1"># e.g., 0.3</span>
+    <span class="n">min_distortion</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># This must match the value in Information_source.__init__</span>
+    
+    <span class="c1"># Get market distribution from the agent&#39;s model</span>
+    <span class="n">distribution</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">heating_distribution</span>
+    <span class="n">total_houses</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="c1"># 1. Get market share for the chosen system</span>
+    <span class="n">market_share</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">total_houses</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">market_share</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">system_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_houses</span>
+    
+    <span class="c1"># 2. Calculate this system&#39;s dynamic *top* distortion</span>
+    <span class="c1"># Linear interpolation: maps [0, 1] -&gt; [max_distortion, min_distortion]</span>
+    <span class="n">dynamic_top_distortion</span> <span class="o">=</span> <span class="n">min_distortion</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">market_share</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_distortion</span> <span class="o">-</span> <span class="n">min_distortion</span><span class="p">)</span>
+    
+    <span class="c1"># 3. Set distortion range</span>
+    <span class="n">bot_distortion</span> <span class="o">=</span> <span class="o">-</span><span class="n">dynamic_top_distortion</span>
+    <span class="n">top_distortion</span> <span class="o">=</span> <span class="n">dynamic_top_distortion</span>
+            
+    <span class="n">uncertainty_lower</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_lower</span>
+    <span class="n">uncertainty_upper</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+    
+    <span class="n">new_system</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">system_name</span><span class="p">)</span>
+    <span class="n">new_system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+        <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+        <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+    <span class="p">)</span>
+            
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;operation_effort&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fuel_cost&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;emissions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;installation_effort&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;opex&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">random_noise</span> <span class="o">=</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+            <span class="n">bot_distortion</span><span class="p">,</span> <span class="n">top_distortion</span>
+            <span class="p">)</span>
+        <span class="n">distortion_factor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">random_noise</span><span class="p">)</span>
+        <span class="c1"># Multiply, then round up the value</span>
+        <span class="n">new_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">distortion_factor</span>
+
+    <span class="c1"># Setting the uncertainty range (UNCHANGED)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rng_information_source_run</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span>
+            <span class="n">uncertainty_lower</span><span class="p">,</span> <span class="n">uncertainty_upper</span>
+        <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">new_system</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

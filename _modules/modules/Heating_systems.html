@@ -1,0 +1,1319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Heating_systems &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Heating_systems</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Heating_systems</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the classes and methods for all heating systems in the simulation.</span>
+
+<span class="sd">This module provides the core data structures for representing heating systems.</span>
+<span class="sd">It includes a generic `Heating_system` base class that defines the common</span>
+<span class="sd">attributes and functionalities shared by all systems.</span>
+
+<span class="sd">Specific heating technologies are implemented as subclasses. </span>
+<span class="sd">These subclasses inherit the common framework from the base class </span>
+<span class="sd">but are initialised with their own unique parameters </span>
+<span class="sd">loaded from external data files.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_heating_init</span>
+<span class="kn">from</span> <span class="nn">modules.Excel_input_read</span> <span class="kn">import</span> <span class="n">Heating_params_table</span>
+<span class="c1">#from statsmodels.discrete.tests.results.results_count_robust_cluster import params_table</span>
+<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">current_dir</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">src_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="n">params_table</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="init_param_table">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.init_param_table">[docs]</a>
+<span class="k">def</span> <span class="nf">init_param_table</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialises the global heating system parameter table.</span>
+<span class="sd">    This function must be called once at the beginning of a simulation run</span>
+<span class="sd">    before any `Heating_system` objects are created. It creates an instance of</span>
+<span class="sd">    `Heating_params_table`, loading the data from the input file and making it</span>
+<span class="sd">    globally accessible for all heating system instances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">params_table</span> 
+    <span class="n">params_table</span> <span class="o">=</span> <span class="n">Heating_params_table</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Heating_system">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class representing a generic heating system.</span>
+<span class="sd">    This class serves as the blueprint for all heating system types in the</span>
+<span class="sd">    model. It defines the core attributes and perceived characteristics. </span>
+<span class="sd">    It also contains the methods for calculating key performance and cost indicators,</span>
+<span class="sd">    including installation costs, fuel costs, operating costs, and emissions.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    unique_id : uuid.UUID</span>
+<span class="sd">        A unique identifier for the system instance.</span>
+<span class="sd">    table : pandas.Series</span>
+<span class="sd">        The row from the parameters table corresponding to the system type.</span>
+<span class="sd">    age : int</span>
+<span class="sd">        The number of steps (weeks) since the system was installed.</span>
+<span class="sd">    breakdown : bool</span>
+<span class="sd">        A flag indicating if the system has broken down.</span>
+<span class="sd">    investment : float or None</span>
+<span class="sd">        The remaining investment cost to be paid back.</span>
+<span class="sd">    rating : float or None</span>
+<span class="sd">        An agent&#39;s calculated attitude (rating) towards this system.</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        A dictionary holding the core parameters of the system. Each key maps</span>
+<span class="sd">        to a list of two values: the parameter&#39;s point value and its</span>
+<span class="sd">        associated uncertainty (e.g., `[value, uncertainty]`).</span>
+<span class="sd">    riskiness : float</span>
+<span class="sd">        A calculated score from 0 to 1 representing the perceived riskiness</span>
+<span class="sd">        of installing this system.</span>
+<span class="sd">    weibull_lifetime : bool</span>
+<span class="sd">        Defines whether the lifetime will be calculated using Weibull or Uniform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Heating_system instance with default values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Seed control part</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Other params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter of HS&#39;s lifetime after installation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Marks a broken system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_energy_demand</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># House and system-specific demand</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">investment</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payback</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsidised</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loan</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># The part used for the Theory of Planned Behaviour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rating</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Attitude of a houseowner towards certain HS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighbours_opinions</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Storage of neighbours&#39; opinions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">social_norm</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Perceived social &quot;norm&quot;, mean of the opinions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">behavioural_control</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># PERCEIVED behavioural control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Operational effort, hours per year</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Fuel/energy cost, EUR per year</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Emissions, grams of CO2 equivalent per kWh</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Installation price, EUR</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Working hours</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>  <span class="c1"># Operating expenses, EUR per Year</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">riskiness</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#The higher, the worse [0, 1]</span>
+
+
+    <span class="c1"># Methods part</span>
+<div class="viewcode-block" id="Heating_system.generate_lifetime">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.generate_lifetime">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_lifetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_weeks</span><span class="p">,</span> <span class="n">max_weeks</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a random lifetime for the system, using one of two modes.</span>
+<span class="sd">    </span>
+<span class="sd">        Mode 1: Uniform (Default)</span>
+<span class="sd">            If &#39;shape&#39; and &#39;scale&#39; are NOT provided (or are None), this</span>
+<span class="sd">            generates a uniform random integer between &#39;min_weeks&#39; and </span>
+<span class="sd">            &#39;max_weeks&#39; (inclusive).</span>
+<span class="sd">    </span>
+<span class="sd">        Mode 2: Weibull</span>
+<span class="sd">            If &#39;shape&#39; and &#39;scale&#39; ARE provided, this generates a random</span>
+<span class="sd">            lifetime from a Weibull distribution. In this mode, </span>
+<span class="sd">            &#39;min_weeks&#39; and &#39;max_weeks&#39; are IGNORED.</span>
+<span class="sd">        </span>
+<span class="sd">        The final lifetime is rounded to the nearest integer.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        min_weeks : int</span>
+<span class="sd">            The minimum possible lifetime (inclusive) for the uniform distribution.</span>
+<span class="sd">            Ignored if &#39;shape&#39; and &#39;scale&#39; are provided.</span>
+<span class="sd">        max_weeks : int</span>
+<span class="sd">            The maximum possible lifetime (inclusive) for the uniform distribution.</span>
+<span class="sd">            Ignored if &#39;shape&#39; and &#39;scale&#39; are provided.</span>
+<span class="sd">        shape : float, optional</span>
+<span class="sd">            The shape parameter (k) for the Weibull distribution.</span>
+<span class="sd">            If provided, &#39;scale&#39; must also be provided.</span>
+<span class="sd">        scale : float, optional</span>
+<span class="sd">            The scale parameter (lambda) for the Weibull distribution.</span>
+<span class="sd">            If provided, &#39;shape&#39; must also be provided.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The generated lifetime in weeks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">rng_heating_init</span><span class="p">()</span> <span class="c1"># Get the random number generator</span>
+    
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span><span class="p">:</span>
+            <span class="c1"># --- Mode 1: Unrestricted Weibull Distribution ---</span>
+            <span class="c1"># &#39;min_weeks&#39; and &#39;max_weeks&#39; are ignored, as requested.</span>
+
+            <span class="n">lifetime</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_weeks</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">weibull</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># --- Mode 2: Uniform Integer Distribution ---</span>
+            <span class="c1"># We use &#39;max_weeks + 1&#39; because rng.integers is exclusive </span>
+            <span class="c1"># of the upper bound (i.e., [low, high) )</span>
+            <span class="n">lifetime</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">min_weeks</span><span class="p">,</span> <span class="n">max_weeks</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    
+        <span class="c1"># Round to the nearest integer for both cases</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">lifetime</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.get_name">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.get_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the name of the heating system class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The class name as a string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.breakdown_check">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.breakdown_check">[docs]</a>
+    <span class="k">def</span> <span class="nf">breakdown_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the system&#39;s age has exceeded its lifetime.</span>
+
+<span class="sd">        If the age is greater than the system&#39;s generated lifetime, </span>
+<span class="sd">        the `breakdown` flag is set to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">investment</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.payback_check">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.payback_check">[docs]</a>
+    <span class="k">def</span> <span class="nf">payback_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduce the remaining investment value.</span>
+
+<span class="sd">        This method is called periodically to simulate the payback of the</span>
+<span class="sd">        initial investment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">investment</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">leftovers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">investment</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">payback</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">investment</span> <span class="o">=</span> <span class="n">leftovers</span> <span class="k">if</span> <span class="n">leftovers</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_all_attributes">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_all_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_all_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">house</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">heat_load</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates all cost and performance attributes for the system.</span>
+
+<span class="sd">        This is a convenience method that runs all individual calculation</span>
+<span class="sd">        methods to populate the system&#39;s `params` dictionary </span>
+<span class="sd">        based on the properties of a given house.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        area : float, optional</span>
+<span class="sd">            The living area of the house in square meters.</span>
+<span class="sd">        energy_demand : float, optional</span>
+<span class="sd">            The specific energy demand of the house in kWh per square meter per year.</span>
+<span class="sd">        house : House, optional</span>
+<span class="sd">            A House object from which to derive area, energy_demand, and heat_load.</span>
+<span class="sd">            If provided, it overrides other parameters.</span>
+<span class="sd">        heat_load : float, optional</span>
+<span class="sd">            The heat load of the house in kW.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">house</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">house</span><span class="o">.</span><span class="n">area</span>
+            <span class="n">energy_demand</span><span class="o">=</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span>
+            <span class="n">heat_load</span><span class="o">=</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+<span class="w">            </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform all calculations in one method&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_energy_demand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_energy_demand</span><span class="p">(</span>
+            <span class="n">energy_demand</span><span class="o">=</span><span class="n">energy_demand</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="n">area</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_installation_costs</span><span class="p">(</span><span class="n">area</span><span class="o">=</span><span class="n">area</span><span class="p">,</span>
+                                                                    <span class="n">heat_load</span><span class="o">=</span><span class="n">heat_load</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_fuel_costs</span><span class="p">(</span>
+            <span class="n">energy_demand</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_energy_demand</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_operating_costs</span><span class="p">(</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span><span class="p">,</span>
+                                                                <span class="n">heat_load</span><span class="o">=</span><span class="n">heat_load</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;emissions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_emissions</span><span class="p">(</span>
+            <span class="n">energy_demand</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_energy_demand</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_installation_costs">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_installation_costs">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_installation_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">heat_load</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the installation cost for the heating system.</span>
+
+<span class="sd">        The calculation logic depends on the system type. </span>
+<span class="sd">        Some systems are priced based on the house&#39;s area, </span>
+<span class="sd">        while others are priced based on the required heat load.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        area : float, optional</span>
+<span class="sd">            The living area of the house in square meters.</span>
+<span class="sd">        heat_load : float, optional</span>
+<span class="sd">            The heat load of the house in kW.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The total installation cost in EUR.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">area_based</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;Heating_system_district&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Heating_system_electricity&quot;</span><span class="p">:</span>
+            <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+            <span class="n">factor_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_area&quot;</span><span class="p">]</span>
+            <span class="n">factor_oppendorf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_oppendorf&quot;</span><span class="p">]</span>
+            <span class="n">price_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;price_index&quot;</span><span class="p">]</span>
+            <span class="n">sidecosts_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;sidecosts_index&quot;</span><span class="p">]</span>
+    
+            <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">price</span>
+                <span class="o">*</span> <span class="n">area</span><span class="o">**</span><span class="n">factor_area</span>
+                <span class="o">*</span> <span class="n">area</span>
+                <span class="o">*</span> <span class="n">factor_oppendorf</span>
+                <span class="o">*</span> <span class="n">price_index</span>
+                <span class="o">*</span> <span class="n">sidecosts_index</span>
+            <span class="p">)</span>
+    
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">area_based</span><span class="p">:</span>
+            <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+            <span class="n">factor_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_area&quot;</span><span class="p">]</span>
+            <span class="n">factor_oppendorf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_oppendorf&quot;</span><span class="p">]</span>
+            <span class="n">price_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;price_index&quot;</span><span class="p">]</span>
+            <span class="n">sidecosts_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;sidecosts_index&quot;</span><span class="p">]</span>
+            <span class="n">correction_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_load_correction&quot;</span><span class="p">]</span>
+    
+            <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">price</span>
+                <span class="o">*</span> <span class="n">area</span><span class="o">**</span><span class="n">factor_area</span>
+                <span class="o">*</span> <span class="n">area</span>
+                <span class="o">*</span> <span class="n">factor_oppendorf</span>
+                <span class="o">*</span> <span class="n">price_index</span>
+                <span class="o">*</span> <span class="n">sidecosts_index</span>
+                <span class="o">*</span> <span class="n">correction_factor</span>
+            <span class="p">)</span>
+    
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">price</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_load_price&quot;</span><span class="p">])</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_load_factor&quot;</span><span class="p">])</span>
+            <span class="n">correction_factor</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_load_correction&quot;</span><span class="p">])</span>
+    
+            <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">price</span>
+                <span class="o">*</span> <span class="p">((</span><span class="n">heat_load</span><span class="p">)</span><span class="o">**</span><span class="n">factor</span><span class="p">)</span>
+                <span class="o">*</span> <span class="n">heat_load</span>
+            <span class="p">)</span>
+            
+            <span class="c1">#Adjustments for network options, the same otherwise</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">*</span> <span class="n">correction_factor</span>
+            
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_operating_costs">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_operating_costs">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_operating_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">heat_load</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the annual operating and maintenance costs (OPEX).</span>
+
+<span class="sd">        Calculates the OPEX as a fraction of the initial installation cost.</span>
+<span class="sd">        For systems with a heat delivery contract, the amortised installation</span>
+<span class="sd">        cost is included in the annual OPEX.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        area : float</span>
+<span class="sd">            The living area of the house in square meters.</span>
+<span class="sd">        heat_load : float</span>
+<span class="sd">            The heat load of the house in kW.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The total annual operating costs in EUR.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_installation_costs</span><span class="p">(</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span><span class="p">,</span> 
+                                                  <span class="n">heat_load</span> <span class="o">=</span> <span class="n">heat_load</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span><span class="p">:</span>
+            <span class="n">price_distributed</span> <span class="o">=</span> <span class="mi">52</span><span class="o">*</span><span class="p">(</span><span class="n">price</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span><span class="p">)</span>
+            
+            <span class="n">factor_opex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_opex&quot;</span><span class="p">]</span>
+            <span class="n">opex</span> <span class="o">=</span> <span class="n">price</span> <span class="o">*</span> <span class="n">factor_opex</span>
+            
+            <span class="n">total_opex</span> <span class="o">=</span> <span class="n">opex</span> <span class="o">+</span> <span class="n">price_distributed</span>
+            
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">total_opex</span><span class="p">)</span>      
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">factor_opex</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_opex&quot;</span><span class="p">])</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">price</span> <span class="o">*</span> <span class="n">factor_opex</span>
+         
+            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_fuel_costs">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_fuel_costs">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_fuel_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_demand</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the annual energy costs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        energy_demand : float</span>
+<span class="sd">            The total final energy demand of the house in kWh per year.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The total annual fuel costs in EUR.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fuel_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;fuel_cost&quot;</span><span class="p">]</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">fuel_cost</span> <span class="o">*</span> <span class="n">energy_demand</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_emissions">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_emissions">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_emissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_demand</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the annual CO2 equivalent emissions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        energy_demand : float</span>
+<span class="sd">            The total final energy demand of the house in kWh per year.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The total annual emissions in grams of CO2 equivalent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">emissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;emissions&quot;</span><span class="p">]</span>
+        <span class="n">total_emissions</span> <span class="o">=</span> <span class="n">emissions</span> <span class="o">*</span> <span class="n">energy_demand</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">total_emissions</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_energy_demand">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_energy_demand">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_energy_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_demand</span><span class="p">,</span> <span class="n">area</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the final energy demand.</span>
+
+<span class="sd">        This method adjusts a house&#39;s specific energy demand by applying a</span>
+<span class="sd">        system-specific efficiency factor. The factor is chosen from a list</span>
+<span class="sd">        based on which predefined energy demand class is closest to the</span>
+<span class="sd">        house&#39;s demand.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        energy_demand : float</span>
+<span class="sd">            The specific energy demand of the house in kWh per square meter per year.</span>
+<span class="sd">        area : float</span>
+<span class="sd">            The living area of the house in square meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The total final energy demand in kWh per year.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="c1"># Create a DataFrame of demand and factor classes</span>
+        <span class="n">demand_classes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">]</span>
+        <span class="n">factor_classes</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;factor_energy&quot;</span><span class="p">])</span>
+        <span class="n">classes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="n">demand_classes</span><span class="p">,</span>
+            <span class="s2">&quot;Factor&quot;</span><span class="p">:</span> <span class="n">factor_classes</span><span class="p">,</span>
+        <span class="p">})</span>
+    
+        <span class="c1"># Identify the factor corresponding to the closest demand class</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">classes_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">classes_df</span><span class="p">[</span><span class="s2">&quot;Demand&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">energy_demand</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">idxmin</span><span class="p">(),</span> <span class="s2">&quot;Factor&quot;</span><span class="p">]</span>
+    
+        <span class="c1"># Calculate the processed area with a fixed scaling formula</span>
+        <span class="n">processed_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.3</span> <span class="o">*</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.75</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.32</span>
+    
+        <span class="c1"># Compute total energy demand</span>
+        <span class="n">total_demand</span> <span class="o">=</span> <span class="n">processed_area</span> <span class="o">*</span> <span class="n">energy_demand</span> <span class="o">*</span> <span class="n">factor</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">total_demand</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Heating_system.calculate_risk">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.calculate_risk">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_risk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method computes a &#39;riskiness&#39; score between 0 and 1. The score</span>
+<span class="sd">        is an average of several factors, including the financial risk from</span>
+<span class="sd">        a potential loan and the system-specific uncertainty mitigated by</span>
+<span class="sd">        the share of neighbours that have adopted the same system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent for whom the risk is being calculated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">factors</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># --- 1. Loan Risk ---</span>
+        <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loan</span> <span class="ow">and</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">loan_risk</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loan</span><span class="o">.</span><span class="n">loan_amount</span> <span class="o">/</span> <span class="n">price</span><span class="p">)</span>
+            <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;loan_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loan_risk</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;loan_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if self.fuel_price_contract_term:</span>
+<span class="sd">            price_ratio = min(self.fuel_price_contract_term / self.lifetime, 1)</span>
+<span class="sd">            price_risk = 1 - price_ratio</span>
+<span class="sd">            factors[&quot;price_risk&quot;] = price_risk</span>
+<span class="sd">        else:</span>
+<span class="sd">            factors[&quot;price_risk&quot;] = 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="c1"># --- 2. Uncertainty Risk ---</span>
+        
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">G</span>
+        
+        <span class="n">successors_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">unique_id</span><span class="p">))</span>
+        
+        <span class="n">n_total_neighbors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">successors_ids</span><span class="p">)</span>
+        
+        <span class="n">n_dissatisfied</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n_known</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">target_system_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+    
+        <span class="k">for</span> <span class="n">neighbour_id</span><span class="p">,</span> <span class="n">opinion_data</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">neighbours_satisfaction</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">neighbour_id</span> <span class="ow">in</span> <span class="n">successors_ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">target_system_name</span> <span class="ow">in</span> <span class="n">opinion_data</span><span class="p">:</span>
+                    <span class="n">n_known</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">opinion_data</span><span class="p">[</span><span class="n">target_system_name</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Dissatisfied&quot;</span><span class="p">:</span>
+                        <span class="n">n_dissatisfied</span> <span class="o">+=</span> <span class="mi">1</span>
+                        
+        <span class="n">n_unknown</span> <span class="o">=</span> <span class="n">n_total_neighbors</span> <span class="o">-</span> <span class="n">n_known</span>
+    
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">uncertainty_factor</span>
+        <span class="n">weighted_dissatisfaction</span> <span class="o">=</span> <span class="n">n_dissatisfied</span> <span class="o">+</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">n_unknown</span><span class="p">)</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if n_dissatisfied &gt; 0:</span>
+<span class="sd">            factors[&quot;uncertainty_risk&quot;] = 1 - n_known / n_total_neighbors)</span>
+<span class="sd">        else:</span>
+<span class="sd">            factors[&quot;uncertainty_risk&quot;] = 0&quot;&quot;&quot;</span>
+        
+        <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;uncertainty_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weighted_dissatisfaction</span> <span class="o">/</span> <span class="n">n_total_neighbors</span>
+        
+        <span class="n">final_risk</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">factors</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">factors</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">riskiness</span> <span class="o">=</span> <span class="n">final_risk</span></div>
+
+        
+<div class="viewcode-block" id="Heating_system.count_neighbours">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system.count_neighbours">[docs]</a>
+    <span class="k">def</span> <span class="nf">count_neighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This helper method counts the fraction of an agent&#39;s neighbours who</span>
+<span class="sd">        have installed the same type of heating system. It returns a value</span>
+<span class="sd">        representing the inverse of this fraction, where 1 indicates maximum</span>
+<span class="sd">        uncertainty (no neighbours have the system) and 0 indicates minimum</span>
+<span class="sd">        uncertainty (all neighbours have the system).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent whose neighbours are being checked.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            A value between 0 and 1 representing social uncertainty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_systems</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">target_systems</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">neighbour_system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">neighbours_systems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">total_systems</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="o">==</span> <span class="n">neighbour_system</span><span class="p">:</span>
+                <span class="n">target_systems</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="k">if</span> <span class="n">total_systems</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>     
+            <span class="n">target_share</span> <span class="o">=</span> <span class="n">target_systems</span> <span class="o">/</span> <span class="n">total_systems</span>
+            <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">target_share</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span></div>
+
+    
+    
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> | Price: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> | Rating: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rating</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="Heating_system_oil">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_oil">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_oil</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an oil-fired heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the oil heating system with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span>
+                <span class="mi">0</span><span class="p">,</span>
+            <span class="p">],</span>  <span class="c1"># Operational effort, hours per year</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Fuel/energy cost, EUR per year</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Emissions, grams of CO2 equivalent per kWh</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Installation price, EUR</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span>
+                <span class="mi">0</span><span class="p">,</span>
+            <span class="p">],</span>  <span class="c1"># Working hours</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Operating price, EUR per Year</span>
+        <span class="p">}</span>
+
+        <span class="c1"># The part used by AHID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;oil&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_gas">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_gas">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_gas</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a gas-fired heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for a gas heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the gas heating system with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;gas&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+        
+
+<div class="viewcode-block" id="Heating_system_heat_pump">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_heat_pump">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_heat_pump</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an independent heat pump.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the heat pump heating system with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;heat_re&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;hp_air&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_electricity">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_electricity">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_electricity</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an electricity-based heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the electricity-based heating with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;electricity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_pellet">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_pellet">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_pellet</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a pellet heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the pellet heating system with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;wood&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_network_district">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_network_district">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_network_district</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a district grid-based heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the district heating with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;wood&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;dh&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_network_local">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_network_local">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_network_local</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a hot local network heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the hot local network heating with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;wood&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;dh&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_heat_pump_brine">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_heat_pump_brine">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_heat_pump_brine</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a heat pump-based cold local network heating system.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the heat pump-based cold local network with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;heat_re&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;hp_brine&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Heating_system_GP_Joule">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_GP_Joule">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_GP_Joule</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a hot local network heating system provided by the firm &quot;GP Joule&quot;.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the hot local network provided by the firm GP Joule </span>
+<span class="sd">        with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;wood&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;dh&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+        
+
+<div class="viewcode-block" id="Heating_system_vacuum_tube">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Heating_systems.Heating_system_vacuum_tube">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_system_vacuum_tube</span><span class="p">(</span><span class="n">Heating_system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a vacuum tube heating system. Not actually a heating system and</span>
+<span class="sd">    is not used anywhere in the model.</span>
+
+<span class="sd">    This class inherits from `Heating_system` and sets the specific parameters</span>
+<span class="sd">    for an oil heating system by loading them from the global `params_table`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the vacuum tube heating system with its specific parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Heating_params_table, optional</span>
+<span class="sd">            The parameter table to use. If None, the global `params_table`</span>
+<span class="sd">            is used, by default None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Data table</span>
+        <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">params_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+        <span class="c1"># Used for the data collection and visualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="c1"># Expected lifetime of a system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weibull_lifetime</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">heat_sys_weibull_generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_lifetime</span><span class="p">(</span>
+            <span class="n">min_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_lower&quot;</span><span class="p">],</span> <span class="n">max_weeks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;lifetime_upper&quot;</span><span class="p">],</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_shape&quot;</span><span class="p">],</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;weibull_scale&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">availability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;availability&quot;</span><span class="p">]</span>
+        <span class="c1"># Used by plumber to install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_time&quot;</span><span class="p">]</span>
+        <span class="c1"># Satisfied/dissatisfied known neighbour owners ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">satisfied_ratio</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_contract_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;contract&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_delivery_contract</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;heat_delivery&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># The part used for the rating calculation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;operation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;fuel_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;installation_effort&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;installation_effort&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;opex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversion_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="s2">&quot;heat_re&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;heat_sys&quot;</span><span class="p">:</span> <span class="s2">&quot;cond_boiler_sol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ht&quot;</span><span class="p">:</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ns&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;AHID Compatibility parameters</span>
+<span class="sd">es = energy source(&quot;gas&quot;, &quot;oil&quot;, &quot;wood&quot;, &quot;electricity&quot;, &quot;heat_re&quot;, &quot;district_chp_mix&quot;, &quot;district_steam_mix&quot;)</span>
+<span class="sd">heat_sys = heating system (&quot;cond_boiler&quot;, &quot;cond_boiler_sol&quot;, &quot;low_temp_boiler&quot;, </span>
+<span class="sd">                           &quot;low_temp_boiler_sol&quot;, &quot;const_temp_boiler&quot;, &quot;const_temp_boiler_sol&quot;, </span>
+<span class="sd">                           &quot;pellet, pellet_sol&quot;, &quot;hp_air&quot;, &quot;hp_air_vent&quot;, &quot;hp_brine&quot;, &quot;hp_brine_vent&quot;, &quot;dh&quot;)</span>
+<span class="sd">ht = heating type (&quot;district&quot;, &quot;central&quot;, &quot;flat&quot;)</span>
+<span class="sd">ns = night setback (&quot;yes&quot;, &quot;no&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

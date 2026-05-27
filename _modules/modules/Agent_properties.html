@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Agent_properties &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Agent_properties</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Agent_properties</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines classes for agent socio-cognitive properties and preferences.</span>
+
+<span class="sd">This module contains the building blocks for an agent&#39;s intrinsic profile,</span>
+<span class="sd">often referred to as their &quot;milieu.&quot; These classes encapsulate an agent&#39;s</span>
+<span class="sd">preferences for heating systems and information sources, their personal</span>
+<span class="sd">standards for evaluating options, and the cognitive weights used in their</span>
+<span class="sd">decision-making processes. These properties are typically initialized from</span>
+<span class="sd">external data tables and randomized to create heterogeneity among agents.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_milieu_init</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+
+
+<div class="viewcode-block" id="Milieu">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Milieu">[docs]</a>
+<span class="k">class</span> <span class="nc">Milieu</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A container for an agent&#39;s socio-cognitive profile.</span>
+<span class="sd">    This class represents an agent&#39;s &quot;milieu,&quot; which groups together all their</span>
+<span class="sd">    intrinsic preferences, standards, and cognitive weights. It is initialised</span>
+<span class="sd">    for a specific milieu type (e.g., &quot;Mainstream,&quot; &quot;Leading&quot;) and serves as a</span>
+<span class="sd">    central object for an agent&#39;s characteristics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    table : Milieu_table</span>
+<span class="sd">        A data object containing the parameters for all milieu types.</span>
+<span class="sd">    milieu_type : str, optional</span>
+<span class="sd">        The specific type of milieu to initialize, by default &quot;Generalized&quot;.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    unique_id : uuid.UUID</span>
+<span class="sd">        A unique identifier for the milieu instance.</span>
+<span class="sd">    milieu_type : str</span>
+<span class="sd">        The name of the milieu.</span>
+<span class="sd">    heating_preferences : Heating_preferences</span>
+<span class="sd">        An object holding the agent&#39;s preferences for heating system attributes.</span>
+<span class="sd">    source_preferences : Information_source_preferences</span>
+<span class="sd">        An object holding the agent&#39;s preferences for information sources.</span>
+<span class="sd">    standard : Personal_standard</span>
+<span class="sd">        An object defining the agent&#39;s thresholds for decision-making.</span>
+<span class="sd">    tpb_weights : tuple[float, float, float]</span>
+<span class="sd">        A tuple containing the weights for attitude, social norm, and</span>
+<span class="sd">        perceived behavioural control in the Theory of Planned Behaviour.</span>
+<span class="sd">    ra_exposure : dict</span>
+<span class="sd">        A dictionary of exposure values for the relative agreement model.</span>
+<span class="sd">    uncertainty_factor: float</span>
+<span class="sd">            USed during risk calculation to define the attitude towards unknown information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="s2">&quot;Generalized&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a milieu defining all agent preferences and standards.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Milieu_table</span>
+<span class="sd">            A data object containing the parameters for all milieu types.</span>
+<span class="sd">        milieu_type : str, optional</span>
+<span class="sd">            The specific type of milieu to initialize, by default &quot;Generalized&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">milieu_type</span> <span class="o">=</span> <span class="n">milieu_type</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">milieu_type</span><span class="p">]</span>
+
+        <span class="c1"># Preferences over HS parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heating_preferences</span> <span class="o">=</span> <span class="n">Heating_preferences</span><span class="p">(</span>
+            <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="n">milieu_type</span>
+        <span class="p">)</span>
+        <span class="c1"># Preferences over types of information sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_preferences</span> <span class="o">=</span> <span class="n">Information_source_preferences</span><span class="p">(</span>
+            <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="n">milieu_type</span>
+        <span class="p">)</span>
+        <span class="c1"># Threshold to define standard that HS must meet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="n">Personal_standard</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="n">milieu_type</span><span class="p">)</span>
+        <span class="c1"># Placeholder for weights for attitude, social norm and PBC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tpb_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_TPB_weights</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">)</span>
+        <span class="c1"># Exposure to other&#39;s opinions, used for relative agreement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ra_exposure</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Leading&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ra_exposure_leading&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Mainstream&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ra_exposure_mainstream&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Traditionals&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ra_exposure_traditionals&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Hedonists&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ra_exposure_hedonists&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+        
+        <span class="n">uncertainty_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Leading&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">leading</span><span class="o">.</span><span class="n">uncertainty_factor</span><span class="p">,</span>
+                        <span class="s2">&quot;Mainstream&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">mainstream</span><span class="o">.</span><span class="n">uncertainty_factor</span><span class="p">,</span>
+                        <span class="s2">&quot;Traditionals&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">traditionals</span><span class="o">.</span><span class="n">uncertainty_factor</span><span class="p">,</span>
+                        <span class="s2">&quot;Hedonists&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">hedonists</span><span class="o">.</span><span class="n">uncertainty_factor</span><span class="p">}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">uncertainty_factor</span> <span class="o">=</span> <span class="n">uncertainty_dict</span><span class="p">[</span><span class="n">milieu_type</span><span class="p">]</span>
+        
+<div class="viewcode-block" id="Milieu.generate_TPB_weights">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Milieu.generate_TPB_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_TPB_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate randomised weights for Theory of Planned Behaviour factors.</span>
+
+<span class="sd">        This method creates a set of weights for the three components of the</span>
+<span class="sd">        Theory of Planned Behaviour (TPB): attitude, social norm, and</span>
+<span class="sd">        perceived behavioural control. The weights are drawn from a uniform</span>
+<span class="sd">        distribution, where the bounds are determined by a mean value specific</span>
+<span class="sd">        to the milieu and a standard deviation from the global settings.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params : pandas.Series</span>
+<span class="sd">            A series containing the mean TPB weights for the milieu.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dict containing the generated weights for attitude, social</span>
+<span class="sd">            norm, and control, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tpb_attitude&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tpb_social&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tpb_control&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+        
+        <span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">attitude_multiplier</span>
+        <span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">social_norm_multiplier</span>
+        <span class="n">means</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">pbc_multiplier</span>
+        
+        <span class="c1"># First Normalisation</span>
+        <span class="n">total_mean</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_mean</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="o">/</span> <span class="n">total_mean</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">means</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">sa_active</span><span class="p">:</span>
+            <span class="n">std_val</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">sa_tpb_weights_std</span>
+            <span class="n">stds</span> <span class="o">=</span> <span class="p">[</span><span class="n">std_val</span><span class="p">,</span> <span class="n">std_val</span><span class="p">,</span> <span class="n">std_val</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stds</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">houseowner</span><span class="o">.</span><span class="n">tpb_weights_std</span>
+
+        <span class="c1"># Generate Random Weights</span>
+        <span class="n">raw_weights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">stds</span><span class="p">):</span>
+            <span class="c1"># Calculate bounds</span>
+            <span class="n">w_min</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mean</span> <span class="o">-</span> <span class="n">std</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">w_max</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">mean</span> <span class="o">+</span> <span class="n">std</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            
+            <span class="c1"># Draw random value</span>
+            <span class="k">if</span> <span class="n">w_max</span> <span class="o">&gt;</span> <span class="n">w_min</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">rng_milieu_init</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">w_min</span><span class="p">,</span> <span class="n">w_max</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">mean</span>
+            <span class="n">raw_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        
+        <span class="c1"># Second Normalisation</span>
+        <span class="n">total_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">raw_weights</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">final_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="o">/</span> <span class="n">total_weight</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">raw_weights</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_weights</span> <span class="o">=</span> <span class="n">raw_weights</span>
+
+        <span class="n">w_att</span> <span class="o">=</span> <span class="n">final_weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">w_soc</span> <span class="o">=</span> <span class="n">final_weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">w_pbc</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">w_att</span> <span class="o">-</span> <span class="n">w_soc</span>
+        
+        <span class="c1"># Keys must match the attributes used in calculate_integral_rating</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;attitude&quot;</span><span class="p">:</span> <span class="n">w_att</span><span class="p">,</span>
+            <span class="s2">&quot;social_norm&quot;</span><span class="p">:</span> <span class="n">w_soc</span><span class="p">,</span>
+            <span class="s2">&quot;behavioural_control&quot;</span><span class="p">:</span> <span class="n">w_pbc</span>
+        <span class="p">}</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Heating_preferences">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Heating_preferences">[docs]</a>
+<span class="k">class</span> <span class="nc">Heating_preferences</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents an agent&#39;s set of preferences (weights) concerning</span>
+<span class="sd">    the different characteristics of a heating system. </span>
+<span class="sd">    Each preference is generated as a random value drawn from a Beta distribution </span>
+<span class="sd">    to create individual variations based on the agent&#39;s milieu.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    table : Milieu_table</span>
+<span class="sd">        The data object containing parameters for all milieus.</span>
+<span class="sd">    milieu_type : str, optional</span>
+<span class="sd">        The specific milieu to generate preferences for, by default &quot;Generalized&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="s2">&quot;Generalized&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes preferences for heating system parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Milieu_table</span>
+<span class="sd">            The data object containing parameters for all milieus.</span>
+<span class="sd">        milieu_type : str, optional</span>
+<span class="sd">            The specific milieu to generate preferences for, </span>
+<span class="sd">            by default &quot;Generalized&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">milieu_type</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation_effort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;effort_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;effort_b&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;fuel_cost_b&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;emissions_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;emissions_b&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;price_b&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">installation_effort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;effort_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;effort_b&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_preferences</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price_a&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;price_b&quot;</span><span class="p">])</span>
+
+        <span class="c1"># TODO: Knowledge, understanding as an attribute</span>
+
+<div class="viewcode-block" id="Heating_preferences.generate_preferences">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Heating_preferences.generate_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a single preference value from a Beta distribution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            The alpha shape parameter for the Beta distribution.</span>
+<span class="sd">        beta : float</span>
+<span class="sd">            The beta shape parameter for the Beta distribution.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            A random value between 0 and 1 representing a preference weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alpha_param</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="n">beta_param</span> <span class="o">=</span> <span class="n">beta</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">rng_milieu_init</span><span class="p">()</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">alpha_param</span><span class="p">,</span> <span class="n">beta_param</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Information_source_preferences">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Information_source_preferences">[docs]</a>
+<span class="k">class</span> <span class="nc">Information_source_preferences</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents an agent&#39;s preferences for various information</span>
+<span class="sd">    sources (e.g., internet, plumber, neighbors). The preferences are</span>
+<span class="sd">    generated as a set of probabilities that sum to 1, drawn from a</span>
+<span class="sd">    Dirichlet distribution. This determines the likelihood that an agent</span>
+<span class="sd">    will choose one source over another.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    table : Milieu_table</span>
+<span class="sd">        The data object containing parameters for all milieus.</span>
+<span class="sd">    milieu_type : str, optional</span>
+<span class="sd">        The specific milieu to generate preferences for, by default &quot;Generalized&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="s2">&quot;Generalized&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes preferences for different information sources.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Milieu_table</span>
+<span class="sd">            The data object containing parameters for all milieus.</span>
+<span class="sd">        milieu_type : str, optional</span>
+<span class="sd">            The specific milieu to generate preferences for, by default &quot;Generalized&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">milieu_type</span><span class="p">]</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;internet&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;magazine&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;plumber&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;neighbour&quot;</span><span class="p">],</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;energy_advisor&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">randomizer</span> <span class="o">=</span> <span class="n">rng_milieu_init</span><span class="p">()</span><span class="o">.</span><span class="n">dirichlet</span><span class="p">(</span><span class="n">ratios</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">internet</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magazine</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plumber</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighbour</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy_advisor</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Personal_standard">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Agent_properties.Personal_standard">[docs]</a>
+<span class="k">class</span> <span class="nc">Personal_standard</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class holds the set of thresholds that an agent uses to evaluate</span>
+<span class="sd">    whether a heating system is still acceptable. These standards apply to specific</span>
+<span class="sd">    attributes. It also includes a lifetime threshold, </span>
+<span class="sd">    which determines how close to the end of its lifespan a system</span>
+<span class="sd">    must be before the agent considers replacing it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    table : Milieu_table</span>
+<span class="sd">        The data object containing parameters for all milieus.</span>
+<span class="sd">    milieu_type : str, optional</span>
+<span class="sd">        The specific milieu to define standards for, by default &quot;Generalized&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">milieu_type</span><span class="o">=</span><span class="s2">&quot;Generalized&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the personal standards and decision thresholds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table : Milieu_table</span>
+<span class="sd">            The data object containing parameters for all milieus.</span>
+<span class="sd">        milieu_type : str, optional</span>
+<span class="sd">            The specific milieu to define standards for, </span>
+<span class="sd">            by default &quot;Generalized&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">milieu_type</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation_effort</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s_operation_effort&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_cost</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s_fuel_cost&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emissions</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s_emissions&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s_lifetime&quot;</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

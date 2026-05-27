@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Rng &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Rng</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Rng</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Manages random number generation to ensure model reproducibility.</span>
+
+<span class="sd">This module provides a suite of functions that serve as access points to</span>
+<span class="sd">separate, seeded random number generators (RNGs). By using distinct RNG</span>
+<span class="sd">streams for different model components (e.g., model setup, agent behaviour), </span>
+<span class="sd">it prevents a change in one stochastic process</span>
+<span class="sd">from affecting the outcomes of others.</span>
+
+<span class="sd">Each function initialises a singleton NumPy `Generator` instance on its first</span>
+<span class="sd">call, using a specific seed from the project&#39;s configuration file. All</span>
+<span class="sd">subsequent calls return the same instance. This ensures that the sequence of</span>
+<span class="sd">random numbers for each stream is consistent across identical simulation runs.</span>
+<span class="sd">The module also includes an optional debugging utility to log the call stack</span>
+<span class="sd">each time an RNG is accessed.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="n">model_init_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">model_run_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">house_init_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">houseowner_run_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">plumber_run_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">milieu_init_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">heating_init_rng</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">information_source_run_rng</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">run</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">initialised</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="init">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.init">[docs]</a>
+<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialise the output directory for RNG invocation logs.</span>
+
+<span class="sd">    This is an internal helper function called by `print_stacktrace` on its</span>
+<span class="sd">    first invocation to ensure the target directory for logging exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">initialised</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">initialised</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">randomstreaminvocations_folder</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">initialised</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="rng_model_init">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_model_init">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_model_init</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for model initialisation.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">model_init_rng</span>
+    <span class="k">if</span> <span class="n">model_init_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model_init_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">model_init</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_model_init, message=message)</span>
+    <span class="k">return</span> <span class="n">model_init_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_model_run">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_model_run">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_model_run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the main model run loop.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for the model&#39;s run phase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">model_run_rng</span>
+    <span class="k">if</span> <span class="n">model_run_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model_run_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">model_run</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_model_run, message=message)</span>
+    <span class="k">return</span> <span class="n">model_run_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_house_init">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_house_init">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_house_init</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the initialisation of instances</span>
+<span class="sd">    of the House class.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">house_init_rng</span>
+    <span class="k">if</span> <span class="n">house_init_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">house_init_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">house_init</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_house_ini, message=message)</span>
+    <span class="k">return</span> <span class="n">house_init_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_houseowner_run">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_houseowner_run">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_houseowner_run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the Houseowner behaviour-related</span>
+<span class="sd">    random processes.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">houseowner_run_rng</span>
+    <span class="k">if</span> <span class="n">houseowner_run_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">houseowner_run_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">houseowner_run</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_houseowner_run, message=message)</span>
+    <span class="k">return</span> <span class="n">houseowner_run_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_plumber_run">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_plumber_run">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_plumber_run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the Plumber behaviour-related</span>
+<span class="sd">    random processes.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">plumber_run_rng</span>
+    <span class="k">if</span> <span class="n">plumber_run_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plumber_run_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">plumber_run</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_plumber_run, message=message)</span>
+    <span class="k">return</span> <span class="n">plumber_run_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_milieu_init">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_milieu_init">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_milieu_init</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the initialisation of the Houseowner milieu.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">milieu_init_rng</span>
+    <span class="k">if</span> <span class="n">milieu_init_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">milieu_init_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">milieu_init</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_milieu_init, message=message)</span>
+    <span class="k">return</span> <span class="n">milieu_init_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_heating_init">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_heating_init">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_heating_init</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the initialisation of the Heating_system</span>
+<span class="sd">    related initialisation.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">heating_init_rng</span>
+    <span class="k">if</span> <span class="n">heating_init_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">heating_init_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">heating_init</span><span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_heating_init, message=message)</span>
+    <span class="k">return</span> <span class="n">heating_init_rng</span></div>
+
+
+
+<div class="viewcode-block" id="rng_information_source_run">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.rng_information_source_run">[docs]</a>
+<span class="k">def</span> <span class="nf">rng_information_source_run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the RNG instance for the interaction between Houseowners and</span>
+<span class="sd">    information sources.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A message to include in the stack trace log for debugging context,</span>
+<span class="sd">        by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.random.Generator</span>
+<span class="sd">        The singleton RNG instance for model initialisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">information_source_run_rng</span>
+    <span class="k">if</span> <span class="n">information_source_run_rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">information_source_run_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">seeds</span><span class="o">.</span><span class="n">information_source_run</span>
+        <span class="p">)</span>
+    <span class="c1">#print_stacktrace(name=settings.output.logger_information_source_run, message=message)</span>
+    <span class="k">return</span> <span class="n">information_source_run_rng</span></div>
+
+
+
+<div class="viewcode-block" id="print_stacktrace">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Rng.print_stacktrace">[docs]</a>
+<span class="k">def</span> <span class="nf">print_stacktrace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log the current call stack to a file for debugging.</span>
+<span class="sd">    When enabled via `settings.output.randomstreaminvocations`, this function</span>
+<span class="sd">    is called by an RNG provider to record the sequence of function calls</span>
+<span class="sd">    that led to the request for a random number. It helps trace the exact source of</span>
+<span class="sd">    randomness and verify that the correct RNG streams are being used.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The prefix for the log file&#39;s name, by default &quot;&quot;.</span>
+<span class="sd">    message : str, optional</span>
+<span class="sd">        A contextual message to include in the log entry, by default &quot;&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">randomstreaminvocations</span><span class="p">:</span>
+        <span class="n">init</span><span class="p">()</span>
+        <span class="k">global</span> <span class="n">counter</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">randomstreaminvocations_folder</span><span class="p">,</span> 
+                               <span class="n">name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">run</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">),</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;------- </span><span class="si">{</span><span class="n">counter</span><span class="si">:</span><span class="s2">7d</span><span class="si">}</span><span class="s2"> &gt; &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_stack</span><span class="p">(</span>
+                <span class="n">limit</span><span class="o">=-</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span> <span class="o">-</span> <span class="n">settings</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">randomstream_cutentries</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------&gt; &quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span></div>
+
+            
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

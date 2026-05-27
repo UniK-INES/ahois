@@ -1,0 +1,643 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Triggers &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Triggers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Triggers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the trigger events that initiate an agent&#39;s decision-making process.</span>
+
+<span class="sd">This module contains the classes that represent various events or conditions,</span>
+<span class="sd">known as &quot;triggers,&quot; which can prompt a `Houseowner` agent to reconsider their</span>
+<span class="sd">current heating system. It includes a generic `Trigger` base class and numerous</span>
+<span class="sd">subclasses, each modelling a specific event such as a system breakdown, a fuel</span>
+<span class="sd">price shock, or social influence from a neighbour.</span>
+
+<span class="sd">When a trigger becomes active for an agent, its `impact` method is executed,</span>
+<span class="sd">typically moving the agent from a passive state into the first stage of the</span>
+<span class="sd">decision-making model.</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Dmytro Mykhailiuk &lt;dmytromykhailiuk6@gmail.com&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">modules.Information_sources</span> <span class="kn">import</span> <span class="n">generate_imperfect_system</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_model_run</span>
+<span class="kn">from</span> <span class="nn">click.decorators</span> <span class="kn">import</span> <span class="n">option</span>
+
+<span class="n">logger_rng</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ahoi.rng&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Trigger">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class for an event that can trigger an agent&#39;s decision process.</span>
+
+<span class="sd">    This class provides the structure for all triggers. Its primary</span>
+<span class="sd">    role is to define the `impact` method, which is called when the trigger</span>
+<span class="sd">    affects an agent. The base `impact` method handles data collection and</span>
+<span class="sd">    ensures an agent is not re-triggered if they are already in an active</span>
+<span class="sd">    decision process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies the trigger&#39;s effect to an agent.</span>
+
+<span class="sd">        This base method logs the trigger&#39;s activation for data collection and</span>
+<span class="sd">        contains a guard clause to prevent the trigger from affecting an agent</span>
+<span class="sd">        who is already in an active decision-making stage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_types_counter</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_types_counter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+            <span class="k">return</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    
+
+<div class="viewcode-block" id="Trigger_none">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_none">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_none</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A null trigger that has no effect.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_none instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_none.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_none.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies only the impact from the superclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Trigger_price_shock">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_price_shock">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_price_shock</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing a sudden, significant increase in fuel price.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises the price shock trigger.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        factor : float, optional</span>
+<span class="sd">            The multiplication factor to apply to the agent&#39;s current fuel cost,</span>
+<span class="sd">            by default 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_price_shock.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_price_shock.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Increases the agent&#39;s perceived fuel cost </span>
+<span class="sd">        and starts the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">fuel_cost</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Trigger_lifetime">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_lifetime">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_lifetime</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing the agent&#39;s awareness </span>
+<span class="sd">    that their system is nearing its end of life.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Trigger_lifetime instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_lifetime.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_lifetime.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Stage 1&quot;</span>  
+        <span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Trigger_neighbour_jealousy">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_neighbour_jealousy">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_neighbour_jealousy</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing social influence </span>
+<span class="sd">    from a neighbor&#39;s new heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Trigger_neighbour_jealousy instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_neighbour_jealousy.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_neighbour_jealousy.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Trigger_adoptive_comparsion">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_adoptive_comparsion">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_adoptive_comparsion</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing an invitation </span>
+<span class="sd">    from a neighbour to adopt a heating system of the same type.</span>
+
+<span class="sd">    This trigger occurs when a neighbour installs a new heating system</span>
+<span class="sd">    and proposes to install one of the same type to the agent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialises the adoptive comparison trigger.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Trigger_adoptive_comparsion.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_adoptive_comparsion.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        This trigger simulates the effect of being prompted to think about one&#39;s</span>
+<span class="sd">        own heating system after a neighbour asks for advice.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Stage 1&quot;</span>  
+        <span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+                
+<div class="viewcode-block" id="Trigger_asked_by_neighbour">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_asked_by_neighbour">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_asked_by_neighbour</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing being asked for an opinion by a neighbour.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_asked_by_neighbour instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_asked_by_neighbour.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_asked_by_neighbour.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        This trigger simulates the effect of being prompted to think about one&#39;s</span>
+<span class="sd">        own heating system after a neighbour asks for advice.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Stage 1&quot;</span>  
+        <span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Trigger_breakdown">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_breakdown">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_breakdown</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing a critical failure </span>
+<span class="sd">    of the agent&#39;s heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Trigger_breakdown instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_breakdown.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_breakdown.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forces the agent directly into the second stage of the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_breakpoint</span> <span class="o">=</span> <span class="s2">&quot;Goal&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 2&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Trigger_information_campaign">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_information_campaign">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_information_campaign</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A trigger representing an agent being targeted </span>
+<span class="sd">    by an information campaign.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the information campaign trigger.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system_names : list[str]</span>
+<span class="sd">            A list of heating system names being promoted by the campaign.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_names</span> <span class="o">=</span> <span class="n">system_names</span>
+
+<div class="viewcode-block" id="Trigger_information_campaign.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_information_campaign.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Introduces idealised versions of promoted systems </span>
+<span class="sd">        to the agent&#39;s knowledge.</span>
+
+<span class="sd">        This trigger adds perfected versions of the</span>
+<span class="sd">        promoted heating systems to the agent&#39;s set of known alternatives,</span>
+<span class="sd">        then moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_names</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">system_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_names</span><span class="p">:</span>
+                <span class="n">advertised_system</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">generate_system</span><span class="p">(</span><span class="n">system_name</span><span class="p">)</span>
+                <span class="n">advertised_system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span><span class="n">area</span> <span class="o">=</span> <span class="mi">106</span><span class="p">,</span> 
+                                                           <span class="n">energy_demand</span> <span class="o">=</span> <span class="mi">147</span><span class="p">,</span> 
+                                                           <span class="n">heat_load</span> <span class="o">=</span> <span class="mi">19</span><span class="p">)</span>
+                <span class="n">advertised_system</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Campaign&quot;</span>
+                
+                <span class="n">source</span> <span class="o">=</span> <span class="kc">None</span> 
+                <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">list_of_sources</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Information_source_internet&quot;</span><span class="p">:</span>
+                        <span class="n">source</span> <span class="o">=</span> <span class="n">option</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">system_name</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">system_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">system_name</span><span class="p">])</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">apply_subsidies</span><span class="p">(</span><span class="n">system</span> <span class="o">=</span> <span class="n">advertised_system</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">advertised_system</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_source</span><span class="o">.</span><span class="n">uncertainty_upper</span>
+                    
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">system_name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">):</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">advertised_system</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+    
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">relative_agreement</span><span class="p">(</span><span class="n">new_system</span> <span class="o">=</span> <span class="n">advertised_system</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                
+            <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Stage 1&quot;</span><span class="p">)</span>
+            
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="Trigger_consulted">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_consulted">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_consulted</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing an agent being nudged to thinking about the replacement </span>
+<span class="sd">    by a consultation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_consulted instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_consulted.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_consulted.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        This trigger is typically activated by an external intervention, like an</span>
+<span class="sd">        information campaign that encourages houseowners to think about the replacement.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="Trigger_risk_targeting_campaign">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_risk_targeting_campaign">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_risk_targeting_campaign</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger from a campaign designed to mitigate perceived technology risk.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the risk-targeting campaign trigger.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_risk_targeting_campaign.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_risk_targeting_campaign.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Stage 1&quot;</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="Trigger_availability">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_availability">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_availability</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing a change in the availability of a heating system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_availability instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_availability.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_availability.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forces the agent directly into the second stage of the decision process.</span>
+
+<span class="sd">        This trigger models an external event where an agent finds out that </span>
+<span class="sd">        their current heating type will be no longer available for the installation</span>
+<span class="sd">        in some (near) future, forcing them to think about installing a new one</span>
+<span class="sd">        of the same type to avoid the &quot;forced&quot; switch to another heating technology.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="Trigger_fuel_price">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_fuel_price">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_fuel_price</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing general awareness of changing fuel prices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_fuel_price instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_fuel_price.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_fuel_price.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        This trigger models a non-shock-based response to fuel price volatility,</span>
+<span class="sd">        prompting the agent to begin considering their heating options.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="Trigger_owner_change">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_owner_change">[docs]</a>
+<span class="k">class</span> <span class="nc">Trigger_owner_change</span><span class="p">(</span><span class="n">Trigger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trigger representing general awareness of changing fuel prices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialises a new Trigger_fuel_price instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="Trigger_owner_change.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Triggers.Trigger_owner_change.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Moves the agent into the first stage of the decision process.</span>
+
+<span class="sd">        This trigger models a non-shock-based response to fuel price volatility,</span>
+<span class="sd">        prompting the agent to begin considering their heating options.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        agent : Houseowner</span>
+<span class="sd">            The agent to be impacted by the trigger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="o">=</span> <span class="s2">&quot;Stage 1&quot;</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">trigger_counter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

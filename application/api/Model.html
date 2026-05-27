@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model module &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Run module" href="Run.html" />
+    <link rel="prev" title="APIs" href="../api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Model module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Model.Prototype_Model"><code class="docutils literal notranslate"><span class="pre">Prototype_Model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html">modules package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html">modules package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">Model module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/Model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Model">
+<span id="model-module"></span><h1>Model module<a class="headerlink" href="#module-Model" title="Link to this heading"></a></h1>
+<p>The main MESA model for the agent-based simulation of heating system adoption.</p>
+<p>This module defines the <cite>Prototype_Model</cite> class, which handles the entire 
+agent-based simulation. It is responsible for initialising the environment, 
+creating all agents (Houses, Houseowners, Plumbers, Energy Advisors), managing 
+the simulation schedule, collecting data, and running the simulation loop. It 
+also handles dynamic updates to the environment, such as changes in fuel costs 
+or subsidy availability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+<li><p>Sören Lohr</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="Model.Prototype_Model">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Prototype_Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>The main MESA model for simulating heating system replacement decisions.</p>
+<p>This class sets up and runs the agent-based simulation. It initialises the
+geographical space (<cite>GeoSpace</cite>), creates and populates it with agents based
+on input data (e.g., GeoJSON), and manages their interactions through a
+scheduler. The model also handles scenario-specific interventions, dynamic
+environmental changes, and comprehensive data collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>space</strong><span class="classifier">mesa_geo.GeoSpace</span></dt><dd><p>The geographical environment where agents are located.</p>
+</dd>
+<dt><strong>schedule</strong><span class="classifier">mesa.time.RandomActivationByType</span></dt><dd><p>The scheduler that controls the order of agent activation.</p>
+</dd>
+<dt><strong>scenario</strong><span class="classifier">Scenario</span></dt><dd><p>The scenario object defining interventions and targets for the simulation run.</p>
+</dd>
+<dt><strong>datacollector</strong><span class="classifier">mesa.DataCollector</span></dt><dd><p>The MESA object responsible for collecting model- and agent-level data.</p>
+</dd>
+<dt><strong>grid</strong><span class="classifier">shobnetpy.SHoBNetworkGrid</span></dt><dd><p>The social network grid managing interactions between Houseowner agents.</p>
+</dd>
+<dt><strong>num_plumbers</strong><span class="classifier">int</span></dt><dd><p>The number of Plumber agents in the model.</p>
+</dd>
+<dt><strong>num_energy_advisors</strong><span class="classifier">int</span></dt><dd><p>The number of EnergyAdvisor agents in the model.</p>
+</dd>
+<dt><strong>dropout_counter</strong><span class="classifier">pd.DataFrame</span></dt><dd><p>A DataFrame tracking the reasons why houseowners did not choose certain
+heating systems.</p>
+</dd>
+<dt><strong>obstacles</strong><span class="classifier">dict</span></dt><dd><p>A dictionary for tracking agents at various stages of the decision-making
+process for target heating systems.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes the simulation model.</p>
+<p>This method orchestrates the complete setup of the simulation environment. 
+It involves creating the geographical space, loading and processing building 
+data from a GeoJSON file, and instantiating all agent populations: 
+Houses, Houseowners with specific milieu and economic profiles, Plumbers, 
+and Energy Advisors. It also establishes the social network between 
+houseowners, configures scenario-specific parameters, and prepares a 
+comprehensive data collector for tracking simulation outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>P</strong><span class="classifier">int</span></dt><dd><p>The number of Plumber agents to create.</p>
+</dd>
+<dt><strong>scenario</strong><span class="classifier">str</span></dt><dd><p>The name of the scenario class to be used for the simulation.</p>
+</dd>
+<dt><strong>E</strong><span class="classifier">int</span></dt><dd><p>The number of Energy Advisor agents to create.</p>
+</dd>
+<dt><strong>subsidy_to_observe</strong><span class="classifier">str, optional</span></dt><dd><p>A specific subsidy to observe for visualization purposes. Defaults to None.</p>
+</dd>
+<dt><strong>known_hs_to_observe</strong><span class="classifier">str, optional</span></dt><dd><p>A specific heating system to observe for visualization. Defaults to None.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, enables print statements during initialization. Defaults to True.</p>
+</dd>
+<dt><strong>geojson_path</strong><span class="classifier">str, optional</span></dt><dd><p>The file path to the GeoJSON file containing house data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Model.Prototype_Model.heating_distribution">
+<span class="sig-name descname"><span class="pre">heating_distribution</span></span><a class="headerlink" href="#Model.Prototype_Model.heating_distribution" title="Link to this definition"></a></dt>
+<dd><p>Agent creator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.step" title="Link to this definition"></a></dt>
+<dd><p>Executes a single time step in the simulation.</p>
+<p>This method advances the model by one step. It first updates dynamic 
+environmental variables (like fuel costs and subsidy availability), then 
+applies any scenario-specific impacts, activates all scheduled agents to 
+perform their actions, and finally collects all specified data for this step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.run" title="Link to this definition"></a></dt>
+<dd><p>Runs the simulation for a specified number of steps and saves the results.</p>
+<p>This method iterates through the <cite>step()</cite> method for the given number of 
+steps. After the simulation is complete, it processes the data collected 
+by the <cite>DataCollector</cite> and saves it to output files (e.g., CSV, Pickle).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>steps</strong><span class="classifier">int</span></dt><dd><p>The total number of steps to run the simulation.</p>
+</dd>
+<dt><strong>run_id</strong><span class="classifier">str or int</span></dt><dd><p>A unique identifier for this specific simulation run, used for file naming.</p>
+</dd>
+<dt><strong>config_id</strong><span class="classifier">str or int</span></dt><dd><p>An identifier for the configuration used in this run.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_ownership">
+<span class="sig-name descname"><span class="pre">update_ownership</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_ownership"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_ownership" title="Link to this definition"></a></dt>
+<dd><p>NOTE: Needs to be finalised by generating a social network for the new agent,
+otherwise it will not have any connections, including spatial neighbours.
+Then the method should be called at the very beginning of every model step.
+Also needs testing. Also refactor cognitive resource, it should not be random.
+——————
+Simulates the change of house ownership for each houseowner.</p>
+<p>Iterates through all Houseowner agents and, based on a small probability,
+replaces an existing houseowner with a new one. The new houseowner is
+generated with a fresh set of socio-demographic and psychological attributes,
+but inherits the same house. The old agent is removed from the model schedule
+and space, and the new one is added.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_availability">
+<span class="sig-name descname"><span class="pre">update_availability</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_availability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_availability" title="Link to this definition"></a></dt>
+<dd><p>Updates the availability of heating systems based on the current step.</p>
+<p>If a heating system’s availability term has expired, it is added to the 
+list of globally infeasible options for all agents.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_contracts">
+<span class="sig-name descname"><span class="pre">update_contracts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_contracts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_contracts" title="Link to this definition"></a></dt>
+<dd><p>Updates the remaining term of fixed-price fuel contracts for houseowners.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_emissions">
+<span class="sig-name descname"><span class="pre">update_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_emissions" title="Link to this definition"></a></dt>
+<dd><p>Updates the emissions factors for heating systems based on dynamic data.</p>
+<p>If the current step corresponds to a scheduled change in emissions, this 
+method updates the <cite>heating_params_table</cite> and recalculates the emissions 
+for all installed systems of that type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_fuel_costs">
+<span class="sig-name descname"><span class="pre">update_fuel_costs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_fuel_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_fuel_costs" title="Link to this definition"></a></dt>
+<dd><p>Updates fuel costs for heating systems based on dynamic data.</p>
+<p>If the current step corresponds to a scheduled change in fuel price, this
+method updates the <cite>heating_params_table</cite> and recalculates the fuel costs
+for all installed systems not under a fixed-price contract. It may also
+trigger a <cite>Trigger_fuel_price</cite> for affected houseowners.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.update_subsidies">
+<span class="sig-name descname"><span class="pre">update_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.update_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.update_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Removes temporary subsidies from the model when they expire.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.create_information_sources">
+<span class="sig-name descname"><span class="pre">create_information_sources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.create_information_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.create_information_sources" title="Link to this definition"></a></dt>
+<dd><p>Creates and returns a list of all available information source objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.determine_highest_milieu">
+<span class="sig-name descname"><span class="pre">determine_highest_milieu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.determine_highest_milieu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.determine_highest_milieu" title="Link to this definition"></a></dt>
+<dd><p>Defines the milieu with the highest probability</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.map_milieus">
+<span class="sig-name descname"><span class="pre">map_milieus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.map_milieus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.map_milieus" title="Link to this definition"></a></dt>
+<dd><p>Maps a milieu group number to its corresponding string label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>row</strong><span class="classifier">pd.Series</span></dt><dd><p>A row from the GeoJSON DataFrame containing milieu group data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>str</dt><dd><p>The string label for the milieu (e.g., ‘Leading’).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.generate_heating_system">
+<span class="sig-name descname"><span class="pre">generate_heating_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pellet</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.generate_heating_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.generate_heating_system" title="Link to this definition"></a></dt>
+<dd><p>Generates a random heating system instance based on a given probability distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>oil, gas, heat, elec, pellet</strong><span class="classifier">float</span></dt><dd><p>The probabilities for each respective heating system type.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Heating_system</dt><dd><p>An instance of a randomly chosen heating system with a generated age.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.generate_clipped_age">
+<span class="sig-name descname"><span class="pre">generate_clipped_age</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.generate_clipped_age"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.generate_clipped_age" title="Link to this definition"></a></dt>
+<dd><p>Generates a system age from a truncated normal distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>int</dt><dd><p>The generated age in simulation steps (weeks).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.distribute_heating_systems">
+<span class="sig-name descname"><span class="pre">distribute_heating_systems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.distribute_heating_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.distribute_heating_systems" title="Link to this definition"></a></dt>
+<dd><p>Assigns initial heating systems to houses based on milieu-specific distributions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.define_income">
+<span class="sig-name descname"><span class="pre">define_income</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">milieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.define_income"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.define_income" title="Link to this definition"></a></dt>
+<dd><p>Generates a weekly income for a houseowner from a milieu-specific distribution.
+This time truncated normal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>milieu</strong><span class="classifier">str</span></dt><dd><p>The milieu type of the houseowner.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The generated weekly income.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.define_risk_tolerance">
+<span class="sig-name descname"><span class="pre">define_risk_tolerance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">milieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.define_risk_tolerance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.define_risk_tolerance" title="Link to this definition"></a></dt>
+<dd><p>Defines a risk tolerance value for a houseowner based on their milieu.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>milieu</strong><span class="classifier">str</span></dt><dd><p>The milieu type of the houseowner.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The agent’s risk tolerance value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.define_cognitive_resource">
+<span class="sig-name descname"><span class="pre">define_cognitive_resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">milieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.define_cognitive_resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.define_cognitive_resource" title="Link to this definition"></a></dt>
+<dd><p>Produces milieu-specific cognitive resource values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>milieu</strong><span class="classifier">str</span></dt><dd><p>The milieu type of the houseowner.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The agent’s cognitive resource value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.initial_meetings">
+<span class="sig-name descname"><span class="pre">initial_meetings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.initial_meetings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.initial_meetings" title="Link to this definition"></a></dt>
+<dd><p>Performs initial knowledge spread to populate social norm-related
+memory parts of the Houseowner agents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to perform meetings.</p>
+</dd>
+<dt><strong>share: float</strong></dt><dd><p>The share of predecessor neighbours to meet</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.calculate_emissions">
+<span class="sig-name descname"><span class="pre">calculate_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.calculate_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.calculate_emissions" title="Link to this definition"></a></dt>
+<dd><p>Calculates the mean annual emissions across all houses in the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.calculate_energy_demand">
+<span class="sig-name descname"><span class="pre">calculate_energy_demand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.calculate_energy_demand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.calculate_energy_demand" title="Link to this definition"></a></dt>
+<dd><p>Calculates the mean annual energy demand across all houses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.calculate_total_expenses">
+<span class="sig-name descname"><span class="pre">calculate_total_expenses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.calculate_total_expenses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.calculate_total_expenses" title="Link to this definition"></a></dt>
+<dd><p>Calculates the mean Levelized Cost of Heat (LCOH) across all houses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_replacements_counter">
+<span class="sig-name descname"><span class="pre">get_replacements_counter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_replacements_counter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_replacements_counter" title="Link to this definition"></a></dt>
+<dd><p>Returns a copy of the dictionary counting heating system replacements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_changes_counter">
+<span class="sig-name descname"><span class="pre">get_changes_counter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_changes_counter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_changes_counter" title="Link to this definition"></a></dt>
+<dd><p>Returns a copy of the dictionary counting changes in heating technology.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_information_source_calls">
+<span class="sig-name descname"><span class="pre">get_information_source_calls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_information_source_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_information_source_calls" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary summarising the calls to different information sources.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_dropouts">
+<span class="sig-name descname"><span class="pre">get_dropouts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_dropouts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_dropouts" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary summarising the reasons agents dropped certain HS options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_heating_distribution">
+<span class="sig-name descname"><span class="pre">get_heating_distribution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_heating_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_heating_distribution" title="Link to this definition"></a></dt>
+<dd><p>Returns a copy of the dictionary tracking the distribution of installed heating systems.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_triggers_by_type">
+<span class="sig-name descname"><span class="pre">get_triggers_by_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_triggers_by_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_triggers_by_type" title="Link to this definition"></a></dt>
+<dd><p>Returns a copy of the dictionary tracking the triggers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_subsidised_hs">
+<span class="sig-name descname"><span class="pre">get_subsidised_hs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_subsidised_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_subsidised_hs" title="Link to this definition"></a></dt>
+<dd><p>Returns a number indicating the amount of houses 
+with a subsidised heating system.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_subsidies">
+<span class="sig-name descname"><span class="pre">get_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Returns the the volume of subsidies covered during a run</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_loans">
+<span class="sig-name descname"><span class="pre">get_loans</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_loans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_loans" title="Link to this definition"></a></dt>
+<dd><p>Returns the the volume of loans taken during a run</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_cognitive_resource">
+<span class="sig-name descname"><span class="pre">get_cognitive_resource</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_cognitive_resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_cognitive_resource" title="Link to this definition"></a></dt>
+<dd><p>Returns the the volume cognitive resource spent</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_obstacles">
+<span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_obstacles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Returns counted obstacles for each heating system in a new dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_stage_flows">
+<span class="sig-name descname"><span class="pre">get_stage_flows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_stage_flows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_stage_flows" title="Link to this definition"></a></dt>
+<dd><p>Returns stage flows as a nested dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_evaluation_quartiles">
+<span class="sig-name descname"><span class="pre">get_evaluation_quartiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_evaluation_quartiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_evaluation_quartiles" title="Link to this definition"></a></dt>
+<dd><p>Computes quartiles of differences for each evaluation stored in evaluation_factors for all agents.</p>
+<p>For each agent that has evaluation_factors, for each outer key (system type),
+this method computes, for each evaluation column, the difference between the evaluation of an inner key 
+(target system) and the evaluation of the outer key (representative). Differences are collected from all agents.
+Finally, for each outer key and inner key, quartiles (Q1, median, Q3) are computed for each attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>quartile_dict</strong><span class="classifier">dict</span></dt><dd><dl class="simple">
+<dt>A nested dictionary where:</dt><dd><ul class="simple">
+<li><p>The first-level keys are the outer system types.</p></li>
+<li><p>The second-level keys are the inner system types (all keys from the inner dictionary except the outer key).</p></li>
+<li><p>Each inner value is a dictionary mapping each attribute to a tuple of quartiles (Q1, median, Q3)
+representing the distribution of differences (inner - outer) for that attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.get_attribute_ratings">
+<span class="sig-name descname"><span class="pre">get_attribute_ratings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.get_attribute_ratings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.get_attribute_ratings" title="Link to this definition"></a></dt>
+<dd><p>Creates a nested dictionary of quartiles of differences of opinions of all owners of non-target systems
+towards target systems relative to their owned system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>quartile_dict</strong><span class="classifier">dict</span></dt><dd><dl class="simple">
+<dt>A nested dictionary where:</dt><dd><ul class="simple">
+<li><p>The first-level keys are non-target systems (i.e. the owned system of the agent).</p></li>
+<li><p>The second-level keys are target systems.</p></li>
+<li><p>Each inner value is a dictionary mapping each attribute to a tuple of quartiles 
+(Q1, median, Q3) representing the distribution of differences between the target system’s 
+ratings and the owned system’s ratings.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.count_known_subsidies">
+<span class="sig-name descname"><span class="pre">count_known_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.count_known_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.count_known_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Counts the total number of times each subsidy is known by a houseowner.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.count_known_hs">
+<span class="sig-name descname"><span class="pre">count_known_hs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.count_known_hs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.count_known_hs" title="Link to this definition"></a></dt>
+<dd><p>Counts the total number of times each heating system is known by a houseowner.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.calculate_target_fulfilment">
+<span class="sig-name descname"><span class="pre">calculate_target_fulfilment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.calculate_target_fulfilment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.calculate_target_fulfilment" title="Link to this definition"></a></dt>
+<dd><p>Calculate the fulfilment percentages for each heating system in the scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>scenario</strong><span class="classifier">object</span></dt><dd><p>The scenario object containing the target distribution of heating systems.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total fulfillment percentage.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.count_heating_system">
+<span class="sig-name descname"><span class="pre">count_heating_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heating_system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.count_heating_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.count_heating_system" title="Link to this definition"></a></dt>
+<dd><p>Counts the number of houses with a specific heating system installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>heating_system</strong><span class="classifier">str</span></dt><dd><p>The class name of the heating system to count.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The total count of the specified system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Model.Prototype_Model.gather_house_data">
+<span class="sig-name descname"><span class="pre">gather_house_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/Model.html#Prototype_Model.gather_house_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Model.Prototype_Model.gather_house_data" title="Link to this definition"></a></dt>
+<dd><p>Generates an Excel file with summary data for all houses in the model.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../api.html" class="btn btn-neutral float-left" title="APIs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Run.html" class="btn btn-neutral float-right" title="Run module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

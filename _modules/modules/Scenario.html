@@ -1,0 +1,1138 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules.Scenario &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../application.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">modules.Scenario</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for modules.Scenario</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the experimental scenarios for the simulation.</span>
+
+<span class="sd">This module contains the classes that control the specific conditions and</span>
+<span class="sd">interventions for different simulation experiments. It features a base `Scenario`</span>
+<span class="sd">class that provides the core structure and default behaviours.</span>
+
+<span class="sd">Various subclasses inherit from this base class to implement specific future</span>
+<span class="sd">pathways or policy interventions. Each scenario can modify the model&#39;s initial</span>
+<span class="sd">state (via the `setup` method) and introduce dynamic events during the</span>
+<span class="sd">simulation (via the `impact` method).</span>
+
+<span class="sd">:Authors:</span>
+<span class="sd"> - Ivan Digel &lt;ivan.digel@uni-kassel.de&gt;</span>
+<span class="sd"> - Sascha Holzhauer &lt;sascha.holzhauer@uni-kassel.de&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">helpers.config</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">modules.Heating_systems</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Heating_system_oil</span><span class="p">,</span>
+    <span class="n">Heating_system_gas</span><span class="p">,</span>
+    <span class="n">Heating_system_heat_pump</span><span class="p">,</span>
+    <span class="n">Heating_system_heat_pump_brine</span><span class="p">,</span>
+    <span class="n">Heating_system_electricity</span><span class="p">,</span>
+    <span class="n">Heating_system_pellet</span><span class="p">,</span>
+    <span class="n">Heating_system_network_district</span><span class="p">,</span>
+    <span class="n">Heating_system_network_local</span><span class="p">,</span>
+    <span class="n">Heating_system_GP_Joule</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">interventions.Subsidy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">modules.Rng</span> <span class="kn">import</span> <span class="n">rng_model_init</span><span class="p">,</span> <span class="n">rng_model_run</span>
+<span class="kn">from</span> <span class="nn">modules.Triggers</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">modules.Information_sources</span> <span class="kn">import</span> <span class="n">generate_imperfect_system</span>
+
+
+<div class="viewcode-block" id="Scenario">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class for defining an experimental scenario.</span>
+
+<span class="sd">    This class provides the fundamental structure (`setup` and `impact` methods)</span>
+<span class="sd">    and default behaviours that can be inherited and extended by specific</span>
+<span class="sd">    scenario subclasses. It also contains the logic for common, optional</span>
+<span class="sd">    interventions like plumber training or information campaigns, which can be</span>
+<span class="sd">    activated via the global settings.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id : str</span>
+<span class="sd">        The unique identifier for the scenario.</span>
+<span class="sd">    hs_targets : dict</span>
+<span class="sd">        A dictionary defining the target market shares for heating systems in this scenario.</span>
+<span class="sd">    visited_agents : list</span>
+<span class="sd">        A list to keep track of agents who have been targeted by an intervention.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;00&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the scenario&#39;s state-tracking attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visited_agents</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Scenario.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies initial, one-time modifications to the model.</span>
+
+<span class="sd">        This method is called once at the beginning of a simulation (step 0)</span>
+<span class="sd">        to set up the specific conditions of the scenario. The default behaviour</span>
+<span class="sd">        gives agents who already own a heat pump a head start in knowledge</span>
+<span class="sd">        about various systems and subsidies. Subclasses can extend this to</span>
+<span class="sd">        implement their unique starting conditions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model : Model</span>
+<span class="sd">            The main model instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plumbers_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="c1">#Heat pump users know more about systems and subsidies</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span>
+                    <span class="c1">#First, populate known_hs</span>
+                    <span class="n">systems_to_generate</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">information_overspread</span><span class="o">.</span><span class="n">known_hs_list</span>
+                    <span class="k">for</span> <span class="n">system_name</span> <span class="ow">in</span> <span class="n">systems_to_generate</span><span class="p">:</span>
+                        <span class="n">new_system</span> <span class="o">=</span> <span class="n">generate_imperfect_system</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">system_name</span><span class="p">)</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_system</span><span class="p">)</span>
+                    <span class="c1">#Second, organize and apply subsidies</span>
+                    <span class="n">organize_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> 
+                        <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">):</span>
+                        <span class="n">apply_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span>
+                    
+                    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">:</span>
+                            <span class="n">apply_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span>
+                    
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">system</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">):</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">calculate_attitude</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">):</span>
+                            <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">initial_meetings</span><span class="p">(</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span><span class="p">,</span>
+                                       <span class="n">share</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span></div>
+
+                  
+<div class="viewcode-block" id="Scenario.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies dynamic interventions or events during the simulation.</span>
+
+<span class="sd">        This method is called at each step of the simulation to introduce</span>
+<span class="sd">        changes or trigger events. It serves as the entry point for various</span>
+<span class="sd">        policy interventions that can be enabled in the settings, such as</span>
+<span class="sd">        plumber training programs, information campaigns, technology bans, or</span>
+<span class="sd">        replacement mandates.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model : Model</span>
+<span class="sd">            The main model instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">plumber_training</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">plumber_training_program</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">,</span>
+                                     <span class="n">system_name</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">plumber_training_system</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">information_campaign</span> <span class="o">==</span> <span class="kc">True</span>
+            <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_duration</span><span class="p">):</span>
+            <span class="n">information_campaign</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">,</span>
+                                 <span class="n">system_names</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_systems</span><span class="p">,</span>
+                                 <span class="n">mode</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_mode</span><span class="p">,</span>
+                                 <span class="n">scenario</span> <span class="o">=</span> <span class="bp">self</span><span class="p">)</span>  
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">enforcement</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">enforce_heating_systems</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">,</span> <span class="n">systems_names</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">enforcement_systems</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">replacement_mandates</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">issue_replacement_mandates</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">open_house_measure</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">open_house_measure</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">,</span> 
+                               <span class="n">system_names</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">open_house_systems</span><span class="p">,</span> 
+                               <span class="n">milieus</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">open_house_milieus</span><span class="p">,</span>
+                               <span class="n">freq</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">open_house_freq</span><span class="p">)</span></div>
+</div>
+
+    
+<div class="viewcode-block" id="Scenario_none">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_none">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_none</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A default scenario with no specific modifications.</span>
+
+<span class="sd">    This scenario serves as a baseline or control, applying only the default</span>
+<span class="sd">    setup and impact logic from the base `Scenario` class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;01&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Scenario_none.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_none.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_none.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_none.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_perfect">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_perfect">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_perfect</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario with perfect information and no feasibility constraints.</span>
+
+<span class="sd">    In this idealised scenario, all agents start with complete and perfect</span>
+<span class="sd">    knowledge of all available heating systems. Information is not distorted,</span>
+<span class="sd">    and all systems are considered feasible options from the beginning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;02&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Scenario_network_district&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_network&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+            <span class="s2">&quot;Scenario_network_local_hot&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_network&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+            <span class="s2">&quot;Scenario_network_local_cold&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+            <span class="s2">&quot;Scenario_mix_pellet_heat_pump&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+                <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Scenario_mix_pellet_heat_pump_network&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+                <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+                <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">:</span> <span class="mi">62</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="Scenario_perfect.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_perfect.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        
+        <span class="n">known_hs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Heating_system_oil</span><span class="p">(),</span>
+            <span class="n">Heating_system_gas</span><span class="p">(),</span>
+            <span class="n">Heating_system_heat_pump</span><span class="p">(),</span>
+            <span class="n">Heating_system_electricity</span><span class="p">(),</span>
+            <span class="n">Heating_system_pellet</span><span class="p">(),</span>
+            <span class="n">Heating_system_network_district</span><span class="p">(),</span>
+            <span class="n">Heating_system_network_local</span><span class="p">(),</span>
+            <span class="n">Heating_system_heat_pump_brine</span><span class="p">(),</span>
+            <span class="n">Heating_system_GP_Joule</span><span class="p">(),</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">known_hs</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                    <span class="n">system</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                        <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+                        <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">calculate_all_attributes</span><span class="p">(</span>
+                    <span class="n">area</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="n">energy_demand</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">energy_demand</span><span class="p">,</span>
+                    <span class="n">heat_load</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">heat_load</span>
+                <span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">initial_aspiration_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">aspiration_value</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+        
+        
+<div class="viewcode-block" id="Scenario_perfect.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_perfect.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_network_district">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_district">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_network_district</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario where district heating is the sole targeted technology.</span>
+
+<span class="sd">    This scenario models a future where policy and infrastructure are focused</span>
+<span class="sd">    exclusively on district heating. Competing network-based technologies are</span>
+<span class="sd">    made infeasible for all agents from the start of the simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;03&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_network_district.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_district.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+            
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_network_district.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_district.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_network_local_hot">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_hot">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_network_local_hot</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario where local &#39;hot&#39; network heating is the sole targeted technology.</span>
+
+<span class="sd">    This scenario models a future focused exclusively on local &#39;hot&#39; heating</span>
+<span class="sd">    networks. It makes district networks and other system-based</span>
+<span class="sd">    options (brine heat pumps, GP Joule) infeasible for all agents from the</span>
+<span class="sd">    start of the simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;04&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_network_local_hot.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_hot.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_network_local_hot.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_hot.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_network_local_cold">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_cold">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_network_local_cold</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario where brine heat pumps (cold network) are the sole targeted technology.</span>
+
+<span class="sd">    This scenario models a future pathway centered on local &quot;cold&quot; networks that rely on</span>
+<span class="sd">    brine heat pumps. Competing centralised network options are made</span>
+<span class="sd">    infeasible for all agents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;05&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_network_local_cold.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_cold.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="Scenario_network_local_cold.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_network_local_cold.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_heat_pumps">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_heat_pumps">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_heat_pumps</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario where air-source heat pumps are the sole targeted technology.</span>
+
+<span class="sd">    This scenario simulates a strong policy push towards electrification of</span>
+<span class="sd">    heating via individual air-source heat pumps. All network-based heating</span>
+<span class="sd">    options are made infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;06&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_heat_pumps.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_heat_pumps.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_heat_pumps.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_heat_pumps.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+        
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_mix_pellet_heat_pump</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario targeting a mix of heat pumps and pellet systems.</span>
+
+<span class="sd">    This scenario explores a future with two desired renewable, decentralised</span>
+<span class="sd">    heating options. It assumes no large-scale heating networks are built,</span>
+<span class="sd">    making those options infeasible for all agents. The target market share</span>
+<span class="sd">    is 80% heat pumps and 20% pellet systems.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;07&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump_network">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump_network">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_mix_pellet_heat_pump_network</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario targeting a mix of a local hot network, heat pumps, </span>
+<span class="sd">    and pellet systems.</span>
+
+<span class="sd">    This complex scenario models a spatially differentiated energy transition.</span>
+<span class="sd">    A local &#39;hot&#39; heating network is available, but only for agents outside</span>
+<span class="sd">    the &#39;Sued&#39; subarea. All agents can choose between heat pumps and pellet</span>
+<span class="sd">    systems. Other network types are globally infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;08&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump_network.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump_network.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">subarea</span> <span class="o">==</span> <span class="s2">&quot;Sued&quot;</span><span class="p">:</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_mix_pellet_heat_pump_network.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_pellet_heat_pump_network.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+              
+                
+<div class="viewcode-block" id="Scenario_pellets">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_pellets">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_pellets</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario where pellet heating systems are the sole targeted technology.</span>
+
+<span class="sd">    This scenario models a future pathway focused on biomass as the primary</span>
+<span class="sd">    renewable heating source. All network-based heating options and heat pumps</span>
+<span class="sd">    that require significant grid infrastructure are made infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;09&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_pellets.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_pellets.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_pellets.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_pellets.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Scenario_mix_heat_pump_network_cold">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_heat_pump_network_cold">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_mix_heat_pump_network_cold</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario targeting a mix of air-source and local cold network based on</span>
+<span class="sd">    brine-source heat pumps.</span>
+
+<span class="sd">    This scenario simulates a future focused entirely on different types of</span>
+<span class="sd">    heat pump technology, representing a full electrification pathway. All</span>
+<span class="sd">    other centralised heating network options are made infeasible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;10&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_mix_heat_pump_network_cold.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_heat_pump_network_cold.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">)</span></div>
+
+                    
+
+<div class="viewcode-block" id="Scenario_mix_heat_pump_network_cold.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_heat_pump_network_cold.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Scenario_mix_GP_Joule">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_GP_Joule">[docs]</a>
+<span class="k">class</span> <span class="nc">Scenario_mix_GP_Joule</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A scenario targeting a mix of a local hot network, heat pumps, </span>
+<span class="sd">    and pellet systems.</span>
+<span class="sd">    The default hot network is replaced with the option provided</span>
+<span class="sd">    by the firm GP Joule.</span>
+
+<span class="sd">    It assumes no other large-scale heating networks are built,</span>
+<span class="sd">    making those options infeasible for all agents.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;11&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hs_targets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_pellet&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="s2">&quot;Heating_system_GP_Joule&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># Percentage</span>
+
+<div class="viewcode-block" id="Scenario_mix_GP_Joule.setup">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_GP_Joule.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific model adjustments&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">blocked_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">,]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">global_infeasibles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">blocked_systems</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_district&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_heat_pump_brine&quot;</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Heating_system_network_local&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Scenario_mix_GP_Joule.impact">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.Scenario_mix_GP_Joule.impact">[docs]</a>
+    <span class="k">def</span> <span class="nf">impact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scenario specific impacts during model runs&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">impact</span><span class="p">(</span><span class="n">model</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1">#Helper methods for the default set-up </span>
+<div class="viewcode-block" id="apply_subsidies">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.apply_subsidies">[docs]</a>
+<span class="k">def</span> <span class="nf">apply_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies all known and applicable subsidies to a given heating system.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : Houseowner</span>
+<span class="sd">        The agent considering the system.</span>
+<span class="sd">    system : Heating_system</span>
+<span class="sd">        The heating system to which subsidies will be applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">system_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    
+    <span class="n">subsidies_by_hs</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="p">[</span><span class="n">system_name</span><span class="p">]</span>
+    
+    <span class="n">current_price</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">total_subsidy</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Pre-calculate the maximum allowed subsidy (70% of price OR 21,000)</span>
+    <span class="n">subsidy_cap</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">current_price</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">21000</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">subsidy_rule</span> <span class="ow">in</span> <span class="n">subsidies_by_hs</span><span class="p">:</span>
+        <span class="c1"># Check if subsidy applies (unconditional OR condition met)</span>
+        <span class="k">if</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">subsidy_amount</span> <span class="o">=</span> <span class="n">current_price</span> <span class="o">*</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">subsidy</span>
+            <span class="n">total_subsidy</span> <span class="o">+=</span> <span class="n">subsidy_amount</span>
+        <span class="k">elif</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">check_condition</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">):</span>
+            <span class="n">subsidy_amount</span> <span class="o">=</span> <span class="n">current_price</span> <span class="o">*</span> <span class="n">subsidy_rule</span><span class="o">.</span><span class="n">subsidy</span>
+            <span class="n">total_subsidy</span> <span class="o">+=</span> <span class="n">subsidy_amount</span>
+
+        <span class="c1"># Enforce the cap</span>
+        <span class="k">if</span> <span class="n">total_subsidy</span> <span class="o">&gt;=</span> <span class="n">subsidy_cap</span><span class="p">:</span>
+            <span class="n">total_subsidy</span> <span class="o">=</span> <span class="n">subsidy_cap</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">total_subsidy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">subsidised</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">total_subsidy</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+    
+<div class="viewcode-block" id="organize_subsidies">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.organize_subsidies">[docs]</a>
+<span class="k">def</span> <span class="nf">organize_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Populates an agent&#39;s knowledge base with available subsidies.</span>
+
+<span class="sd">    This function simulates an agent learning about the various subsidies</span>
+<span class="sd">    available for the heating systems they know. It populates the agent&#39;s</span>
+<span class="sd">    `known_subsidies_by_hs` dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    agent : Houseowner</span>
+<span class="sd">        The agent who is learning about subsidies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subsidies_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Subsidy_pellet</span><span class="p">(),</span>
+                      <span class="n">Subsidy_heat_pump</span><span class="p">(),</span>
+                      <span class="n">Subsidy_heat_pump_brine</span><span class="p">(),</span>
+                      <span class="n">Subsidy_climate_speed</span><span class="p">(),</span>
+                      <span class="n">Subsidy_income</span><span class="p">(),</span>
+                      <span class="n">Subsidy_network_local</span><span class="p">(),</span>
+                      <span class="n">Subsidy_GP_Joule</span><span class="p">(),</span>
+                      <span class="n">Subsidy_efficiency</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">subsidy</span> <span class="ow">in</span> <span class="n">subsidies_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                    <span class="n">hs_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="k">if</span> <span class="n">hs_name</span> <span class="ow">in</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">deepcopy</span><span class="p">(</span>
+                                <span class="n">Subsidy</span><span class="p">(</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                    <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                                    <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                                    <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                                    <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                                    <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span> <span class="o">==</span> <span class="s2">&quot;Any&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">hs</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">:</span>
+                <span class="n">hs_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">hs_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">deepcopy</span><span class="p">(</span>
+                        <span class="n">Subsidy</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">abbr</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">abbr</span><span class="p">,</span>
+                            <span class="n">subsidy</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">subsidy</span><span class="p">,</span>
+                            <span class="n">heating_system</span><span class="o">=</span><span class="n">hs_name</span><span class="p">,</span>
+                            <span class="n">condition</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="n">subsidy</span><span class="o">.</span><span class="n">target</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">known_subsidies_by_hs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">subsidy</span><span class="o">.</span><span class="n">heating_system</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">deepcopy</span><span class="p">(</span><span class="n">subsidy</span><span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+    
+<div class="viewcode-block" id="plumber_training_program">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.plumber_training_program">[docs]</a>
+<span class="k">def</span> <span class="nf">plumber_training_program</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">system_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulates a training program for plumbers.</span>
+<span class="sd">    This function identifies all plumber agents in the model who do not yet</span>
+<span class="sd">    have knowledge of a specific heating system and makes them &quot;trained&quot; in it,</span>
+<span class="sd">    adding it to their knowledge base.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Model</span>
+<span class="sd">        The main model instance.</span>
+<span class="sd">    system_name : str</span>
+<span class="sd">        The name of the heating system for the training program.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plumbers_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Plumber&quot;</span><span class="p">:</span>
+            <span class="n">names_known_hs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">system_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_known_hs</span><span class="p">:</span>
+                <span class="n">plumbers_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plumbers_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">plumber</span> <span class="ow">in</span> <span class="n">plumbers_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">system_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">system</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">known_hs</span><span class="p">]:</span>
+                <span class="n">plumber</span><span class="o">.</span><span class="n">training</span><span class="p">(</span><span class="n">system</span> <span class="o">=</span> <span class="n">system_name</span><span class="p">)</span></div>
+
+                
+<div class="viewcode-block" id="information_campaign">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.information_campaign">[docs]</a>
+<span class="k">def</span> <span class="nf">information_campaign</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">system_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulates a large-scale information campaign intervention.</span>
+
+<span class="sd">    This function models different types of information campaigns designed to</span>
+<span class="sd">    influence houseowners. The behaviour depends on the specified `mode`:</span>
+<span class="sd">    - &#39;Direct_informing&#39;: A set number of agents receive direct information.</span>
+<span class="sd">    - &#39;Energy_advisor&#39;: A set number of agents are prompted to consult an energy advisor.</span>
+<span class="sd">    - &#39;Risk_targeting&#39;: A campaign designed to mitigate the perceived risk of certain technologies.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Model</span>
+<span class="sd">        The main model instance.</span>
+<span class="sd">    system_names : list</span>
+<span class="sd">        A list of heating systems to be promoted in the campaign.</span>
+<span class="sd">    mode : str</span>
+<span class="sd">        The type of campaign to run (&#39;Direct_informing&#39;, &#39;Energy_advisor&#39;, or &#39;Risk_targeting&#39;).</span>
+<span class="sd">    scenario : Scenario</span>
+<span class="sd">        The currently active scenario instance, used to track visited agents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No mode was chosen for the information campaign!&quot;</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Direct_informing&quot;</span><span class="p">:</span>
+        <span class="n">all_agents</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span>
+            <span class="ow">and</span> <span class="n">agent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span>  <span class="c1"># Ensure agent was not previously visited</span>
+        <span class="p">]</span>
+    
+        <span class="k">if</span> <span class="n">all_agents</span><span class="p">:</span>
+            <span class="n">agents_to_propagate</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">reach</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_reach</span>
+    
+            <span class="k">while</span> <span class="n">reach</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">all_agents</span><span class="p">:</span>  <span class="c1"># Avoid empty sampling</span>
+                <span class="n">agent_to_propagate</span> <span class="o">=</span> <span class="n">rng_model_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_agents</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">agents_to_propagate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_to_propagate</span><span class="p">)</span>
+                <span class="n">all_agents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">agent_to_propagate</span><span class="p">)</span>  <span class="c1"># Prevent duplicates</span>
+                <span class="n">reach</span> <span class="o">-=</span> <span class="mi">1</span>
+    
+            <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">agents_to_propagate</span><span class="p">)</span>  <span class="c1"># Add drawn agents to visited set</span>
+    
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents_to_propagate</span><span class="p">:</span>
+                <span class="n">organize_subsidies</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                <span class="n">trigger</span> <span class="o">=</span> <span class="n">Trigger_information_campaign</span><span class="p">(</span><span class="n">system_names</span><span class="o">=</span><span class="n">system_names</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">active_trigger</span> <span class="o">=</span> <span class="n">trigger</span>
+    
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Energy_advisor&quot;</span><span class="p">:</span>
+        <span class="n">all_houseowners</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span>
+            <span class="ow">and</span> <span class="n">agent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span>  <span class="c1"># Ensure agent was not previously visited</span>
+            <span class="ow">and</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_stage</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Stage 3&quot;</span><span class="p">,</span> <span class="s2">&quot;Stage 4&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+    
+        <span class="n">all_advisors</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;EnergyAdvisor&quot;</span><span class="p">]</span>
+    
+        <span class="k">if</span> <span class="n">all_houseowners</span> <span class="ow">and</span> <span class="n">all_advisors</span><span class="p">:</span>
+            <span class="n">reach</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_reach</span>
+            <span class="n">agents_to_consult</span> <span class="o">=</span> <span class="p">[]</span>
+    
+            <span class="k">while</span> <span class="n">reach</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">all_houseowners</span><span class="p">:</span>  <span class="c1"># Ensure there are available agents to select</span>
+                <span class="n">agent_to_consult</span> <span class="o">=</span> <span class="n">rng_model_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_houseowners</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">advisor</span> <span class="o">=</span> <span class="n">rng_model_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_advisors</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">advisor</span><span class="o">.</span><span class="n">Services</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">queue_job</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>
+                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consulted_by_energy_advisor</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">agent_to_consult</span><span class="o">.</span><span class="n">consultation_ordered</span> <span class="o">=</span> <span class="kc">True</span>
+                
+                <span class="n">agents_to_consult</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>
+                <span class="n">all_houseowners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">agent_to_consult</span><span class="p">)</span>  <span class="c1"># Prevent duplicate selection</span>
+                <span class="n">reach</span> <span class="o">-=</span> <span class="mi">1</span>
+    
+            <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">agents_to_consult</span><span class="p">)</span>  <span class="c1"># Add consulted agents to visited set</span>
+    
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Risk_targeting&quot;</span><span class="p">:</span>
+        <span class="n">all_agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span> 
+                      <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span> <span class="ow">and</span> <span class="n">agent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">all_agents</span><span class="p">:</span>
+            <span class="n">agents_to_propagate</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">reach</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">inf_campaign_reach</span>
+        
+            <span class="k">while</span> <span class="n">reach</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">all_agents</span><span class="p">:</span>  <span class="c1"># Ensure we do not try to sample from an empty list</span>
+                <span class="n">agent_to_propagate</span> <span class="o">=</span> <span class="n">rng_model_run</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_agents</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">agents_to_propagate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_to_propagate</span><span class="p">)</span>
+                <span class="n">all_agents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">agent_to_propagate</span><span class="p">)</span>  <span class="c1"># Prevent duplicate selection</span>
+                <span class="n">reach</span> <span class="o">-=</span> <span class="mi">1</span>
+        
+            <span class="n">scenario</span><span class="o">.</span><span class="n">visited_agents</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">agents_to_propagate</span><span class="p">)</span>  <span class="c1"># Update visited agents</span>
+        
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents_to_propagate</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">risk_tolerance</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">risk_tolerance</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+                <span class="n">trigger</span> <span class="o">=</span> <span class="n">Trigger_risk_targeting_campaign</span><span class="p">(</span><span class="n">system_names</span><span class="o">=</span><span class="n">system_names</span><span class="p">)</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">active_trigger</span> <span class="o">=</span> <span class="n">trigger</span></div>
+
+        
+<div class="viewcode-block" id="enforce_heating_systems">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.enforce_heating_systems">[docs]</a>
+<span class="k">def</span> <span class="nf">enforce_heating_systems</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">systems_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enforces a limited set of allowed heating systems.</span>
+
+<span class="sd">    This function models a regulatory policy where only a specific list of</span>
+<span class="sd">    heating systems are allowed for new installations. All other systems are</span>
+<span class="sd">    made infeasible for all agents.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Model</span>
+<span class="sd">        The main model instance.</span>
+<span class="sd">    systems_names : list</span>
+<span class="sd">        A list of the only heating system names that are allowed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">all_systems</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">heating_systems</span><span class="o">.</span><span class="n">list</span>
+        <span class="n">enforced_systems</span> <span class="o">=</span> <span class="n">systems_names</span>
+        <span class="n">banned_systems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_systems</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">enforced_systems</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Agents can only install: &quot;</span><span class="p">,</span> <span class="n">enforced_systems</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">enforced_systems</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">system_name</span> <span class="ow">in</span> <span class="n">banned_systems</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system_name</span><span class="p">)</span></div>
+
+                
+
+<div class="viewcode-block" id="issue_replacement_mandates">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.issue_replacement_mandates">[docs]</a>
+<span class="k">def</span> <span class="nf">issue_replacement_mandates</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulates the policy of mandating the replacement of inefficient systems.</span>
+
+<span class="sd">    This function models two types of mandates:</span>
+<span class="sd">    1. Performance-based: A fraction of systems exceeding a certain emissions</span>
+<span class="sd">       threshold are forced into a &#39;breakdown&#39; state each year.</span>
+<span class="sd">    2. Technology-based: Any systems of a specific type (e.g., oil boilers)</span>
+<span class="sd">       are forced into a &#39;breakdown&#39; state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Model</span>
+<span class="sd">        The main model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params_conditions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;emissions&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">emissions_mandate</span><span class="p">}</span>
+    <span class="n">systems_to_replace</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">experiments</span><span class="o">.</span><span class="n">systems_mandate</span>
+    <span class="k">if</span> <span class="n">params_conditions</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span> <span class="o">%</span> <span class="mi">52</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">eligible_agents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Loop over agents to find eligible ones</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">params_conditions</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">condition</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">params_conditions</span><span class="p">[</span><span class="n">condition</span><span class="p">]</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span><span class="p">):</span>
+                        <span class="c1"># Compute a &quot;badness&quot; score: the amount by which the parameter exceeds the condition</span>
+                        <span class="n">score</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">condition</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">params_conditions</span><span class="p">[</span><span class="n">condition</span><span class="p">]</span>
+                        <span class="n">eligible_agents</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">score</span><span class="p">,</span> <span class="n">agent</span><span class="p">))</span>
+                        <span class="c1"># Only add the agent once, even if they violate multiple conditions</span>
+                        <span class="k">break</span>
+    
+        <span class="c1"># Only proceed if there are any eligible agents</span>
+        <span class="k">if</span> <span class="n">eligible_agents</span><span class="p">:</span>
+            <span class="c1"># Sort the agents in descending order by their score (worst first)</span>
+            <span class="n">eligible_agents</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eligible_agents</span><span class="p">)</span>
+            <span class="c1"># Select 10% of agents (rounding down, but ensure at least one agent is selected)</span>
+            <span class="n">num_to_select</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">total</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">))</span>
+            <span class="c1"># Process the selected worst agents</span>
+            <span class="k">for</span> <span class="n">score</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">eligible_agents</span><span class="p">[:</span><span class="n">num_to_select</span><span class="p">]:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Note: using assignment (=) here</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="s2">&quot;None&quot;</span> <span class="ow">in</span> <span class="n">systems_to_replace</span>
+        <span class="ow">and</span> <span class="n">systems_to_replace</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span><span class="p">:</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">systems_to_replace</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">systems_to_replace</span>
+                    <span class="ow">and</span> <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">):</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="o">.</span><span class="n">breakdown</span> <span class="o">==</span> <span class="kc">True</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">infeasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+                    
+<div class="viewcode-block" id="open_house_measure">
+<a class="viewcode-back" href="../../application/api/modules.html#modules.Scenario.open_house_measure">[docs]</a>
+<span class="k">def</span> <span class="nf">open_house_measure</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> 
+                       <span class="n">system_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Heating_system_heat_pump&quot;</span><span class="p">],</span> 
+                       <span class="n">milieus</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Leading&quot;</span><span class="p">],</span>
+                       <span class="n">freq</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asks Heat pump users to share their satisfaction and knowledge with their neighbours</span>
+<span class="sd">    Based on &#39;Woche der Wärmepumpe&#39; launched by BMWK and dena.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : Model</span>
+<span class="sd">        The main model instance.</span>
+<span class="sd">    system_names : list</span>
+<span class="sd">        A list of heating systems to be promoted in the campaign.</span>
+<span class="sd">    milieus: list</span>
+<span class="sd">        A list of milieus that would actively participate as promoters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_step</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">steps</span>
+
+    <span class="c1"># 1. Safety check for frequency: skips execution if freq is 0</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># 2. Check if the current step falls within the sequence</span>
+        <span class="k">if</span> <span class="n">current_step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">520</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+                <span class="c1"># Check all conditions for agent sharing</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Houseowner&quot;</span> <span class="ow">and</span> 
+                    <span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">current_heating</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">system_names</span> <span class="ow">and</span> 
+                    <span class="n">agent</span><span class="o">.</span><span class="n">milieu</span> <span class="ow">in</span> <span class="n">milieus</span> <span class="ow">and</span> 
+                    <span class="n">agent</span><span class="o">.</span><span class="n">satisfaction</span> <span class="o">==</span> <span class="s2">&quot;Satisfied&quot;</span><span class="p">):</span>
+                    
+                    <span class="n">agent</span><span class="o">.</span><span class="n">share_decision</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">cognitive_resource</span><span class="p">)</span></div>
+
+                    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

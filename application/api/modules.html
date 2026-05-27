@@ -1,0 +1,2381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modules package &mdash; AHOIS-pro 0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=9755988c" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="analysis package" href="analysis.html" />
+    <link rel="prev" title="agents.base package" href="agents.base.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AHOIS-pro
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../stakeholder.html">Stakeholder</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../application.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instructions.html">Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../odd.html">ODD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recipes.html">Recipes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">APIs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Model.html">Model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Run.html">Run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.html">agents package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agents.base.html">agents.base package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">modules package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Agent_properties">modules.Agent_properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Excel_input_read">modules.Excel_input_read module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Heating_systems">modules.Heating_systems module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Information_sources">modules.Information_sources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Rng">modules.Rng module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Scenario">modules.Scenario module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Triggers">modules.Triggers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="analysis.html">analysis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="experiments.html">experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interventions.html">interventions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html">server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">modules package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Agent_properties">modules.Agent_properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Excel_input_read">modules.Excel_input_read module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Heating_systems">modules.Heating_systems module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Information_sources">modules.Information_sources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Rng">modules.Rng module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Scenario">modules.Scenario module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.Triggers">modules.Triggers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AHOIS-pro</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../application.html">Application</a></li>
+          <li class="breadcrumb-item"><a href="../api.html">APIs</a></li>
+      <li class="breadcrumb-item active">modules package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/application/api/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modules-package">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">modules package</a><a class="headerlink" href="#modules-package" title="Link to this heading"></a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#modules-package" id="id1">modules package</a></p>
+<ul>
+<li><p><a class="reference internal" href="#module-modules.Agent_properties" id="id2">modules.Agent_properties module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Excel_input_read" id="id3">modules.Excel_input_read module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Heating_systems" id="id4">modules.Heating_systems module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Information_sources" id="id5">modules.Information_sources module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Rng" id="id6">modules.Rng module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Scenario" id="id7">modules.Scenario module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules.Triggers" id="id8">modules.Triggers module</a></p></li>
+<li><p><a class="reference internal" href="#module-modules" id="id9">Module contents</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="module-modules.Agent_properties">
+<span id="modules-agent-properties-module"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">modules.Agent_properties module</a><a class="headerlink" href="#module-modules.Agent_properties" title="Link to this heading"></a></h2>
+<p>Defines classes for agent socio-cognitive properties and preferences.</p>
+<p>This module contains the building blocks for an agent’s intrinsic profile,
+often referred to as their “milieu.” These classes encapsulate an agent’s
+preferences for heating systems and information sources, their personal
+standards for evaluating options, and the cognitive weights used in their
+decision-making processes. These properties are typically initialized from
+external data tables and randomized to create heterogeneity among agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Agent_properties.Milieu">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Milieu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">milieu_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generalized'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Milieu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Milieu" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A container for an agent’s socio-cognitive profile.
+This class represents an agent’s “milieu,” which groups together all their
+intrinsic preferences, standards, and cognitive weights. It is initialised
+for a specific milieu type (e.g., “Mainstream,” “Leading”) and serves as a
+central object for an agent’s characteristics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>A data object containing the parameters for all milieu types.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific type of milieu to initialize, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>unique_id</strong><span class="classifier">uuid.UUID</span></dt><dd><p>A unique identifier for the milieu instance.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str</span></dt><dd><p>The name of the milieu.</p>
+</dd>
+<dt><strong>heating_preferences</strong><span class="classifier">Heating_preferences</span></dt><dd><p>An object holding the agent’s preferences for heating system attributes.</p>
+</dd>
+<dt><strong>source_preferences</strong><span class="classifier">Information_source_preferences</span></dt><dd><p>An object holding the agent’s preferences for information sources.</p>
+</dd>
+<dt><strong>standard</strong><span class="classifier">Personal_standard</span></dt><dd><p>An object defining the agent’s thresholds for decision-making.</p>
+</dd>
+<dt><strong>tpb_weights</strong><span class="classifier">tuple[float, float, float]</span></dt><dd><p>A tuple containing the weights for attitude, social norm, and
+perceived behavioural control in the Theory of Planned Behaviour.</p>
+</dd>
+<dt><strong>ra_exposure</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of exposure values for the relative agreement model.</p>
+</dd>
+<dt><strong>uncertainty_factor: float</strong></dt><dd><p>USed during risk calculation to define the attitude towards unknown information</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes a milieu defining all agent preferences and standards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>A data object containing the parameters for all milieu types.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific type of milieu to initialize, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Agent_properties.Milieu.generate_TPB_weights">
+<span class="sig-name descname"><span class="pre">generate_TPB_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Milieu.generate_TPB_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Milieu.generate_TPB_weights" title="Link to this definition"></a></dt>
+<dd><p>Generate randomised weights for Theory of Planned Behaviour factors.</p>
+<p>This method creates a set of weights for the three components of the
+Theory of Planned Behaviour (TPB): attitude, social norm, and
+perceived behavioural control. The weights are drawn from a uniform
+distribution, where the bounds are determined by a mean value specific
+to the milieu and a standard deviation from the global settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">pandas.Series</span></dt><dd><p>A series containing the mean TPB weights for the milieu.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>dict</dt><dd><p>A dict containing the generated weights for attitude, social
+norm, and control, respectively.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Agent_properties.Heating_preferences">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_preferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">milieu_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generalized'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Heating_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Heating_preferences" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents an agent’s set of preferences (weights) concerning
+the different characteristics of a heating system. 
+Each preference is generated as a random value drawn from a Beta distribution 
+to create individual variations based on the agent’s milieu.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to generate preferences for, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes preferences for heating system parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to generate preferences for, 
+by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Agent_properties.Heating_preferences.generate_preferences">
+<span class="sig-name descname"><span class="pre">generate_preferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Heating_preferences.generate_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Heating_preferences.generate_preferences" title="Link to this definition"></a></dt>
+<dd><p>Generates a single preference value from a Beta distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>The alpha shape parameter for the Beta distribution.</p>
+</dd>
+<dt><strong>beta</strong><span class="classifier">float</span></dt><dd><p>The beta shape parameter for the Beta distribution.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>A random value between 0 and 1 representing a preference weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Agent_properties.Information_source_preferences">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_preferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">milieu_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generalized'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Information_source_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Information_source_preferences" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents an agent’s preferences for various information
+sources (e.g., internet, plumber, neighbors). The preferences are
+generated as a set of probabilities that sum to 1, drawn from a
+Dirichlet distribution. This determines the likelihood that an agent
+will choose one source over another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to generate preferences for, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes preferences for different information sources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to generate preferences for, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Agent_properties.Personal_standard">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Personal_standard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">milieu_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generalized'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Agent_properties.html#Personal_standard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Agent_properties.Personal_standard" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class holds the set of thresholds that an agent uses to evaluate
+whether a heating system is still acceptable. These standards apply to specific
+attributes. It also includes a lifetime threshold, 
+which determines how close to the end of its lifespan a system
+must be before the agent considers replacing it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to define standards for, by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes the personal standards and decision thresholds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Milieu_table</span></dt><dd><p>The data object containing parameters for all milieus.</p>
+</dd>
+<dt><strong>milieu_type</strong><span class="classifier">str, optional</span></dt><dd><p>The specific milieu to define standards for, 
+by default “Generalized”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-modules.Excel_input_read">
+<span id="modules-excel-input-read-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">modules.Excel_input_read module</a><a class="headerlink" href="#module-modules.Excel_input_read" title="Link to this heading"></a></h2>
+<p>Provides classes for loading and accessing model input data from CSV files.</p>
+<p>This module contains container classes responsible for reading specific
+input data files. Although the module name suggests Excel, it is designed to
+read data from Comma-Separated Values (CSV) files using the pandas library.
+Each class corresponds to a key data table required by the model, such as
+milieu parameters or heating system specifications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Excel_input_read.Milieu_table">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Milieu_table</span></span><a class="reference internal" href="../../_modules/modules/Excel_input_read.html#Milieu_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Excel_input_read.Milieu_table" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A container for milieu parameters loaded from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>content</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame holding the milieu parameter data, indexed by milieu type.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialises the Milieu_table by loading the data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Excel_input_read.Heating_params_table">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_params_table</span></span><a class="reference internal" href="../../_modules/modules/Excel_input_read.html#Heating_params_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Excel_input_read.Heating_params_table" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A container for heating system parameters loaded from a CSV file.
+This class reads the primary CSV file containing the technical and economic
+parameters for all available heating systems. It performs minor cleaning,
+by stripping whitespace from column headers and setting the system
+name as the index. The data is accessible through the <cite>content</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>content</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame holding the heating system parameter data, indexed by
+the system’s name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialises the Heating_params_table by loading and preparing the data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Excel_input_read.Heating_params_dynamics_table">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_params_dynamics_table</span></span><a class="reference internal" href="../../_modules/modules/Excel_input_read.html#Heating_params_dynamics_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Excel_input_read.Heating_params_dynamics_table" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A container for the dynamic parameters of heating systems.</p>
+<p>This class reads the CSV file that contains time-series or dynamic data
+related to heating system parameters, such as evolving fuel prices or
+emissions factors. The data is loaded into a pandas DataFrame and is
+accessible through the <cite>content</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>content</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame holding the dynamic parameter data for heating systems.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes the Heating_params_dynamics_table by loading the data.</p>
+</dd></dl>
+
+</section>
+<section id="module-modules.Heating_systems">
+<span id="modules-heating-systems-module"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">modules.Heating_systems module</a><a class="headerlink" href="#module-modules.Heating_systems" title="Link to this heading"></a></h2>
+<p>Defines the classes and methods for all heating systems in the simulation.</p>
+<p>This module provides the core data structures for representing heating systems.
+It includes a generic <cite>Heating_system</cite> base class that defines the common
+attributes and functionalities shared by all systems.</p>
+<p>Specific heating technologies are implemented as subclasses. 
+These subclasses inherit the common framework from the base class 
+but are initialised with their own unique parameters 
+loaded from external data files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Heating_systems.init_param_table">
+<span class="sig-name descname"><span class="pre">init_param_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#init_param_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.init_param_table" title="Link to this definition"></a></dt>
+<dd><p>Initialises the global heating system parameter table.
+This function must be called once at the beginning of a simulation run
+before any <cite>Heating_system</cite> objects are created. It creates an instance of
+<cite>Heating_params_table</cite>, loading the data from the input file and making it
+globally accessible for all heating system instances.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system</span></span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class representing a generic heating system.
+This class serves as the blueprint for all heating system types in the
+model. It defines the core attributes and perceived characteristics. 
+It also contains the methods for calculating key performance and cost indicators,
+including installation costs, fuel costs, operating costs, and emissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>unique_id</strong><span class="classifier">uuid.UUID</span></dt><dd><p>A unique identifier for the system instance.</p>
+</dd>
+<dt><strong>table</strong><span class="classifier">pandas.Series</span></dt><dd><p>The row from the parameters table corresponding to the system type.</p>
+</dd>
+<dt><strong>age</strong><span class="classifier">int</span></dt><dd><p>The number of steps (weeks) since the system was installed.</p>
+</dd>
+<dt><strong>breakdown</strong><span class="classifier">bool</span></dt><dd><p>A flag indicating if the system has broken down.</p>
+</dd>
+<dt><strong>investment</strong><span class="classifier">float or None</span></dt><dd><p>The remaining investment cost to be paid back.</p>
+</dd>
+<dt><strong>rating</strong><span class="classifier">float or None</span></dt><dd><p>An agent’s calculated attitude (rating) towards this system.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>A dictionary holding the core parameters of the system. Each key maps
+to a list of two values: the parameter’s point value and its
+associated uncertainty (e.g., <cite>[value, uncertainty]</cite>).</p>
+</dd>
+<dt><strong>riskiness</strong><span class="classifier">float</span></dt><dd><p>A calculated score from 0 to 1 representing the perceived riskiness
+of installing this system.</p>
+</dd>
+<dt><strong>weibull_lifetime</strong><span class="classifier">bool</span></dt><dd><p>Defines whether the lifetime will be calculated using Weibull or Uniform</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes a new Heating_system instance with default values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.generate_lifetime">
+<span class="sig-name descname"><span class="pre">generate_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_weeks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_weeks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.generate_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.generate_lifetime" title="Link to this definition"></a></dt>
+<dd><p>Generates a random lifetime for the system, using one of two modes.</p>
+<dl class="simple">
+<dt>Mode 1: Uniform (Default)</dt><dd><p>If ‘shape’ and ‘scale’ are NOT provided (or are None), this
+generates a uniform random integer between ‘min_weeks’ and 
+‘max_weeks’ (inclusive).</p>
+</dd>
+<dt>Mode 2: Weibull</dt><dd><p>If ‘shape’ and ‘scale’ ARE provided, this generates a random
+lifetime from a Weibull distribution. In this mode, 
+‘min_weeks’ and ‘max_weeks’ are IGNORED.</p>
+</dd>
+</dl>
+<p>The final lifetime is rounded to the nearest integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>min_weeks</strong><span class="classifier">int</span></dt><dd><p>The minimum possible lifetime (inclusive) for the uniform distribution.
+Ignored if ‘shape’ and ‘scale’ are provided.</p>
+</dd>
+<dt><strong>max_weeks</strong><span class="classifier">int</span></dt><dd><p>The maximum possible lifetime (inclusive) for the uniform distribution.
+Ignored if ‘shape’ and ‘scale’ are provided.</p>
+</dd>
+<dt><strong>shape</strong><span class="classifier">float, optional</span></dt><dd><p>The shape parameter (k) for the Weibull distribution.
+If provided, ‘scale’ must also be provided.</p>
+</dd>
+<dt><strong>scale</strong><span class="classifier">float, optional</span></dt><dd><p>The scale parameter (lambda) for the Weibull distribution.
+If provided, ‘shape’ must also be provided.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The generated lifetime in weeks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.get_name" title="Link to this definition"></a></dt>
+<dd><p>Returns the name of the heating system class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>str</dt><dd><p>The class name as a string.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.breakdown_check">
+<span class="sig-name descname"><span class="pre">breakdown_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.breakdown_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.breakdown_check" title="Link to this definition"></a></dt>
+<dd><p>Check if the system’s age has exceeded its lifetime.</p>
+<p>If the age is greater than the system’s generated lifetime, 
+the <cite>breakdown</cite> flag is set to True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.payback_check">
+<span class="sig-name descname"><span class="pre">payback_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.payback_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.payback_check" title="Link to this definition"></a></dt>
+<dd><p>Reduce the remaining investment value.</p>
+<p>This method is called periodically to simulate the payback of the
+initial investment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_all_attributes">
+<span class="sig-name descname"><span class="pre">calculate_all_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_demand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">house</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_all_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_all_attributes" title="Link to this definition"></a></dt>
+<dd><p>Calculates all cost and performance attributes for the system.</p>
+<p>This is a convenience method that runs all individual calculation
+methods to populate the system’s <cite>params</cite> dictionary 
+based on the properties of a given house.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>area</strong><span class="classifier">float, optional</span></dt><dd><p>The living area of the house in square meters.</p>
+</dd>
+<dt><strong>energy_demand</strong><span class="classifier">float, optional</span></dt><dd><p>The specific energy demand of the house in kWh per square meter per year.</p>
+</dd>
+<dt><strong>house</strong><span class="classifier">House, optional</span></dt><dd><p>A House object from which to derive area, energy_demand, and heat_load.
+If provided, it overrides other parameters.</p>
+</dd>
+<dt><strong>heat_load</strong><span class="classifier">float, optional</span></dt><dd><p>The heat load of the house in kW.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_installation_costs">
+<span class="sig-name descname"><span class="pre">calculate_installation_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_installation_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_installation_costs" title="Link to this definition"></a></dt>
+<dd><p>Calculates the installation cost for the heating system.</p>
+<p>The calculation logic depends on the system type. 
+Some systems are priced based on the house’s area, 
+while others are priced based on the required heat load.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>area</strong><span class="classifier">float, optional</span></dt><dd><p>The living area of the house in square meters.</p>
+</dd>
+<dt><strong>heat_load</strong><span class="classifier">float, optional</span></dt><dd><p>The heat load of the house in kW.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total installation cost in EUR.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_operating_costs">
+<span class="sig-name descname"><span class="pre">calculate_operating_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_load</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_operating_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_operating_costs" title="Link to this definition"></a></dt>
+<dd><p>Calculates the annual operating and maintenance costs (OPEX).</p>
+<p>Calculates the OPEX as a fraction of the initial installation cost.
+For systems with a heat delivery contract, the amortised installation
+cost is included in the annual OPEX.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>area</strong><span class="classifier">float</span></dt><dd><p>The living area of the house in square meters.</p>
+</dd>
+<dt><strong>heat_load</strong><span class="classifier">float</span></dt><dd><p>The heat load of the house in kW.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total annual operating costs in EUR.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_fuel_costs">
+<span class="sig-name descname"><span class="pre">calculate_fuel_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy_demand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_fuel_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_fuel_costs" title="Link to this definition"></a></dt>
+<dd><p>Calculates the annual energy costs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>energy_demand</strong><span class="classifier">float</span></dt><dd><p>The total final energy demand of the house in kWh per year.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total annual fuel costs in EUR.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_emissions">
+<span class="sig-name descname"><span class="pre">calculate_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy_demand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_emissions" title="Link to this definition"></a></dt>
+<dd><p>Calculate the annual CO2 equivalent emissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>energy_demand</strong><span class="classifier">float</span></dt><dd><p>The total final energy demand of the house in kWh per year.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total annual emissions in grams of CO2 equivalent.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_energy_demand">
+<span class="sig-name descname"><span class="pre">calculate_energy_demand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy_demand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_energy_demand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_energy_demand" title="Link to this definition"></a></dt>
+<dd><p>Calculates the final energy demand.</p>
+<p>This method adjusts a house’s specific energy demand by applying a
+system-specific efficiency factor. The factor is chosen from a list
+based on which predefined energy demand class is closest to the
+house’s demand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>energy_demand</strong><span class="classifier">float</span></dt><dd><p>The specific energy demand of the house in kWh per square meter per year.</p>
+</dd>
+<dt><strong>area</strong><span class="classifier">float</span></dt><dd><p>The living area of the house in square meters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>The total final energy demand in kWh per year.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.calculate_risk">
+<span class="sig-name descname"><span class="pre">calculate_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.calculate_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.calculate_risk" title="Link to this definition"></a></dt>
+<dd><p>This method computes a ‘riskiness’ score between 0 and 1. The score
+is an average of several factors, including the financial risk from
+a potential loan and the system-specific uncertainty mitigated by
+the share of neighbours that have adopted the same system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent for whom the risk is being calculated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system.count_neighbours">
+<span class="sig-name descname"><span class="pre">count_neighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system.count_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system.count_neighbours" title="Link to this definition"></a></dt>
+<dd><p>This helper method counts the fraction of an agent’s neighbours who
+have installed the same type of heating system. It returns a value
+representing the inverse of this fraction, where 1 indicates maximum
+uncertainty (no neighbours have the system) and 0 indicates minimum
+uncertainty (all neighbours have the system).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent whose neighbours are being checked.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>A value between 0 and 1 representing social uncertainty.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_oil">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_oil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_oil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_oil" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents an oil-fired heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the oil heating system with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_gas">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_gas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_gas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_gas" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a gas-fired heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for a gas heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the gas heating system with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_heat_pump">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_heat_pump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_heat_pump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_heat_pump" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents an independent heat pump.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the heat pump heating system with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_electricity">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_electricity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_electricity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_electricity" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents an electricity-based heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the electricity-based heating with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_pellet">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_pellet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_pellet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_pellet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a pellet heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the pellet heating system with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_network_district">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_network_district</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_network_district"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_network_district" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a district grid-based heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the district heating with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_network_local">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_network_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_network_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_network_local" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a hot local network heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the hot local network heating with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_heat_pump_brine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_heat_pump_brine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_heat_pump_brine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_heat_pump_brine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a heat pump-based cold local network heating system.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the heat pump-based cold local network with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_GP_Joule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_GP_Joule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_GP_Joule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_GP_Joule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a hot local network heating system provided by the firm “GP Joule”.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the hot local network provided by the firm GP Joule 
+with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Heating_systems.Heating_system_vacuum_tube">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Heating_system_vacuum_tube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Heating_systems.html#Heating_system_vacuum_tube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Heating_systems.Heating_system_vacuum_tube" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Heating_systems.Heating_system" title="modules.Heating_systems.Heating_system"><code class="xref py py-class docutils literal notranslate"><span class="pre">Heating_system</span></code></a></p>
+<p>Represents a vacuum tube heating system. Not actually a heating system and
+is not used anywhere in the model.</p>
+<p>This class inherits from <cite>Heating_system</cite> and sets the specific parameters
+for an oil heating system by loading them from the global <cite>params_table</cite>.</p>
+<p>Initialises the vacuum tube heating system with its specific parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>table</strong><span class="classifier">Heating_params_table, optional</span></dt><dd><p>The parameter table to use. If None, the global <cite>params_table</cite>
+is used, by default None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-modules.Information_sources">
+<span id="modules-information-sources-module"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">modules.Information_sources module</a><a class="headerlink" href="#module-modules.Information_sources" title="Link to this heading"></a></h2>
+<p>This module provides the classes and logic for how agents gather information.
+It features a base <cite>Information_source</cite> class that implements the core
+information-seeking process, where an agent receives potentially biased and
+uncertain data about a heating system.</p>
+<p>Specific subclasses, such as <cite>Information_source_internet</cite> and
+<cite>Information_source_plumber</cite>, represent different channels through which an
+agent can seek information. Each source has its own characteristics, including
+the scope of its knowledge (content), the cost to consult it, and the specific
+interaction mechanics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class for a generic source of information.</p>
+<p>This class provides the structure and methods for all information
+sources in the model. It defines standard attributes like search cost and
+distortion levels and contains the core <cite>data_search</cite> method, which
+simulates the process of an agent acquiring and perceiving information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cost</strong><span class="classifier">int</span></dt><dd><p>The cognitive resource cost for an agent to perform one search action.</p>
+</dd>
+<dt><strong>distortion</strong><span class="classifier">float</span></dt><dd><p>The base (maximum) factor for distorting a heating system’s true parameters.</p>
+</dd>
+<dt><strong>min_distortion</strong><span class="classifier">float</span></dt><dd><p>The minimum distortion (for a 100% market share system).</p>
+</dd>
+<dt><strong>uncertainty_lower</strong><span class="classifier">float</span></dt><dd><p>The lower bound for the uncertainty range applied to parameters.</p>
+</dd>
+<dt><strong>uncertainty_upper</strong><span class="classifier">float</span></dt><dd><p>The upper bound for the uncertainty range applied to parameters.</p>
+</dd>
+<dt><strong>content</strong><span class="classifier">list or None</span></dt><dd><p>A list of heating system names that this source can provide information on.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialises a generic Information_source instance.</p>
+<p>This constructor sets the default attributes for an information source,
+such as cost and distortion levels, by loading them from the global
+settings.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source.instantiate_subclasses">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">instantiate_subclasses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source.instantiate_subclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source.instantiate_subclasses" title="Link to this definition"></a></dt>
+<dd><p>Creates and returns an instance of each direct subclass.</p>
+<p>This factory method is a convenient way to get a list of all available
+information source objects in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list[Information_source]</dt><dd><p>A list containing one instance of each subclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source.data_search">
+<span class="sig-name descname"><span class="pre">data_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source.data_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source.data_search" title="Link to this definition"></a></dt>
+<dd><p>Simulates an agent’s process of searching for information using
+Internet or Magazine.</p>
+<p>This method models an agent spending cognitive resources to acquire
+information about a heating system. The process involves several steps:
+1. A random heating system is selected from the source’s content.
+2. A “perceived” version of this system is created, where its true</p>
+<blockquote>
+<div><p>parameters are distorted.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>The distortion is “pessimistic-only” (&gt;= 1.0) and its
+upper bound is based on the system’s market share.
+- New tech (low share) = wide range [0.0, MAX] -&gt; unpredictable
+- Old tech (high share) = narrow range [0.0, MIN] -&gt; predictable</p></li>
+<li><p>An uncertainty range is added to each perceived parameter.</p></li>
+<li><p>If the system is new to the agent, it’s added to their knowledge base.</p></li>
+<li><p>If the agent already knows the system, their existing perception is
+updated using a relative agreement mechanism.</p></li>
+</ol>
+<p>The source also add knowledge about subsidies.
+The search continues until the agent runs out of cognitive resources,
+finds a satisfactory option, or becomes overloaded with information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent performing the information search.</p>
+</dd>
+<dt><strong>cost</strong><span class="classifier">int</span></dt><dd><p>The cognitive resource cost for this specific search action.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_internet">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_internet</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_internet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_internet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Information_sources.Information_source" title="modules.Information_sources.Information_source"><code class="xref py py-class docutils literal notranslate"><span class="pre">Information_source</span></code></a></p>
+<p>Represents the Internet as a source of information.</p>
+<p>Initialises the Internet source.
+The Internet is configured to have knowledge of all heating systems
+and subsidies listed in the project settings.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_internet.organize_subsidies">
+<span class="sig-name descname"><span class="pre">organize_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_internet.organize_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_internet.organize_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Populate the source’s knowledge of available subsidies.</p>
+<p>This method compiles a list of subsidies applicable to the heating
+systems that the source provides information about.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_magazine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_magazine</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_magazine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_magazine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Information_sources.Information_source" title="modules.Information_sources.Information_source"><code class="xref py py-class docutils literal notranslate"><span class="pre">Information_source</span></code></a></p>
+<p>Represents a professional magazine as a source of information.</p>
+<p>Initialises the magazine source.</p>
+<p>A magazine is configured with a limited set of conventional heating
+systems that it can provide information about.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_magazine.organize_subsidies">
+<span class="sig-name descname"><span class="pre">organize_subsidies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_magazine.organize_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_magazine.organize_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Populates the source’s knowledge of available subsidies.
+This method compiles a list of subsidies applicable to the heating
+systems that the source provides information about.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_plumber">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_plumber</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_plumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_plumber" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Information_sources.Information_source" title="modules.Information_sources.Information_source"><code class="xref py py-class docutils literal notranslate"><span class="pre">Information_source</span></code></a></p>
+<p>Represents a plumber as a source of information.
+Not the plumber itself. This subclass facilitates
+exclusively the data search part 
+of houseowner-plumber interaction.</p>
+<p>Initializes the plumber information source.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_plumber.data_search">
+<span class="sig-name descname"><span class="pre">data_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_plumber.data_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_plumber.data_search" title="Link to this definition"></a></dt>
+<dd><p>Simulate an agent consulting a plumber.</p>
+<p>This method models the specific interaction of ordering a consultation
+from a plumber. The agent finds a plumber (if they don’t already have
+one) and requests a service. The actual information exchange is then
+handled by the plumber agent’s logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent seeking a consultation.</p>
+</dd>
+<dt><strong>cost</strong><span class="classifier">int</span></dt><dd><p>The cognitive resource cost of contacting the plumber.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_neighbours">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_neighbours</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_neighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_neighbours" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Information_sources.Information_source" title="modules.Information_sources.Information_source"><code class="xref py py-class docutils literal notranslate"><span class="pre">Information_source</span></code></a></p>
+<p>Represents neighbours as a source of information.
+Not the neighbours themselves. This subclass facilitates
+exclusively the information search among neighbours.</p>
+<p>Initialises the neighbours information source.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_neighbours.data_search">
+<span class="sig-name descname"><span class="pre">data_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_neighbours.data_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_neighbours.data_search" title="Link to this definition"></a></dt>
+<dd><p>Simulate an agent asking their neighbours for information.</p>
+<p>This method triggers the agent’s behaviour to interact with their
+neighbours to gather opinions and information about their heating
+systems. The information exchange is handled by the agent’s
+<cite>ask_neighbours</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent asking neighbors.</p>
+</dd>
+<dt><strong>cost</strong><span class="classifier">int</span></dt><dd><p>The cognitive resource cost (not used in this implementation).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_energy_advisor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Information_source_energy_advisor</span></span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_energy_advisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_energy_advisor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Information_sources.Information_source" title="modules.Information_sources.Information_source"><code class="xref py py-class docutils literal notranslate"><span class="pre">Information_source</span></code></a></p>
+<p>Represents an energy advisor as a source of information.
+Not the EA itself. This subclass facilitates
+exclusively the data search part 
+of houseowner-EA interaction.</p>
+<p>Initialises the energy advisor information source.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Information_sources.Information_source_energy_advisor.data_search">
+<span class="sig-name descname"><span class="pre">data_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#Information_source_energy_advisor.data_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.Information_source_energy_advisor.data_search" title="Link to this definition"></a></dt>
+<dd><p>Simulates an agent consulting an energy advisor.
+This method models the agent finding and ordering a consultation from
+an energy advisor. The detailed information exchange is subsequently
+handled by the energy advisor agent’s logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent seeking a consultation.</p>
+</dd>
+<dt><strong>cost</strong><span class="classifier">int</span></dt><dd><p>The cognitive resource cost of contacting the advisor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Information_sources.generate_imperfect_system">
+<span class="sig-name descname"><span class="pre">generate_imperfect_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Information_sources.html#generate_imperfect_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Information_sources.generate_imperfect_system" title="Link to this definition"></a></dt>
+<dd><p>Create a perceived, imperfect representation of a heating system.</p>
+<p>This function simulates an agent’s imperfect perception of a heating
+system. It takes a system name, creates an instance with its “true”
+attributes calculated for the agent’s house, and then applies a random
+“pessimistic-only” distortion and an uncertainty range to its parameters.</p>
+<p>The distortion’s upper bound is based on the system’s market share.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent for whom the system perception is being generated.</p>
+</dd>
+<dt><strong>system_name</strong><span class="classifier">str</span></dt><dd><p>The name of the heating system class to generate.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Heating_system</dt><dd><p>The newly created <cite>Heating_system</cite> object with distorted and
+uncertain parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-modules.Rng">
+<span id="modules-rng-module"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">modules.Rng module</a><a class="headerlink" href="#module-modules.Rng" title="Link to this heading"></a></h2>
+<p>Manages random number generation to ensure model reproducibility.</p>
+<p>This module provides a suite of functions that serve as access points to
+separate, seeded random number generators (RNGs). By using distinct RNG
+streams for different model components (e.g., model setup, agent behaviour), 
+it prevents a change in one stochastic process
+from affecting the outcomes of others.</p>
+<p>Each function initialises a singleton NumPy <cite>Generator</cite> instance on its first
+call, using a specific seed from the project’s configuration file. All
+subsequent calls return the same instance. This ensures that the sequence of
+random numbers for each stream is consistent across identical simulation runs.
+The module also includes an optional debugging utility to log the call stack
+each time an RNG is accessed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.init" title="Link to this definition"></a></dt>
+<dd><p>Initialise the output directory for RNG invocation logs.</p>
+<p>This is an internal helper function called by <cite>print_stacktrace</cite> on its
+first invocation to ensure the target directory for logging exists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_model_init">
+<span class="sig-name descname"><span class="pre">rng_model_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_model_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_model_init" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for model initialisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_model_run">
+<span class="sig-name descname"><span class="pre">rng_model_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_model_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_model_run" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the main model run loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for the model’s run phase.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_house_init">
+<span class="sig-name descname"><span class="pre">rng_house_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_house_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_house_init" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the initialisation of instances
+of the House class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_houseowner_run">
+<span class="sig-name descname"><span class="pre">rng_houseowner_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_houseowner_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_houseowner_run" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the Houseowner behaviour-related
+random processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_plumber_run">
+<span class="sig-name descname"><span class="pre">rng_plumber_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_plumber_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_plumber_run" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the Plumber behaviour-related
+random processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_milieu_init">
+<span class="sig-name descname"><span class="pre">rng_milieu_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_milieu_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_milieu_init" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the initialisation of the Houseowner milieu.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_heating_init">
+<span class="sig-name descname"><span class="pre">rng_heating_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_heating_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_heating_init" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the initialisation of the Heating_system
+related initialisation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.rng_information_source_run">
+<span class="sig-name descname"><span class="pre">rng_information_source_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#rng_information_source_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.rng_information_source_run" title="Link to this definition"></a></dt>
+<dd><p>Provides the RNG instance for the interaction between Houseowners and
+information sources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A message to include in the stack trace log for debugging context,
+by default “”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.random.Generator</dt><dd><p>The singleton RNG instance for model initialisation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Rng.print_stacktrace">
+<span class="sig-name descname"><span class="pre">print_stacktrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Rng.html#print_stacktrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Rng.print_stacktrace" title="Link to this definition"></a></dt>
+<dd><p>Log the current call stack to a file for debugging.
+When enabled via <cite>settings.output.randomstreaminvocations</cite>, this function
+is called by an RNG provider to record the sequence of function calls
+that led to the request for a random number. It helps trace the exact source of
+randomness and verify that the correct RNG streams are being used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">str, optional</span></dt><dd><p>The prefix for the log file’s name, by default “”.</p>
+</dd>
+<dt><strong>message</strong><span class="classifier">str, optional</span></dt><dd><p>A contextual message to include in the log entry, by default “”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-modules.Scenario">
+<span id="modules-scenario-module"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">modules.Scenario module</a><a class="headerlink" href="#module-modules.Scenario" title="Link to this heading"></a></h2>
+<p>Defines the experimental scenarios for the simulation.</p>
+<p>This module contains the classes that control the specific conditions and
+interventions for different simulation experiments. It features a base <cite>Scenario</cite>
+class that provides the core structure and default behaviours.</p>
+<p>Various subclasses inherit from this base class to implement specific future
+pathways or policy interventions. Each scenario can modify the model’s initial
+state (via the <cite>setup</cite> method) and introduce dynamic events during the
+simulation (via the <cite>impact</cite> method).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Sascha Holzhauer &lt;<a class="reference external" href="mailto:sascha&#46;holzhauer&#37;&#52;&#48;uni-kassel&#46;de">sascha<span>&#46;</span>holzhauer<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class for defining an experimental scenario.</p>
+<p>This class provides the fundamental structure (<cite>setup</cite> and <cite>impact</cite> methods)
+and default behaviours that can be inherited and extended by specific
+scenario subclasses. It also contains the logic for common, optional
+interventions like plumber training or information campaigns, which can be
+activated via the global settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>id</strong><span class="classifier">str</span></dt><dd><p>The unique identifier for the scenario.</p>
+</dd>
+<dt><strong>hs_targets</strong><span class="classifier">dict</span></dt><dd><p>A dictionary defining the target market shares for heating systems in this scenario.</p>
+</dd>
+<dt><strong>visited_agents</strong><span class="classifier">list</span></dt><dd><p>A list to keep track of agents who have been targeted by an intervention.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'00'</span></span><a class="headerlink" href="#modules.Scenario.Scenario.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario.setup" title="Link to this definition"></a></dt>
+<dd><p>Applies initial, one-time modifications to the model.</p>
+<p>This method is called once at the beginning of a simulation (step 0)
+to set up the specific conditions of the scenario. The default behaviour
+gives agents who already own a heat pump a head start in knowledge
+about various systems and subsidies. Subclasses can extend this to
+implement their unique starting conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario.impact" title="Link to this definition"></a></dt>
+<dd><p>Applies dynamic interventions or events during the simulation.</p>
+<p>This method is called at each step of the simulation to introduce
+changes or trigger events. It serves as the entry point for various
+policy interventions that can be enabled in the settings, such as
+plumber training programs, information campaigns, technology bans, or
+replacement mandates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_none">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_none</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_none" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A default scenario with no specific modifications.</p>
+<p>This scenario serves as a baseline or control, applying only the default
+setup and impact logic from the base <cite>Scenario</cite> class.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_none.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'01'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_none.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_none.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_none.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_none.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_none.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_none.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_none.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_perfect">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_perfect</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_perfect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_perfect" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario with perfect information and no feasibility constraints.</p>
+<p>In this idealised scenario, all agents start with complete and perfect
+knowledge of all available heating systems. Information is not distorted,
+and all systems are considered feasible options from the beginning.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_perfect.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'02'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_perfect.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_perfect.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_perfect.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_perfect.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_perfect.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_perfect.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_perfect.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_district">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_network_district</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_district"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_district" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario where district heating is the sole targeted technology.</p>
+<p>This scenario models a future where policy and infrastructure are focused
+exclusively on district heating. Competing network-based technologies are
+made infeasible for all agents from the start of the simulation.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_district.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'03'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_network_district.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_district.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_district.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_district.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_district.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_district.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_district.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_hot">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_network_local_hot</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_hot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_hot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario where local ‘hot’ network heating is the sole targeted technology.</p>
+<p>This scenario models a future focused exclusively on local ‘hot’ heating
+networks. It makes district networks and other system-based
+options (brine heat pumps, GP Joule) infeasible for all agents from the
+start of the simulation.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_hot.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'04'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_network_local_hot.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_hot.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_hot.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_hot.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_hot.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_hot.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_hot.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_cold">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_network_local_cold</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_cold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_cold" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario where brine heat pumps (cold network) are the sole targeted technology.</p>
+<p>This scenario models a future pathway centered on local “cold” networks that rely on
+brine heat pumps. Competing centralised network options are made
+infeasible for all agents.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_cold.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'05'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_network_local_cold.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_cold.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_cold.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_cold.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_network_local_cold.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_network_local_cold.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_network_local_cold.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_heat_pumps">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_heat_pumps</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_heat_pumps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_heat_pumps" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario where air-source heat pumps are the sole targeted technology.</p>
+<p>This scenario simulates a strong policy push towards electrification of
+heating via individual air-source heat pumps. All network-based heating
+options are made infeasible.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_heat_pumps.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'06'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_heat_pumps.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_heat_pumps.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_heat_pumps.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_heat_pumps.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_heat_pumps.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_heat_pumps.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_heat_pumps.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_mix_pellet_heat_pump</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario targeting a mix of heat pumps and pellet systems.</p>
+<p>This scenario explores a future with two desired renewable, decentralised
+heating options. It assumes no large-scale heating networks are built,
+making those options infeasible for all agents. The target market share
+is 80% heat pumps and 20% pellet systems.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'07'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump_network">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_mix_pellet_heat_pump_network</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump_network" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario targeting a mix of a local hot network, heat pumps, 
+and pellet systems.</p>
+<p>This complex scenario models a spatially differentiated energy transition.
+A local ‘hot’ heating network is available, but only for agents outside
+the ‘Sued’ subarea. All agents can choose between heat pumps and pellet
+systems. Other network types are globally infeasible.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump_network.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'08'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump_network.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump_network.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump_network.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump_network.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_pellet_heat_pump_network.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_pellet_heat_pump_network.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_pellet_heat_pump_network.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_pellets">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_pellets</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_pellets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_pellets" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario where pellet heating systems are the sole targeted technology.</p>
+<p>This scenario models a future pathway focused on biomass as the primary
+renewable heating source. All network-based heating options and heat pumps
+that require significant grid infrastructure are made infeasible.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_pellets.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'09'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_pellets.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_pellets.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_pellets.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_pellets.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_pellets.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_pellets.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_pellets.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_heat_pump_network_cold">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_mix_heat_pump_network_cold</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_heat_pump_network_cold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_heat_pump_network_cold" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario targeting a mix of air-source and local cold network based on
+brine-source heat pumps.</p>
+<p>This scenario simulates a future focused entirely on different types of
+heat pump technology, representing a full electrification pathway. All
+other centralised heating network options are made infeasible.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_heat_pump_network_cold.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'10'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_mix_heat_pump_network_cold.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_heat_pump_network_cold.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_heat_pump_network_cold.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_heat_pump_network_cold.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_heat_pump_network_cold.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_heat_pump_network_cold.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_heat_pump_network_cold.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_GP_Joule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Scenario_mix_GP_Joule</span></span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_GP_Joule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_GP_Joule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Scenario.Scenario" title="modules.Scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
+<p>A scenario targeting a mix of a local hot network, heat pumps, 
+and pellet systems.
+The default hot network is replaced with the option provided
+by the firm GP Joule.</p>
+<p>It assumes no other large-scale heating networks are built,
+making those options infeasible for all agents.</p>
+<p>Initializes the scenario’s state-tracking attributes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_GP_Joule.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'11'</span></span><a class="headerlink" href="#modules.Scenario.Scenario_mix_GP_Joule.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_GP_Joule.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_GP_Joule.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_GP_Joule.setup" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific model adjustments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Scenario.Scenario_mix_GP_Joule.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#Scenario_mix_GP_Joule.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.Scenario_mix_GP_Joule.impact" title="Link to this definition"></a></dt>
+<dd><p>Scenario specific impacts during model runs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.apply_subsidies">
+<span class="sig-name descname"><span class="pre">apply_subsidies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#apply_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.apply_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Applies all known and applicable subsidies to a given heating system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent considering the system.</p>
+</dd>
+<dt><strong>system</strong><span class="classifier">Heating_system</span></dt><dd><p>The heating system to which subsidies will be applied.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.organize_subsidies">
+<span class="sig-name descname"><span class="pre">organize_subsidies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#organize_subsidies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.organize_subsidies" title="Link to this definition"></a></dt>
+<dd><p>Populates an agent’s knowledge base with available subsidies.</p>
+<p>This function simulates an agent learning about the various subsidies
+available for the heating systems they know. It populates the agent’s
+<cite>known_subsidies_by_hs</cite> dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent who is learning about subsidies.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.plumber_training_program">
+<span class="sig-name descname"><span class="pre">plumber_training_program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#plumber_training_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.plumber_training_program" title="Link to this definition"></a></dt>
+<dd><p>Simulates a training program for plumbers.
+This function identifies all plumber agents in the model who do not yet
+have knowledge of a specific heating system and makes them “trained” in it,
+adding it to their knowledge base.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+<dt><strong>system_name</strong><span class="classifier">str</span></dt><dd><p>The name of the heating system for the training program.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.information_campaign">
+<span class="sig-name descname"><span class="pre">information_campaign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#information_campaign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.information_campaign" title="Link to this definition"></a></dt>
+<dd><p>Simulates a large-scale information campaign intervention.</p>
+<p>This function models different types of information campaigns designed to
+influence houseowners. The behaviour depends on the specified <cite>mode</cite>:
+- ‘Direct_informing’: A set number of agents receive direct information.
+- ‘Energy_advisor’: A set number of agents are prompted to consult an energy advisor.
+- ‘Risk_targeting’: A campaign designed to mitigate the perceived risk of certain technologies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+<dt><strong>system_names</strong><span class="classifier">list</span></dt><dd><p>A list of heating systems to be promoted in the campaign.</p>
+</dd>
+<dt><strong>mode</strong><span class="classifier">str</span></dt><dd><p>The type of campaign to run (‘Direct_informing’, ‘Energy_advisor’, or ‘Risk_targeting’).</p>
+</dd>
+<dt><strong>scenario</strong><span class="classifier">Scenario</span></dt><dd><p>The currently active scenario instance, used to track visited agents.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.enforce_heating_systems">
+<span class="sig-name descname"><span class="pre">enforce_heating_systems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systems_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#enforce_heating_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.enforce_heating_systems" title="Link to this definition"></a></dt>
+<dd><p>Enforces a limited set of allowed heating systems.</p>
+<p>This function models a regulatory policy where only a specific list of
+heating systems are allowed for new installations. All other systems are
+made infeasible for all agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+<dt><strong>systems_names</strong><span class="classifier">list</span></dt><dd><p>A list of the only heating system names that are allowed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.issue_replacement_mandates">
+<span class="sig-name descname"><span class="pre">issue_replacement_mandates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#issue_replacement_mandates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.issue_replacement_mandates" title="Link to this definition"></a></dt>
+<dd><p>Simulates the policy of mandating the replacement of inefficient systems.</p>
+<p>This function models two types of mandates:
+1. Performance-based: A fraction of systems exceeding a certain emissions</p>
+<blockquote>
+<div><p>threshold are forced into a ‘breakdown’ state each year.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Technology-based: Any systems of a specific type (e.g., oil boilers)
+are forced into a ‘breakdown’ state.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.Scenario.open_house_measure">
+<span class="sig-name descname"><span class="pre">open_house_measure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Heating_system_heat_pump']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">milieus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Leading']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Scenario.html#open_house_measure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Scenario.open_house_measure" title="Link to this definition"></a></dt>
+<dd><p>Asks Heat pump users to share their satisfaction and knowledge with their neighbours
+Based on ‘Woche der Wärmepumpe’ launched by BMWK and dena.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The main model instance.</p>
+</dd>
+<dt><strong>system_names</strong><span class="classifier">list</span></dt><dd><p>A list of heating systems to be promoted in the campaign.</p>
+</dd>
+<dt><strong>milieus: list</strong></dt><dd><p>A list of milieus that would actively participate as promoters</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-modules.Triggers">
+<span id="modules-triggers-module"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">modules.Triggers module</a><a class="headerlink" href="#module-modules.Triggers" title="Link to this heading"></a></h2>
+<p>Defines the trigger events that initiate an agent’s decision-making process.</p>
+<p>This module contains the classes that represent various events or conditions,
+known as “triggers,” which can prompt a <cite>Houseowner</cite> agent to reconsider their
+current heating system. It includes a generic <cite>Trigger</cite> base class and numerous
+subclasses, each modelling a specific event such as a system breakdown, a fuel
+price shock, or social influence from a neighbour.</p>
+<p>When a trigger becomes active for an agent, its <cite>impact</cite> method is executed,
+typically moving the agent from a passive state into the first stage of the
+decision-making model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Ivan Digel &lt;<a class="reference external" href="mailto:ivan&#46;digel&#37;&#52;&#48;uni-kassel&#46;de">ivan<span>&#46;</span>digel<span>&#64;</span>uni-kassel<span>&#46;</span>de</a>&gt;</p></li>
+<li><p>Dmytro Mykhailiuk &lt;<a class="reference external" href="mailto:dmytromykhailiuk6&#37;&#52;&#48;gmail&#46;com">dmytromykhailiuk6<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class for an event that can trigger an agent’s decision process.</p>
+<p>This class provides the structure for all triggers. Its primary
+role is to define the <cite>impact</cite> method, which is called when the trigger
+affects an agent. The base <cite>impact</cite> method handles data collection and
+ensures an agent is not re-triggered if they are already in an active
+decision process.</p>
+<p>Initialises a new Trigger instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger.impact" title="Link to this definition"></a></dt>
+<dd><p>Applies the trigger’s effect to an agent.</p>
+<p>This base method logs the trigger’s activation for data collection and
+contains a guard clause to prevent the trigger from affecting an agent
+who is already in an active decision-making stage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_none">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_none</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_none" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A null trigger that has no effect.</p>
+<p>Initialises a new Trigger_none instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_none.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_none.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_none.impact" title="Link to this definition"></a></dt>
+<dd><p>Applies only the impact from the superclass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_price_shock">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_price_shock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_price_shock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_price_shock" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing a sudden, significant increase in fuel price.</p>
+<p>Initialises the price shock trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>factor</strong><span class="classifier">float, optional</span></dt><dd><p>The multiplication factor to apply to the agent’s current fuel cost,
+by default 1.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_price_shock.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_price_shock.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_price_shock.impact" title="Link to this definition"></a></dt>
+<dd><p>Increases the agent’s perceived fuel cost 
+and starts the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_lifetime">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_lifetime</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_lifetime" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing the agent’s awareness 
+that their system is nearing its end of life.</p>
+<p>Initializes a new Trigger_lifetime instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_lifetime.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_lifetime.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_lifetime.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_neighbour_jealousy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_neighbour_jealousy</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_neighbour_jealousy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_neighbour_jealousy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing social influence 
+from a neighbor’s new heating system.</p>
+<p>Initializes a new Trigger_neighbour_jealousy instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_neighbour_jealousy.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_neighbour_jealousy.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_neighbour_jealousy.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_adoptive_comparsion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_adoptive_comparsion</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_adoptive_comparsion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_adoptive_comparsion" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing an invitation 
+from a neighbour to adopt a heating system of the same type.</p>
+<p>This trigger occurs when a neighbour installs a new heating system
+and proposes to install one of the same type to the agent.</p>
+<p>Initialises the adoptive comparison trigger.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_adoptive_comparsion.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_adoptive_comparsion.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_adoptive_comparsion.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<p>This trigger simulates the effect of being prompted to think about one’s
+own heating system after a neighbour asks for advice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_asked_by_neighbour">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_asked_by_neighbour</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_asked_by_neighbour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_asked_by_neighbour" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing being asked for an opinion by a neighbour.</p>
+<p>Initialises a new Trigger_asked_by_neighbour instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_asked_by_neighbour.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_asked_by_neighbour.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_asked_by_neighbour.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<p>This trigger simulates the effect of being prompted to think about one’s
+own heating system after a neighbour asks for advice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_breakdown">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_breakdown</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_breakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing a critical failure 
+of the agent’s heating system.</p>
+<p>Initializes a new Trigger_breakdown instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_breakdown.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_breakdown.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_breakdown.impact" title="Link to this definition"></a></dt>
+<dd><p>Forces the agent directly into the second stage of the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_information_campaign">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_information_campaign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_information_campaign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_information_campaign" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing an agent being targeted 
+by an information campaign.</p>
+<p>Initializes the information campaign trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system_names</strong><span class="classifier">list[str]</span></dt><dd><p>A list of heating system names being promoted by the campaign.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_information_campaign.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_information_campaign.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_information_campaign.impact" title="Link to this definition"></a></dt>
+<dd><p>Introduces idealised versions of promoted systems 
+to the agent’s knowledge.</p>
+<p>This trigger adds perfected versions of the
+promoted heating systems to the agent’s set of known alternatives,
+then moves the agent into the first stage of the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_consulted">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_consulted</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_consulted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_consulted" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing an agent being nudged to thinking about the replacement 
+by a consultation.</p>
+<p>Initialises a new Trigger_consulted instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_consulted.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_consulted.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_consulted.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<p>This trigger is typically activated by an external intervention, like an
+information campaign that encourages houseowners to think about the replacement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_risk_targeting_campaign">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_risk_targeting_campaign</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_risk_targeting_campaign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_risk_targeting_campaign" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger from a campaign designed to mitigate perceived technology risk.</p>
+<p>Initializes the risk-targeting campaign trigger.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_risk_targeting_campaign.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_risk_targeting_campaign.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_risk_targeting_campaign.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_availability">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_availability</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_availability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_availability" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing a change in the availability of a heating system.</p>
+<p>Initialises a new Trigger_availability instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_availability.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_availability.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_availability.impact" title="Link to this definition"></a></dt>
+<dd><p>Forces the agent directly into the second stage of the decision process.</p>
+<p>This trigger models an external event where an agent finds out that 
+their current heating type will be no longer available for the installation
+in some (near) future, forcing them to think about installing a new one
+of the same type to avoid the “forced” switch to another heating technology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_fuel_price">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_fuel_price</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_fuel_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_fuel_price" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing general awareness of changing fuel prices.</p>
+<p>Initialises a new Trigger_fuel_price instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_fuel_price.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_fuel_price.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_fuel_price.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<p>This trigger models a non-shock-based response to fuel price volatility,
+prompting the agent to begin considering their heating options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_owner_change">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trigger_owner_change</span></span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_owner_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_owner_change" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#modules.Triggers.Trigger" title="modules.Triggers.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>A trigger representing general awareness of changing fuel prices.</p>
+<p>Initialises a new Trigger_fuel_price instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modules.Triggers.Trigger_owner_change.impact">
+<span class="sig-name descname"><span class="pre">impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/modules/Triggers.html#Trigger_owner_change.impact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modules.Triggers.Trigger_owner_change.impact" title="Link to this definition"></a></dt>
+<dd><p>Moves the agent into the first stage of the decision process.</p>
+<p>This trigger models a non-shock-based response to fuel price volatility,
+prompting the agent to begin considering their heating options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>agent</strong><span class="classifier">Houseowner</span></dt><dd><p>The agent to be impacted by the trigger.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-modules">
+<span id="module-contents"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink">Module contents</a><a class="headerlink" href="#module-modules" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agents.base.html" class="btn btn-neutral float-left" title="agents.base package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="analysis.html" class="btn btn-neutral float-right" title="analysis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ivan Digel, Sascha Holzhauer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
