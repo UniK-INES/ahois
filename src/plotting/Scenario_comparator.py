@@ -104,7 +104,8 @@ def prepare_data(df, indexname, ascending=True):
         - list: A list of marker styles for plotting.
     """
     labelsdf = getLabels(labels_sheet=indexname, ascending=ascending)
-    
+
+    df["files_prefix"] = df["files_prefix"]. astype("str")    
     df = df.replace(labelsdf["value"].array, labelsdf["label"].array).infer_objects(copy=False)
     colors = labelsdf[labelsdf["label"].isin(df[indexname].unique())]["colour"].tolist()
     hatches = [None if hatch=="None" else hatch for hatch in labelsdf[labelsdf["label"].isin(df[indexname].unique())]["hatch"].tolist()]
@@ -288,7 +289,7 @@ class Scenario_comparator:
         base_df["Heating distribution"] = self._compute_heating_distribution(model_dfs)
         base_df["Stage flows"] = self._compute_stage_flows(model_dfs)
         
-        ob_avg, ob_std = self._compute_obstacles(model_dfs)
+        ob_avg, _ob_std = self._compute_obstacles(model_dfs)
         base_df["Obstacles"] = ob_avg
         # Note: Original code calculated ob_std but only assigned ob_avg to dataframe. 
         # Keeping functionality identical to original.
@@ -592,8 +593,8 @@ class Scenario_comparator:
         
         # Format the line plot.
         if settings.eval.title_fulfillment:
-            ax_line.set_title(_("Fulfillment of target scenario"))
-        ax_line.set_ylabel(_("Fulfillment, %"))
+            ax_line.set_title(_("Target fulfilment"))
+        ax_line.set_ylabel(_("Fulfilment, %"))
         ax_line.set_ylim(0, 110)
         
         if settings.eval.use_adjust_text:
@@ -611,7 +612,7 @@ class Scenario_comparator:
         
         # Save the line plot in its own file.
         outfile = (f"{self.get_output_folder()}/Fulfilment_Time_Series.png")
-        logger.info(f"Store fulfillment comparison figure at {outfile}.")
+        logger.info(f"Store fulfilment comparison figure at {outfile}.")
         plt.savefig(
             outfile,
             bbox_inches="tight",
@@ -629,7 +630,7 @@ class Scenario_comparator:
         ax_network.set_ylabel(_("Share (%)"))
         ax_network.set_ylim(0, 120)
         if settings.eval.title_quota:
-            ax_network.set_title(_("Network quota fulfillment"), pad=10)
+            ax_network.set_title(_("Network quota fulfilment"), pad=10)
         
         # Display share values above each bar.
         for i, v in enumerate(network_shares):
@@ -637,7 +638,7 @@ class Scenario_comparator:
         
         # Save the network quota fulfillment chart in a separate file.
         plt.savefig(
-            f"{self.get_output_folder()}/Fulfillment_Network_Quota.png",
+            f"{self.get_output_folder()}/Fulfilment_Network_Quota.png",
             bbox_inches="tight",
         )
         plt.close(fig_network)
@@ -647,7 +648,7 @@ class Scenario_comparator:
         bars = ax_final.bar(labels, final_values, yerr=final_std_values, capsize=5, 
                             color=self.colors, hatch=self.hatches)
         
-        ax_final.set_title(_("Fulfillment Comparison"))
+        ax_final.set_title(_("Fulfilment Comparison"))
         ax_final.set_xlabel(_("Scenario and Run"))
         ax_final.set_ylabel(_("Fulfillment, %"))
         ax_final.set_ylim(0, 100)
@@ -666,7 +667,7 @@ class Scenario_comparator:
         
         # Save the final fulfilment bar chart.
         outfile = (f"{self.get_output_folder()}/Fulfilment_Bar_chart.png")
-        logger.info(f"Store fulfillment comparison figure at {outfile}.")
+        logger.info(f"Store fulfilment comparison figure at {outfile}.")
         plt.savefig(
             outfile,
             bbox_inches="tight",
@@ -750,7 +751,7 @@ class Scenario_comparator:
 
         # Formatting Line Plot
         if settings.eval.title_fulfillment:
-            ax_line.set_title(_("Relative Fulfillment vs Baseline"))
+            ax_line.set_title(_("Relative Target Fulfilment"))
         
         ax_line.set_ylabel(_("Difference to Baseline (pp)"))
         
@@ -773,7 +774,7 @@ class Scenario_comparator:
         ax_line.legend(loc="lower left")
 
         outfile = (f"{self.get_output_folder()}/Fulfilment_Relative_Time_Series.png")
-        logger.info(f"Store relative fulfillment figure at {outfile}.")
+        logger.info(f"Store relative fulfilment figure at {outfile}.")
         plt.savefig(outfile, bbox_inches="tight")
         plt.close(fig_line)
 
@@ -790,7 +791,7 @@ class Scenario_comparator:
                             color=[c for c, l in zip(self.colors, grouped_data) if l[0][3] != baseline_label], # Match colors to filtered data
                             hatch=[h for h, l in zip(self.hatches, grouped_data) if l[0][3] != baseline_label])
 
-        ax_final.set_title(_("Final Fulfillment Difference vs Baseline"))
+        ax_final.set_title(_("Final Fulfilment Difference"))
         ax_final.set_xlabel(_("Scenario"))
         ax_final.set_ylabel(_("Difference (pp)"))
         plt.xticks(rotation=45, ha="right")
@@ -813,7 +814,7 @@ class Scenario_comparator:
                               fontsize=10)
 
         outfile = (f"{self.get_output_folder()}/Fulfilment_Relative_Bar_chart.png")
-        logger.info(f"Store relative fulfillment bar figure at {outfile}.")
+        logger.info(f"Store relative fulfilment bar figure at {outfile}.")
         plt.savefig(outfile, bbox_inches="tight")
         plt.clf()
 
@@ -853,24 +854,24 @@ class Scenario_comparator:
                 # STAGE 1
                 if stage == "Stage_1":
                     if "Satisfied" in raw_name: 
-                        return "Retention: Satisfied", "top"
+                        return _("Retention: Satisfied"), "top"
                 
                 # STAGE 2
                 if stage == "Stage_2":
                     if "Current_HS_best" in raw_name: 
-                        return "Drop: Old is Best", "bottom"
+                        return _("Exit: Current is Best"), "bottom"
                 
                 # STAGE 4
                 if stage == "Stage_4":
                     if "Satisfied" in raw_name:
-                        return "Satisfied", "top"
+                        return _("Satisfied"), "top"
                     if "Dissatisfied" in raw_name:
-                        return "Dissatisfied", "bottom"
+                        return _("Dissatisfied"), "bottom"
 
                 # GENERIC CLEANUP
-                clean = raw_name.replace("Dissatisfied_", "").replace("Desired_infeasible_", "Inf: ").replace("_", " ")
-                clean = clean.replace(" to drop", "").replace(" to stage 2", "") 
-                return f"Drop: {clean}", "bottom"
+                clean = raw_name.replace("Dissatisfied_", "").replace("Desired_infeasible_", _("Inf: ")).replace("_", " ")
+                clean = clean.replace(" to drop", "").replace(_(" to stage 2"), "") 
+                return f"{_('Exit')}: {_(clean)}", "bottom"
 
             # Scan for dynamic nodes
             for stage_key in ["Stage_1", "Stage_2", "Stage_3", "Stage_4"]:
@@ -898,36 +899,46 @@ class Scenario_comparator:
             node_colors = []
             node_map = {}
             
+            stage_display_names = {
+                "Stage 1": _("Predecisional stage"),
+                "Stage 2": _("Preactional stage"),
+                "Stage 3": _("Actional stage"),
+                "Stage 4": _("Postactional stage")
+            }
+            
             def add_node_def(name, x, y, c):
                 node_map[name] = len(labels_list)
-                labels_list.append(name)
+                display_label = stage_display_names.get(name, name)
+                labels_list.append(display_label)
                 x_coords.append(x)
                 y_coords.append(y)
                 node_colors.append(c)
 
             # A. TOP NODES (Retention + Stage 4 Satisfied)
             for i, name in enumerate(sorted_top):
-                if name == "Satisfied":
-                    add_node_def(name, 0.92, 0.35, C_NODE_SUCCESS) 
+                if name == _("Satisfied"):
+                    add_node_def(name, 0.90, 0.35, C_NODE_SUCCESS) 
                 else:
-                    add_node_def(name, 0.85, 0.01 + (i * 0.06), C_NODE_RETENTION)
+                    add_node_def(name, 0.80, 0.10 + (i * 0.06), C_NODE_RETENTION)
 
             # B. SPINE NODES
             spine = [
                 ("Stage 1", 0.001, 0.5),
                 ("Stage 2", 0.30, 0.65),
                 ("Stage 3", 0.55, 0.55),
-                ("Stage 4", 0.80, 0.5)
+                ("Stage 4", 0.70, 0.5)
             ]
             for name, sx, sy in spine:
                 add_node_def(name, sx, sy, C_NODE_SPINE)
 
             # C. BOTTOM NODES
             for i, name in enumerate(sorted_bottom):
-                if name == "Dissatisfied":
-                    add_node_def(name, 0.92, 0.65, C_NODE_DROP)
+                if name == _("Dissatisfied"):
+                    add_node_def(name, 0.80, 0.65, C_NODE_DROP)
+                elif _("Exit") in name:
+                    add_node_def(name, 0.80, 0.99 - (i * 0.05), C_NODE_DROP)
                 else:
-                    add_node_def(name, 0.90, 0.99 - (i * 0.05), C_NODE_DROP)
+                    add_node_def(name, 0.80, 0.99 - (i * 0.05), C_NODE_DROP)
             
             # --- 4. BUILD LINKS ---
             sources, targets, values, link_labels, link_colors = [], [], [], [], []
@@ -946,7 +957,7 @@ class Scenario_comparator:
                 if v <= 0.01: continue
                 
                 if "Satisfied" in k:
-                    name, _ = categorize_node("Stage_1", k)
+                    name, _pos = categorize_node("Stage_1", k)
                     add_link("Stage 1", name, v, k, C_LINK_DROP)
                 elif "Dissatisfied_age" in k:
                     add_link("Stage 1", "Stage 2", v, k, C_FLOW_AGE)
@@ -964,7 +975,7 @@ class Scenario_comparator:
                 if k == "Found_desired":
                     add_link("Stage 2", "Stage 3", v, k, C_LINK_MAIN)
                 else:
-                    name, _ = categorize_node("Stage_2", k)
+                    name, _pos = categorize_node("Stage_2", k)
                     add_link("Stage 2", name, v, k, C_LINK_DROP)
 
             # STAGE 3
@@ -975,17 +986,17 @@ class Scenario_comparator:
                 elif "to_stage_2" in k:
                     add_link("Stage 3", "Stage 2", v, k, C_LINK_LOOP)
                 else:
-                    name, _ = categorize_node("Stage_3", k)
+                    name, _pos = categorize_node("Stage_3", k)
                     add_link("Stage 3", name, v, k, C_LINK_DROP)
 
             # STAGE 4
             for k, v in final_dict.get("Stage_4", {}).items():
                 if v <= 0.01: continue
                 if "Satisfied" in k:
-                    name, _ = categorize_node("Stage_4", k)
+                    name, _pos = categorize_node("Stage_4", k)
                     add_link("Stage 4", name, v, k, C_LINK_MAIN)
                 else:
-                    name, _ = categorize_node("Stage_4", k)
+                    name, _pos = categorize_node("Stage_4", k)
                     add_link("Stage 4", name, v, k, C_LINK_DROP)
 
             if not sources: continue
@@ -994,6 +1005,10 @@ class Scenario_comparator:
             fig = go.Figure()
             fig.add_trace(go.Sankey(
                 arrangement = "perpendicular", 
+                textfont = dict(
+                    size = settings.eval.sankey_textsize_phases,
+                    color = "black",
+                ),
                 node = dict(
                     pad = 30,
                     thickness = 15,
@@ -1013,28 +1028,33 @@ class Scenario_comparator:
             ))
             
             legend_items = [
-                ("Success", C_LINK_MAIN),
-                ("Loop", C_LINK_LOOP),
-                ("Drop / Dissatisfaction", C_LINK_DROP),
-                ("Dissatisfied: Age", C_FLOW_AGE),
-                ("Dissatisfied: Milieu", C_FLOW_MILIEU),
-                ("Dissatisfied: Breakdown", C_FLOW_BREAKDOWN)
+                (_("Success"), C_LINK_MAIN),
+                (_("Loop"), C_LINK_LOOP),
+                (_("Drop / Dissatisfaction"), C_LINK_DROP),
+                (_("Dissatisfied: Age"), C_FLOW_AGE),
+                (_("Dissatisfied: Milieu"), C_FLOW_MILIEU),
+                (_("Dissatisfied: Breakdown"), C_FLOW_BREAKDOWN)
             ]
             
             for name, col in legend_items:
                 fig.add_trace(go.Scatter(
                     x=[None], y=[None], 
                     mode='markers',
-                    marker=dict(size=12, color=col), 
+                    showlegend=True,
+                    marker={'size': settings.eval.sankey_markersize, 'color': col, 'symbol': "square-dot"}, 
                     name=name
                 ))
 
-            title_text = f"Stage Flows - {files_prefix}"
+            if settings.eval.title_sankey:
+                title_text = f"{_('Stage Flows')} - {files_prefix}"
+            else:
+                title_text = None   
             fig.update_layout(
                 title_text=title_text, 
-                font_size=14, 
-                width=1920, 
-                height=1080,
+                font_size=settings.eval.sankey_textsize_stages, 
+                width=2300, 
+                height=1200,
+                margin=dict(l=50, r=250, t=100, b=50),
                 
                 # 1. Set Backgrounds to White
                 paper_bgcolor='white',
@@ -1056,11 +1076,13 @@ class Scenario_comparator:
                 legend=dict(
                     orientation="h", 
                     y=-0.05, 
-                    x=0.5, 
+                    x=0.5,
+                    itemwidth=50,
                     xanchor="center",
                     bgcolor='white',
                     bordercolor='Black',
-                    borderwidth=0
+                    borderwidth=0,
+                    font=dict(size=settings.eval.sankey_textsize_legend)
                 ),
             )
             
@@ -1068,7 +1090,7 @@ class Scenario_comparator:
             out_path = f"{self.get_output_folder()}/Sankey_Stage_Flows_{safe_suffix}"
             fig.write_html(f"{out_path}.html")
             try:
-                fig.write_image(f"{out_path}.png")
+                fig.write_image(f"{out_path}.png", scale=settings.eval.sankey_scale)
             except Exception:
                 pass
     
@@ -2479,7 +2501,7 @@ class Scenario_comparator:
         outcomes, making it easy to spot trade-offs.
         """
         # Define the categories (axes) for the radar chart
-        categories = ["Subsidies", "Loans", "Cognitive resource", "Scenario fulfilment"]
+        categories = ["Subsidies", "Loans", "Cognitive resource", "Scenario fulfilment", "Emissions"]
         N = len(categories)
     
         # First pass: gather final values for each category across all groups for normalization
@@ -2516,7 +2538,7 @@ class Scenario_comparator:
             ax.fill(angles, normalized_values, alpha=0.1, color=color)
         
         # Set the title and category labels
-        ax.set_title(_("Total Effort Comparison"))
+        ax.set_title(_("Combined Results Comparison"))
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels([_(cat) for cat in categories])
         
@@ -2526,7 +2548,7 @@ class Scenario_comparator:
         ax.set_rlabel_position(30)
         
         # Add a legend and save the figure
-        ax.legend(loc="upper right", bbox_to_anchor=(1.1, 1.1))
+        ax.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1))
 
         outfile = f"{self.get_output_folder()}/Total_Effort_Radar.png"
         logger.info(f"Store total effort radar comparison figure at {outfile}.")
@@ -2542,7 +2564,7 @@ class Scenario_comparator:
         Values > 1.0 indicate more effort/resource usage than Baseline.
         """
         # Define the categories (axes) for the radar chart
-        categories = ["Subsidies", "Loans", "Cognitive resource", "Scenario fulfilment"]
+        categories = ["Subsidies", "Loans", "Cognitive resource", "Scenario fulfilment", "Emissions"]
         N = len(categories)
         
         # Ensure we can iterate multiple times
@@ -2610,7 +2632,7 @@ class Scenario_comparator:
             ax.fill(angles, relative_values, alpha=0.05, color=color)
         
         # --- STEP 4: FORMATTING ---
-        ax.set_title(_("Relative Effort Comparison (Baseline = 1.0)"))
+        ax.set_title(_("Relative Results Comparison"))
         
         # Set category labels
         ax.set_xticks(angles[:-1])
@@ -2626,7 +2648,7 @@ class Scenario_comparator:
         ax.set_rlabel_position(30)
         
         # Add a legend
-        ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1))
+        ax.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1))
 
         outfile = f"{self.get_output_folder()}/Total_Effort_Relative_Radar.png"
         logger.info(f"Store relative total effort radar figure at {outfile}.")

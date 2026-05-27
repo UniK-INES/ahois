@@ -132,9 +132,6 @@ msgstr ""
 msgid "Heating_system_network_local"
 msgstr ""
 
-msgid "Heating_system_heat_pump"
-msgstr ""
-
 msgid "Heating_system_heat_pump_brine"
 msgstr ""
 
@@ -222,6 +219,12 @@ msgstr ""
 msgid "Subsidies"
 msgstr ""
 
+msgid "Loans"
+msgstr ""
+
+msgid "Target fulfilment"
+msgstr ""
+
 msgid "DEZ_Basislinie"
 msgstr ""
 
@@ -303,5 +306,29 @@ msgstr ""
 msgid "Wärmeliefervertrag-Ersatzmandate"
 msgstr ""
 
+msgid "Kredite"
+msgstr ""
 
+msgid "Szenario Zielerfüllung"
+msgstr ""
 
+msgid "Overloaded"
+msgstr ""
+
+msgid "Plumber consulted"
+msgstr ""
+
+msgid "No suitables"
+msgstr ""
+
+msgid "No affordables"
+msgstr ""
+
+msgid "No plumber found"
+msgstr ""
+
+msgid "Long waiting time"
+msgstr ""
+
+msgid "Cannot afford final"
+msgstr ""

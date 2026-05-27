@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 09:27+0100\n"
+"POT-Creation-Date: 2026-03-30 15:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,8 +46,8 @@ msgstr ""
 msgid "tons of CO2 equivalent per year"
 msgstr ""
 
-#: src/plotting/Plots.py:196 src/plotting/Scenario_comparator.py:2084
-#: src/plotting/Scenario_comparator.py:2109
+#: src/plotting/Plots.py:196 src/plotting/Scenario_comparator.py:2105
+#: src/plotting/Scenario_comparator.py:2130
 msgid "MWh per year"
 msgstr ""
 
@@ -67,42 +67,42 @@ msgstr ""
 msgid "Postactional"
 msgstr ""
 
-#: src/plotting/Plots.py:331 src/plotting/Scenario_comparator.py:1375
-#: src/plotting/Scenario_comparator.py:1451
-#: src/plotting/Scenario_comparator.py:1591
-#: src/plotting/Scenario_comparator.py:1677
+#: src/plotting/Plots.py:331 src/plotting/Scenario_comparator.py:1396
+#: src/plotting/Scenario_comparator.py:1472
+#: src/plotting/Scenario_comparator.py:1612
+#: src/plotting/Scenario_comparator.py:1698
 msgid "Obstacles"
 msgstr ""
 
-#: src/plotting/Plots.py:332 src/plotting/Scenario_comparator.py:1771
+#: src/plotting/Plots.py:332 src/plotting/Scenario_comparator.py:1792
 msgid "Agents"
 msgstr ""
 
-#: src/plotting/Plots.py:455 src/plotting/Scenario_comparator.py:1333
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1537
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:455 src/plotting/Scenario_comparator.py:1354
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1558
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Triggered"
 msgstr ""
 
-#: src/plotting/Plots.py:456 src/plotting/Scenario_comparator.py:1334
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1537
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:456 src/plotting/Scenario_comparator.py:1355
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1558
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Deciding"
 msgstr ""
 
-#: src/plotting/Plots.py:457 src/plotting/Scenario_comparator.py:1335
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1537
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:457 src/plotting/Scenario_comparator.py:1356
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1558
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Knowing"
 msgstr ""
 
-#: src/plotting/Plots.py:458 src/plotting/Scenario_comparator.py:1336
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1538
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:458 src/plotting/Scenario_comparator.py:1357
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1559
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Can afford"
 msgstr ""
 
@@ -110,17 +110,17 @@ msgstr ""
 msgid "Certain"
 msgstr ""
 
-#: src/plotting/Plots.py:460 src/plotting/Scenario_comparator.py:1338
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1538
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:460 src/plotting/Scenario_comparator.py:1359
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1559
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Like"
 msgstr ""
 
-#: src/plotting/Plots.py:461 src/plotting/Scenario_comparator.py:1339
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1539
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Plots.py:461 src/plotting/Scenario_comparator.py:1360
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1560
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Installed"
 msgstr ""
 
@@ -410,9 +410,9 @@ msgstr ""
 msgid "Percentage"
 msgstr ""
 
-#: src/plotting/Plots.py:2032 src/plotting/Scenario_comparator.py:794
-#: src/plotting/Scenario_comparator.py:1625
-#: src/plotting/Scenario_comparator.py:1705
+#: src/plotting/Plots.py:2032 src/plotting/Scenario_comparator.py:795
+#: src/plotting/Scenario_comparator.py:1646
+#: src/plotting/Scenario_comparator.py:1726
 msgid "Scenario"
 msgstr ""
 
@@ -440,9 +440,9 @@ msgstr ""
 msgid "{imagename}Optimality"
 msgstr ""
 
-#: src/plotting/Plots.py:2198 src/plotting/Scenario_comparator.py:2188
-#: src/plotting/Scenario_comparator.py:2210
-#: src/plotting/Scenario_comparator.py:2235
+#: src/plotting/Plots.py:2198 src/plotting/Scenario_comparator.py:2209
+#: src/plotting/Scenario_comparator.py:2231
+#: src/plotting/Scenario_comparator.py:2256
 msgid "Optimality, ratio"
 msgstr ""
 
@@ -557,251 +557,326 @@ msgstr ""
 msgid "Count of Agents"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:595
-msgid "Fulfillment of target scenario"
-msgstr ""
-
 #: src/plotting/Scenario_comparator.py:596
-#: src/plotting/Scenario_comparator.py:652
-msgid "Fulfillment, %"
+msgid "Target fulfilment"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:629
+#: src/plotting/Scenario_comparator.py:597
+msgid "Fulfilment, %"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:630
 msgid "Share (%)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:632
-msgid "Network quota fulfillment"
-msgstr ""
-
-#: src/plotting/Scenario_comparator.py:650
-msgid "Fulfillment Comparison"
+#: src/plotting/Scenario_comparator.py:633
+msgid "Network quota fulfilment"
 msgstr ""
 
 #: src/plotting/Scenario_comparator.py:651
-#: src/plotting/Scenario_comparator.py:1410
-#: src/plotting/Scenario_comparator.py:1484
-#: src/plotting/Scenario_comparator.py:1885
-#: src/plotting/Scenario_comparator.py:1918
-#: src/plotting/Scenario_comparator.py:2083
-#: src/plotting/Scenario_comparator.py:2108
-#: src/plotting/Scenario_comparator.py:2209
-#: src/plotting/Scenario_comparator.py:2234
-#: src/plotting/Scenario_comparator.py:2335
-#: src/plotting/Scenario_comparator.py:2361
-#: src/plotting/Scenario_comparator.py:2449
-#: src/plotting/Scenario_comparator.py:2721
+msgid "Fulfilment Comparison"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:652
+#: src/plotting/Scenario_comparator.py:1431
+#: src/plotting/Scenario_comparator.py:1505
+#: src/plotting/Scenario_comparator.py:1906
+#: src/plotting/Scenario_comparator.py:1939
+#: src/plotting/Scenario_comparator.py:2104
+#: src/plotting/Scenario_comparator.py:2129
+#: src/plotting/Scenario_comparator.py:2230
+#: src/plotting/Scenario_comparator.py:2255
+#: src/plotting/Scenario_comparator.py:2356
+#: src/plotting/Scenario_comparator.py:2382
+#: src/plotting/Scenario_comparator.py:2470
+#: src/plotting/Scenario_comparator.py:2742
 msgid "Scenario and Run"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:753
-msgid "Relative Fulfillment vs Baseline"
+#: src/plotting/Scenario_comparator.py:653
+msgid "Fulfillment, %"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:755
+#: src/plotting/Scenario_comparator.py:754
+msgid "Relative Target Fulfilment"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:756
 msgid "Difference to Baseline (pp)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:793
-msgid "Final Fulfillment Difference vs Baseline"
+#: src/plotting/Scenario_comparator.py:794
+msgid "Final Fulfilment Difference"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:795
+#: src/plotting/Scenario_comparator.py:796
 msgid "Difference (pp)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1149
+#: src/plotting/Scenario_comparator.py:857
+msgid "Retention: Satisfied"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:862
+msgid "Exit: Current is Best"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:867
+msgid "Satisfied"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:869
+msgid "Dissatisfied"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:872
+msgid "Inf: "
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:873
+msgid " to stage 2"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:874
+msgid "Exit"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:903
+msgid "Predecisional stage"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:904
+msgid "Preactional stage"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:905
+msgid "Actional stage"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:906
+msgid "Postactional stage"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1031
+msgid "Success"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1032
+msgid "Loop"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1033
+msgid "Drop / Dissatisfaction"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1034
+msgid "Dissatisfied: Age"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1035
+msgid "Dissatisfied: Milieu"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1036
+msgid "Dissatisfied: Breakdown"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1048
+msgid "Stage Flows"
+msgstr ""
+
+#: src/plotting/Scenario_comparator.py:1170
 msgid "Agent Count"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1151
+#: src/plotting/Scenario_comparator.py:1172
 msgid "Comparison of Stage Flows (Final Step)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1152
-#: src/plotting/Scenario_comparator.py:1257
+#: src/plotting/Scenario_comparator.py:1173
+#: src/plotting/Scenario_comparator.py:1278
 msgid "Scenario / Run"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1153
-#: src/plotting/Scenario_comparator.py:1258
+#: src/plotting/Scenario_comparator.py:1174
+#: src/plotting/Scenario_comparator.py:1279
 msgid "Stage Outcome"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1254
+#: src/plotting/Scenario_comparator.py:1275
 msgid "Difference vs Baseline"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1256
+#: src/plotting/Scenario_comparator.py:1277
 msgid "Relative Stage Flows (Scenario - Baseline)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1337
-#: src/plotting/Scenario_comparator.py:1429
-#: src/plotting/Scenario_comparator.py:1538
-#: src/plotting/Scenario_comparator.py:1648
+#: src/plotting/Scenario_comparator.py:1358
+#: src/plotting/Scenario_comparator.py:1450
+#: src/plotting/Scenario_comparator.py:1559
+#: src/plotting/Scenario_comparator.py:1669
 msgid "Accepted"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1372
+#: src/plotting/Scenario_comparator.py:1393
 msgid "Passed Obstacles Comparison for "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1373
-#: src/plotting/Scenario_comparator.py:1449
+#: src/plotting/Scenario_comparator.py:1394
+#: src/plotting/Scenario_comparator.py:1470
 #, python-brace-format
 msgid " in {years} years"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1376
+#: src/plotting/Scenario_comparator.py:1397
 msgid "Passed Agents' Count"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1448
+#: src/plotting/Scenario_comparator.py:1469
 msgid "Passed Obstacles Percentages Comparison for "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1452
+#: src/plotting/Scenario_comparator.py:1473
 msgid "Share of agents at previous level (%)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1589
+#: src/plotting/Scenario_comparator.py:1610
 msgid "Obstacle Count Difference vs Baseline for "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1592
+#: src/plotting/Scenario_comparator.py:1613
 msgid "Difference in Agent Count"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1675
+#: src/plotting/Scenario_comparator.py:1696
 msgid "Conversion Rate Difference vs Baseline for "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1678
+#: src/plotting/Scenario_comparator.py:1699
 msgid "Difference in Conversion Rate (pp)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1770
+#: src/plotting/Scenario_comparator.py:1791
 msgid "Agents' knowledge about heating technologies"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1858
+#: src/plotting/Scenario_comparator.py:1879
 msgid "Total Emissions Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1859
-#: src/plotting/Scenario_comparator.py:1886
-#: src/plotting/Scenario_comparator.py:1983
+#: src/plotting/Scenario_comparator.py:1880
+#: src/plotting/Scenario_comparator.py:1907
+#: src/plotting/Scenario_comparator.py:2004
 msgid "Tons of CO2 equivalent per building"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1884
+#: src/plotting/Scenario_comparator.py:1905
 msgid "Average Emissions Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1917
+#: src/plotting/Scenario_comparator.py:1938
 msgid "Average Emissions Comparison - Boxplot"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1919
+#: src/plotting/Scenario_comparator.py:1940
 msgid "Tons of CO2 equivalent"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:1982
+#: src/plotting/Scenario_comparator.py:2003
 msgid "Yearly Average Emissions Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2060
-#: src/plotting/Scenario_comparator.py:2082
+#: src/plotting/Scenario_comparator.py:2081
+#: src/plotting/Scenario_comparator.py:2103
 msgid "Average House Energy Demand Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2061
+#: src/plotting/Scenario_comparator.py:2082
 msgid "MWh per year per building"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2107
+#: src/plotting/Scenario_comparator.py:2128
 msgid "Energy Demand Comparison - Boxplot"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2187
 #: src/plotting/Scenario_comparator.py:2208
+#: src/plotting/Scenario_comparator.py:2229
 msgid "Optimality Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2233
+#: src/plotting/Scenario_comparator.py:2254
 msgid "Optimality Comparison - Boxplot"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2313
 #: src/plotting/Scenario_comparator.py:2334
+#: src/plotting/Scenario_comparator.py:2355
 msgid "Average Operating Expenses Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2314
-#: src/plotting/Scenario_comparator.py:2336
-#: src/plotting/Scenario_comparator.py:2362
+#: src/plotting/Scenario_comparator.py:2335
+#: src/plotting/Scenario_comparator.py:2357
+#: src/plotting/Scenario_comparator.py:2383
 msgid "Thousands of EUR"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2360
+#: src/plotting/Scenario_comparator.py:2381
 msgid "Operating Expenses Comparison - Boxplot"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2422
+#: src/plotting/Scenario_comparator.py:2443
 msgid "Annual total expenses per household"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2423
-#: src/plotting/Scenario_comparator.py:2450
+#: src/plotting/Scenario_comparator.py:2444
+#: src/plotting/Scenario_comparator.py:2471
 msgid "Expenses, EUR"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2448
+#: src/plotting/Scenario_comparator.py:2469
 msgid "Annual Total Expenses per Household comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2519
-msgid "Total Effort Comparison"
+#: src/plotting/Scenario_comparator.py:2540
+msgid "Combined Results Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2613
-msgid "Relative Effort Comparison (Baseline = 1.0)"
+#: src/plotting/Scenario_comparator.py:2634
+msgid "Relative Results Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2685
+#: src/plotting/Scenario_comparator.py:2706
 msgid "Final Heating Distribution Comparison"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2687
+#: src/plotting/Scenario_comparator.py:2708
 msgid "Heating System"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2688
+#: src/plotting/Scenario_comparator.py:2709
 msgid "Average Count"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2885
+#: src/plotting/Scenario_comparator.py:2906
 msgid "Difference Value"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2887
+#: src/plotting/Scenario_comparator.py:2908
 msgid " (Aggregated)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2887
+#: src/plotting/Scenario_comparator.py:2908
 msgid " (Decomposed)"
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2890
+#: src/plotting/Scenario_comparator.py:2911
 msgid "Attribute Differences for "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2890
+#: src/plotting/Scenario_comparator.py:2911
 msgid " vs "
 msgstr ""
 
-#: src/plotting/Scenario_comparator.py:2891
+#: src/plotting/Scenario_comparator.py:2912
 msgid "Scenario/Run"
 msgstr ""
 
@@ -829,16 +904,20 @@ msgstr ""
 msgid "Preference value"
 msgstr ""
 
-#: src/plotting/slide_maker.py:410
+#: src/plotting/slide_maker.py:424
 msgid "Baseline + "
 msgstr ""
 
-#: src/plotting/slide_maker.py:411
+#: src/plotting/slide_maker.py:425
 msgid "Maßnahmen "
 msgstr ""
 
-#: src/plotting/slide_maker.py:412
+#: src/plotting/slide_maker.py:426
 msgid "Maßnahme "
+msgstr ""
+
+#: src/plotting/sandbox/plot_network.py:12 src/plotting/sandbox/test_l18n.py:10
+msgid "Test"
 msgstr ""
 
 msgid "attitude"
@@ -1018,6 +1097,9 @@ msgstr ""
 msgid "Subsidies"
 msgstr ""
 
+msgid "Loans"
+msgstr ""
+
 msgid "DEZ_Basislinie"
 msgstr ""
 
@@ -1097,4 +1179,31 @@ msgid "Preissenkung-Risikokampagne"
 msgstr ""
 
 msgid "Wärmeliefervertrag-Ersatzmandate"
+msgstr ""
+
+msgid "Kredite"
+msgstr ""
+
+msgid "Szenario Zielerfüllung"
+msgstr ""
+
+msgid "Overloaded"
+msgstr ""
+
+msgid "Plumber consulted"
+msgstr ""
+
+msgid "No suitables"
+msgstr ""
+
+msgid "No affordables"
+msgstr ""
+
+msgid "No plumber found"
+msgstr ""
+
+msgid "Long waiting time"
+msgstr ""
+
+msgid "Cannot afford final"
 msgstr ""
