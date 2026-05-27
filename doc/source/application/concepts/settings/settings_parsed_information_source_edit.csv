@@ -1,0 +1,5 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+distortion,Abstract,float,0.5,Information search,The base factor for distorting a heating systems true parameters to simulate imperfect information.,
+uncertainty_lower,Abstract,float,0.2,Information search,The lower bound for the uncertainty range multiplier used in relative agreement algorithms.,
+uncertainty_upper,Abstract,float,0.5,Information search,The upper bound for the uncertainty range multiplier used in relative agreement algorithms.,
+list,None,list,"[""internet"" ""magazine"" ""plumber"" ""neighbours"" ""energy_advisor""]'",Information search,Defines the complete list of available information sources in the model.,

@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+cons_duration,Week,integer,1,Energy Advisor behaviour,The duration in weeks for an Energy Advisors consultation job.,

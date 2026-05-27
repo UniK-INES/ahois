@@ -1,0 +1,3 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+Heating_system_heat_pump,Percent,integer,80,Scenario fulfillment,"Target or ""reference"" market shares (in percent) for heating systems for each specific scenario.",
+Heating_system_pellet,Percent,integer,20,Scenario fulfillment,"Target or ""reference"" market shares (in percent) for heating systems for each specific scenario.",

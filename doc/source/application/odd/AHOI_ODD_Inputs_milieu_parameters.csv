@@ -1,0 +1,106 @@
+Input Name,Entity,Type: Unit,Default,Source
+pref_effort_a,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1.2576; 
+Leading: 1.6; 
+Mainstream: 1.4432; 
+Traditionals: 1.1314; 
+Hedonists: 0.8127",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_effort_b,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 0.1642; 
+Leading: 0.1778; 
+Mainstream: 0.1968; 
+Traditionals: 0.44; 
+Hedonists: 0.0428",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_fuel_cost_a,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1.0422; 
+Leading: 1.9028; 
+Mainstream: 2.5136; 
+Traditionals: 1.9855; 
+Hedonists: 0.8127",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_fuel_cost_b,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 0.1564; 
+Leading: 0.2114; 
+Mainstream: 0.3107; 
+Traditionals: 0.56; 
+Hedonists: 0.0428",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_emissions_a,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 0.9783; 
+Leading: 1.5897; 
+Mainstream: 1.8605; 
+Traditionals: 0.4519; 
+Hedonists: 0.2822",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_emissions_b,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 0.1925; 
+Leading: 0.3256; 
+Mainstream: 0.5875; 
+Traditionals: 0.3012; 
+Hedonists: 0.0843",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_price_a,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1.0422; 
+Leading: 1.9028; 
+Mainstream: 2.5136; 
+Traditionals: 1.9855; 
+Hedonists: 0.8127",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_price_b,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 0.1564; 
+Leading: 0.2114; 
+Mainstream: 0.3107; 
+Traditionals: 0.56; 
+Hedonists: 0.0428",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_source_internet,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 3.37; 
+Mainstream: 1.21; 
+Traditionals: 1.7; 
+Hedonists: 3.45",Beta parameters fited to the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_source_magazine,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 1.76; 
+Mainstream: 1.31; 
+Traditionals: 1.2; 
+Hedonists: 2.18",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_source_plumber,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 2.2; 
+Mainstream: 1.97; 
+Traditionals: 1.9; 
+Hedonists: 2.27",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_source_neighbour,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 2.58; 
+Mainstream: 2.24; 
+Traditionals: 1.8; 
+Hedonists: 2.64",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+pref_source_energy_advisor,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 1.46; 
+Mainstream: 1.33; 
+Traditionals: 1.4; 
+Hedonists: 1.64",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+s_lifetime,:py:class:`~modules.Agent_properties.Milieu`,Integer: Weeks,"Generalized: 104; 
+Leading: 208; 
+Mainstream: 156; 
+Traditionals: 104; 
+Hedonists: 0",Calibration parameter based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+tpb_attitude,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.8; 
+Mainstream: 0.6; 
+Traditionals: 0.5; 
+Hedonists: 0.9",Calibration parameter based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+tpb_social,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.5; 
+Mainstream: 0.7; 
+Traditionals: 0.6; 
+Hedonists: 0.4",Calibration parameter based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+tpb_control,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.9; 
+Mainstream: 1; 
+Traditionals: 1; 
+Hedonists: 0.8",Calibration parameter based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+ra_exposure_leading,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.74; 
+Mainstream: 0.83; 
+Traditionals: 0.75; 
+Hedonists: 0.78",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+ra_exposure_mainstream,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.83; 
+Mainstream: 0.73; 
+Traditionals: 0.76; 
+Hedonists: 0.65",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+ra_exposure_traditionals,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.73; 
+Mainstream: 0.83; 
+Traditionals: 0.74; 
+Hedonists: 0.75",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+ra_exposure_hedonists,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,"Generalized: 1; 
+Leading: 0.83; 
+Mainstream: 0.37; 
+Traditionals: 0.28; 
+Hedonists: 0.8",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).

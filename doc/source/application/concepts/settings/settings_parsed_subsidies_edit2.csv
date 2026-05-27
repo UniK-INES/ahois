@@ -1,0 +1,10 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+district,Ratio,float,0.3,Subsidy initialization,Subsidy rate for district heating networks.,
+heat_pump,Ratio,float,0.3,Subsidy initialization,Subsidy rate for air-source heat pumps.,
+heat_pump_brine,Ratio,float,0.3,Subsidy initialization,Subsidy rate for brine-source heat pumps.,
+pellet,Ratio,float,0.3,Subsidy initialization,Subsidy rate for pellet heating systems.,
+network_local_hot,Ratio,float,0.3,Subsidy initialization,Subsidy rate for local hot networks.,
+GP_Joule,Ratio,float,0.3,Subsidy initialization,Subsidy rate for the GP Joule heating system.,
+climate_speed,Ratio,float,0.2,Subsidy initialization,An additional subsidy bonus for early replacement of fossil fuel systems.,
+income,Ratio,float,0.3,Subsidy initialization,An additional subsidy bonus for low-income households.,
+efficiency,Ratio,float,0.05,Subsidy initialization,An additional subsidy bonus for achieving a certain efficiency standard.,

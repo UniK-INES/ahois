@@ -1,0 +1,41 @@
+﻿RNG,File,Function,Process,Algorithm,Annotation
+model_init,Model.py,Prototype_Model.__init__,Defines Houseowner's readiness to take loans,PCG64,Binary decision
+model_init,Model.py,Prototype_Model.generate_heating_system,Chooses a heating system class to generate next,PCG64,List of systems
+model_init,Model.py,Prototype_Model.generate_clipped_age,Generates the age of a generated heating system,PCG64,Clipped normal distribution
+model_init,Model.py,Prototype_Model.distribute_heating_systems,Shuffles houses eligible for heat pump installation during initialisation,PCG64,List of houses
+model_init,Model.py,Prototype_Model.distribute_heating_systems,Shuffles houses eligible for ssytems other than heat pumps installation during initialisation,PCG64,List of houses
+model_init,Model.py,Prototype_Model.define_income,Generates the income of an agent,PCG64,Clipped normal distribution
+model_init,Model.py,Prototype_Model.define_risk_tolerance,Generates the risk tolerance of an agent,PCG64,Beta distribution
+model_run,Scenario.py,information_campaign,"Chooses a Houseowner to add knowledge during ""Direct informing"" campaign",PCG64,List of Houseowners
+model_run,Scenario.py,information_campaign,"Chooses a Houseowner to consult during ""Energy_advisor"" campaign",PCG64,List of Houseowners
+model_run,Scenario.py,information_campaign,"Chooses an EnergyAdvisor to perform a consultation during ""Risk_targeting"" campaign",PCG64,List of EnergyAdvisors
+model_run,Scenario.py,information_campaign,"Chooses a Houseowner to mitigate risk during ""Risk_targeting"" campaign",PCG64,List of Houseowners
+model_run,Model.py,Prototype_Model.update_ownership,Chooses a Milieu for a newly generated Houseowner during relocation,PCG64,List of Milieus
+house_init,House.py,House.generate_energy_demand_distribution,Generates the area of a House,PCG64,Backup method
+house_init,House.py,House.generate_area_distribution,Generates the energy demand of a House,PCG64,Backup method
+houseowner_run,Houseowner.py,Houseowner.step,Defines whether a Houseowner will contact another agent when idle,PCG64,Binary decision
+houseowner_run,Houseowner.py,Houseowner.get_data,Chooses an information source during search,PCG64,List of information sources
+houseowner_run,Houseowner.py,Houseowner.compare_hs,Defines the final desired system if there are two system with close ratings,PCG64,List of heating systems
+houseowner_run,Houseowner.py,Houseowner.meet_agent,Chooses a neighbour in the network to meet when idle,PCG64,List of network neighbours
+houseowner_run,Houseowner.py,Houseowner.ask_neighbours,Shuffles the list of network predecessors to before asking,PCG64,List of network predecessors
+houseowner_run,Houseowner.py,Houseowner.share_decision,Shuffles the list of network sucessors to before propagating,PCG64,List of network sucessors
+houseowner_run,Houseowner.py,Houseowner.share_decision,Defines uncertainty values during information exchange with sucessors,PCG64,Uniform distribution
+houseowner_run,Houseowner.py,Houseowner.share_decision,Chooses a specific successor from the network,PCG64,List of network sucessors
+houseowner_run,Houseowner.py,Houseowner.share_knowledge,Defines uncertainty values during information exchange with neighbours,PCG64,Uniform distribution
+houseowner_run,Houseowner.py,Houseowner.find_plumber,Chooses a plumber from the list of plumbers,PCG64,List of Plumbers
+houseowner_run,Houseowner.py,Houseowner.find_plumber_with_desired_hs,Chooses an energy advisor from the list of plumbers,PCG64,List of Plumbers
+houseowner_run,Houseowner.py,Houseowner.find_energy_advisor,Chooses a plumber from the list of energy advisors,PCG64,List of EnergyAdvisors
+plumber_run,Plumber.py,Plumber.__init__,Defines uncertainty values for plumber knowledge during initialisation,PCG64,Uniform distribution
+plumber_run,Plumber.py,Plumber.training,Chooses a random system to train about if the training is not specialised,PCG64,List of heating systems
+plumber_run,Plumber.py,Plumber.training,Defines uncertainty values for plumber knowledge during training,PCG64,Uniform distribution
+milieu_init,Agent_properties.py,Milieu.generate_TPB_weights,Defines the attitude importance for the heating system evaluation,PCG64,Uniform distribution
+milieu_init,Agent_properties.py,Milieu.generate_TPB_weights,Defines the social norm importance for the heating system evaluation,PCG64,Uniform distribution
+milieu_init,Agent_properties.py,Milieu.generate_TPB_weights,Defines the perceived behavioural control importance for the heating system evaluation,PCG64,Uniform distribution
+milieu_init,Agent_properties.py,Milieu.generate_preferences,Generate a preference value,PCG64,Beta distribution
+milieu_init,Agent_properties.py,Information_source_preferences.__init__,Generates information sources preferences,PCG64,Dirichlet distribution
+heating_init,Heating_systems.py,Heating_system.generate_lifetime,Generate the total lifetime of a heating system,PCG64,"Integers is main, Weibull is outommented"
+information_source_run,Information_sources.py,Information_source.data_search,Chooses a heating system to return to a Houseowner calling get_data,PCG64,List of heating systems
+information_source_run,Information_sources.py,Information_source.data_search,Defines deviation of the perceived heating system values from their true values for a Houseowner calling get_data,PCG64,Uniform distribution
+information_source_run,Information_sources.py,Information_source.data_search,Defines uncertainty values of the attributes of a heating system for a Houseowner calling get_data,PCG64,Uniform distribution
+information_source_run,Information_sources.py,generate_imperfect_system,Defines deviation of the perceived heating system values from their true values for the generated system,PCG64,Uniform distribution
+information_source_run,Information_sources.py,generate_imperfect_system,Defines uncertainty values of the attributes of a heating system for the generated system,PCG64,Uniform distribution

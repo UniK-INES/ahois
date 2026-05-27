@@ -16,3 +16,4 @@ APIs
    api/plotting
    api/server
    api/tests
+   api/modules

@@ -1,0 +1,12 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+aspiration,Abstract,integer,1,Plumber behaviour,Included for compatibility with the data collector but are not used in the Plumber agents core logic.,
+cognitive_resource,Abstract,integer,20,Plumber behaviour,Included for compatibility with the data collector but are not used in the Plumber agents core logic.,
+hs_budget,Week,integer,200,Plumber behaviour,Included for compatibility with the data collector but are not used in the Plumber agents core logic.,
+cons_duration,Week,integer,1,Plumber behaviour,The base duration in weeks for a Plumbers consultation job.,
+ins_duration,Week,integer,1,Plumber behaviour,The base duration in weeks for a Plumbers installation job before system-specific time is added.,
+share_systems,None,boolean, true,Plumber behaviour,If true the Plumber will share information about their other clients installed systems during a consultation.,
+assume_area_avg,Sq.m.,integer,106,Plumber behaviour,The average house area (m²) the Plumber assumes when calculating default system parameters for their knowledge base.,
+assume_energydemand_avg,kWh/m^2/a,integer,147,Plumber behaviour,The average energy demand (kWh/m²/a) the Plumber assumes for default calculations.,
+assume_heatload_avg,kWh,integer,19,Plumber behaviour,The average heat load (kW) the Plumber assumes for default calculations.,
+insulation_threshold,kWh/m^2/a,integer,180,Plumber behaviour,The energy demand threshold (kWh/m²/a). Houses exceeding this are considered poorly insulated.,
+insulation_list,None,list,"[ ""Heating_system_heat_pump"", ""Heating_system_heat_pump_brine""]",Plumber behaviour,A list of heating systems that are considered infeasible or not recommended for houses exceeding the insulation_threshold.,

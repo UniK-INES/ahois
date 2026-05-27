@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+ownership_change_probability,Probability,float,0.001,Model behaviour,The weekly probability that a houseowner agent is replaced by a new one simulating a change in home ownership. simulating a change in home ownership.,
+aspiration,Abstract,integer,1,Houseowner behaviour,The initial value for the agents aspiration counter which determines when they are satisfied with the information they have gathered. which determines when they are satisfied with the information they have gathered.,
+overload,Abstract,integer,2,Houseowner behaviour,The initial value for the agents information overload counter. If it reaches zero during information search the process stops. the process stops.,
+budget_limit,Week,integer,104,Houseowner behaviour,The maximum budget an agent can accumulate expressed as a multiple of their weekly income (e.g. 104 weeks of income). expressed as a multiple of their weekly income (e.g. 104 weeks of income).,
+risk_tolerance_std,Abstract,float,0.19,Houseowner behaviour,The standard deviation used for generating randomized risk tolerance values for agents if random_risk_tolerance is true.,
+random_risk_tolerance,,boolean, true,Houseowner behaviour,If true each agents risk tolerance is a random value drawn from a distribution; if false it is a fixed value based on their milieu. each agents risk tolerance is a random value drawn from a distribution; if false it is a fixed value based on their milieu.,
+loan_taking_probability,Probability,float,0.32,Houseowner behaviour,The probability that a newly created agent will be willing to take out a loan.,
+tpb_weights_std,None,list, [],Houseowner behaviour,A list of three floats representing the standard deviations for randomizing the Theory of Planned Behaviour weights.,

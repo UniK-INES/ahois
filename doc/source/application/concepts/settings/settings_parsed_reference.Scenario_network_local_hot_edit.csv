@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+Heating_system_network_local,Percent,integer,100,Scenario fulfillment,"Target or ""reference"" market shares (in percent) for heating systems for each specific scenario.",

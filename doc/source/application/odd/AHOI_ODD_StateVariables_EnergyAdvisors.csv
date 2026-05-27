@@ -1,0 +1,15 @@
+Variable Name,Type and unit,Scale,Meaning ,Name in code
+Active Jobs,Dictionary,Nominal,A dictionary of jobs the advisor is currently performing.,active_jobs
+Active Jobs Counter,Integer,Ratio,The current number of active jobs.,active_jobs_counter
+Completed Jobs,Dictionary,Nominal,A record of jobs that the advisor has completed.,completed_jobs
+Evaluation Parameters,List of Strings,Nominal,The list of attributes the advisor considers when evaluating a heating system.,hs_evaluation_params
+Heating Preferences,Heating preferences (Object),Nominal,The preferences and weights used by the advisor to evaluate heating systems.,heating_preferences
+Infeasible Systems,List of Strings,Nominal,A list of heating system names that the advisor considers technically infeasible.,infeasible
+Known Heating Systems,List of Objects,Nominal,A list of heating systems the advisor is knowledgeable about.,known_hs
+Known Subsidies,List of Objects,Nominal,A list of financial subsidies the advisor is aware of.,known_subsidies
+Known Subsidies by HS,Dictionary,Nominal,"Known subsidies, organized by the heating systems they apply to.",known_subsidies_by_hs
+Max Concurrent Jobs,Integer,Ratio,The maximum number of jobs the advisor can handle simultaneously.,max_concurrent_jobs
+Offered Services,List of Objects,Nominal,"A list of service objects (e.g., Consultation) the advisor offers.",Services
+Perceived Uncertainty,Dictionary,Ratio,A mapping of heating system types to the advisor's perceived uncertainty values.,perceived_uncertainty
+Steps Since Training,Integer (steps),Ratio,The number of simulation steps that have passed since the advisor's last training.,steps_after_training
+Unique ID,Integer,Nominal,A unique identifier for the agent.,unique_id

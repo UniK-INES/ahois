@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+groups,None,list,"[""Generalized"" ""Leading"" ""Mainstream"" ""Traditionals"" ""Hedonists""]",Model initialization,Defines the complete list of milieu types used to categorize agents in the model.,

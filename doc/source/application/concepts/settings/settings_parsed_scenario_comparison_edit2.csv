@@ -1,0 +1,5 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+active,None,boolean, false,Visualization,If true uses scenario_comparator.py instead of plot.py for visualization.,
+scenarios,None,list, [],Visualization,A list of scenario names to be included in the comparison.,
+files_prefixes,None,list, [],Visualization,A list of file prefixes to be included in the comparison.,
+run_ids,None,list, [],Visualization,A list of run_ids corresponding to the specific simulation runs to be compared.,

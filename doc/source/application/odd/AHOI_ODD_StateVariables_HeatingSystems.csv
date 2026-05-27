@@ -1,0 +1,21 @@
+Variable Name,Type and unit,Scale,Meaning ,Name in code
+Availability,Boolean / Object,Nominal,The availability status of the heating system technology.,availability
+Breakdown Status,Boolean,Nominal,A flag indicating if the system has broken down (True) or not (False).,breakdown
+Fuel Price Contract Term,Integer (years),Ratio,The duration of the contract for the fuel price.,fuel_price_contract_term
+Heat Delivery Contract,Object,Nominal,"Represents the contract for heat delivery (e.g., for district heating).",heat_delivery_contract
+Loan,Float ,Ratio,The amount of loan taken for the investment.,loan
+Parameters Table,Pandas Series,Nominal,The row from the main parameters table corresponding to the system type.,table
+Payback Period,Float (years),Ratio,The calculated payback time for the investment.,payback
+Power,Float (kW),Ratio,The power output of the heating system.,power
+Rating Parameters,Dictionary,Ratio,"Core parameters (e.g., cost, emissions), each with a point value and an uncertainty.",params
+Remaining Investment,Float ,Ratio,The remaining investment cost to be paid back.,investment
+Riskiness,Float,Ratio,"A calculated score [0, 1] representing the perceived riskiness of installation.",riskiness
+Subsidy Status,Boolean,Nominal,A flag indicating if the investment was subsidised.,subsidised
+System Age,Integer (weeks),Ratio,The number of weeks since the system was installed.,age
+Total Energy Demand,Float (kWh),Ratio,The house- and system-specific total energy demand.,total_energy_demand
+TPB: Attitude Rating,Float,Interval,An agent's calculated attitude (rating) towards this system.,rating
+TPB: Neighbours' Opinions,Dictionary,Nominal,A collection of opinions from neighbouring agents about the system.,neighbours_opinions
+TPB: Perceived Behavioural Control,Float,Interval,The agent's perception of their ability to install and operate the system.,behavioural_control
+TPB: Social Norm,Float,Interval,The perceived social pressure or norm regarding the system.,social_norm
+Uncertainty Factors,Dictionary,Nominal,A mapping of heating system types to their associated uncertainty factors.,uncertainty_factors
+Unique ID,UUID,Nominal,A unique identifier for the system instance.,unique_id

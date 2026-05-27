@@ -1,0 +1,5 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+mean_savings,Euro,integer,178,Houseowner behaviour,The mean weekly savings (income) for agents in the Leading milieu.,
+stdev_savings,Euro,integer,66,Houseowner behaviour,The standard deviation of weekly savings for agents in the Leading milieu.,
+risk_tolerance,Abstract,float,1,Houseowner behaviour,The base risk tolerance (on a scale of 0 to 1) for agents in the Leading milieu.,
+cognitive_resource,Abstract,integer,5,Houseowner behaviour,The base cognitive resource (effort points per step) for agents in the Leading milieu.,

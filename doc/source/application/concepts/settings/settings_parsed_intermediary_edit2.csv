@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+job_duration,Week,integer,1,Intermediary behaviour,A general default duration in weeks for any intermediary job.,

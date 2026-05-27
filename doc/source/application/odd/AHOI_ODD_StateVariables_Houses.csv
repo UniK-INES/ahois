@@ -1,0 +1,12 @@
+Variable Name,Type and unit,Scale,Meaning ,Name in code
+Area,Float ($m^2$),Ratio,The living area of the house in square meters.,area
+Construction Year,Integer (year),Interval,The year the house was built.,year
+CRS,String / pyproj.CRS,Nominal,The coordinate reference system of the geometry.,crs
+Current Heating,Heating system (Object),Nominal,The heating system currently installed in the house.,current_heating
+Energy Demand,Float ($kWh/sq.m/year$),Ratio,The annual energy demand for heating per squared meter.,energy_demand
+Geometry,Shapely Polygon,Spatial,A polygon representing the house's geographical footprint.,geometry
+Heat Load,Float ($kW$),Ratio,The heating load of the house.,heat_load
+Houseowner,Houseowner (Agent),Nominal,The agent who owns and lives in the house.,houseowner
+Milieu,Milieu (Enum/Object),Nominal,The socio-economic milieu associated with the house's owner.,milieu
+Subarea,String,Nominal,The name of the geographical subarea where the house is located.,subarea
+Unique ID,Integer,Nominal,A unique identifier for the house.,unique_id

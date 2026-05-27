@@ -1,0 +1,5 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+mean_savings,Euro,integer,142,Houseowner behaviour,The mean weekly savings (income) for agents in the Mainstream milieu.,
+stdev_savings,Euro,integer,62,Houseowner behaviour,The standard deviation of weekly savings for agents in the Mainstream milieu.,
+risk_tolerance,Abstract,float,0.7,Houseowner behaviour,The base risk tolerance for agents in the Mainstream milieu.,
+cognitive_resource,Abstract,integer,3,Houseowner behaviour,The base cognitive resource for agents in the Mainstream milieu.,

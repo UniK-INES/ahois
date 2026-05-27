@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+heating_system_electricity,None,string," ""red""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_gas,None,string," ""blue""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_heat_pump,None,string," ""yellow""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_heat_pump_brine,None,string," ""purple""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_oil,None,string," ""black""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_pellet,None,string," ""brown""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_network_district,None,string," ""pink""",Visualization,This section defines the color-coding for creating consistent visualizations.,
+heating_system_network_local,None,string," ""orange""",Visualization,This section defines the color-coding for creating consistent visualizations.,

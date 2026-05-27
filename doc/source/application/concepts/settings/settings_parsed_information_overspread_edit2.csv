@@ -1,0 +1,6 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+selected_option,None,string,"""subsidy_to_observe""",Visualization,Defines which parameter is currently being observed for MESA portrayal (subsidy_to_observe or known_hs_to_observe).,
+subsidies_list,None,list,"[""Climate_speed"", ""Heat_pump"", ""Income""]",Visualization,A list of specific subsidies available for observation in a visualization.,
+subsidies_current,None,string,"""Climate_speed""",Visualization,The specific subsidy from the list that is currently selected for observation.,
+known_hs_list,None,list,"[""Heating_system_oil"", ""Heating_system_gas"", ""Heating_system_heat_pump"", ""Heating_system_electricity"", ""Heating_system_pellet"", ""Heating_system_network_district"", ""Heating_system_network_local"", ""Heating_system_heat_pump_brine"", ""Heating_system_GP_Joule"",]",Visualization,A list of heating systems given as initial knowledge to certain agents at the start of the simulation.,
+known_hs_current,None,string,"""Heating_system_heat_pump""",Visualization,The specific heating system from the list that is currently selected for observation.,

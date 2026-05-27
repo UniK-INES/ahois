@@ -1,0 +1,5 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+mean_savings,Euro,integer,158,Houseowner behaviour,The mean weekly savings (income) for agents in the Hedonists milieu.,
+stdev_savings,Euro,integer,58,Houseowner behaviour,The standard deviation of weekly savings for agents in the Hedonists milieu.,
+risk_tolerance,Abstract,float,0.6,Houseowner behaviour,The base risk tolerance for agents in the Hedonists milieu.,
+cognitive_resource,Abstract,integer,2,Houseowner behaviour,The base cognitive resource for agents in the Hedonists milieu.,

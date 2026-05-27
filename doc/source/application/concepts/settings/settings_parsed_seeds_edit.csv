@@ -1,0 +1,9 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+model_init,Abstract,integer,0,Modeil initialization,The random seed for initializing the models environment and agent population.,
+model_run,Abstract,integer,0,Model runs,The random seed for stochastic processes operated by the model during a run.,
+house_init,Abstract,integer,0,House initialization,The random seed for any stochastic elements in the initialization of House agents.,
+milieu_init,Abstract,integer,0,Agent initialization,The random seed for initalizing agent-specific properties.,
+heating_init,Abstract,integer,0,Agent initialization,The random seed for any stochastic elements in the initialization of Heating System objects.,
+information_source_run,Abstract,integer,0,Information gathering,The random seed for stochastic events in the information gathering process.,
+houseowner_run,Abstract,integer,0,Houseowner behaviour,The random seed for all stochastic decisions made by Houseowner agents during a simulation step.,
+plumber_run,Abstract,integer,0,Plumber behaviour,The random seed for stochastic events related to Plumber agents.,

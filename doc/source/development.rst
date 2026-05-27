@@ -333,7 +333,7 @@ Alternatively:
 		:caption: Windows
 
 		cd <path to ahois-pro>\doc>
-		sphinx-apidoc.exe -o .\source\application\api\ ..\scr\ --templatedir .\source\_templates
+		sphinx-apidoc.exe -o .\source\application\api\ ..\src\ --templatedir .\source\_templates
 	
 	
 	.. code-block:: sh

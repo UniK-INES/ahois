@@ -1,0 +1,67 @@
+Input Name,Entity,Type: Unit,Default,Source
+Lifetime before breakdown,:py:class:`~modules.Heating_systems.Heating_system`,Integer: Weeks,"Oil: 936/1144;
+Gas: 936/1144;
+Heat Pump:  936/1352;
+Heat Pump Brine: 1144/1560; 
+Pellet: 1144/1560; 
+District Network: 1352/1872; 
+Local Network: 1144/1560;","Ranges based on data from `The Association of German Engineers (VDI) <https://www.vdi.de/mitgliedschaft/vdi-richtlinien/details/vdi-handbuch-waerme-heiztechnik>`_ , validated through Validation Workshop."
+Installation Time,:py:class:`~modules.Heating_systems.Heating_system`,Integer: Weeks,"Oil, Gas, Heat Pump, District Network, Local Network: 1; 
+Heat Pump Brine, Pellet: 2","Calculations based on data from `The Association of German Engineers (VDI) <https://www.vdi.de/mitgliedschaft/vdi-richtlinien/details/vdi-handbuch-waerme-heiztechnik>`_ , validated through Validation Workshop."
+Operation Effort,:py:class:`~modules.Heating_systems.Heating_system`,Integer: Hours/year,"Oil, Gas: 10; 
+Heat Pump, Heat Pump Brine: 5; 
+Pellet: 20; 
+District Network, Local Network: 0","Calculations based on data from `The Association of German Engineers (VDI) <https://www.vdi.de/mitgliedschaft/vdi-richtlinien/details/vdi-handbuch-waerme-heiztechnik>`_ , validated through Validation Workshop."
+Fuel Cost,:py:class:`~modules.Heating_systems.Heating_system`,Float: EUR/kWh,"Oil: 0.1324; 
+Gas: 0.1073; 
+Heat Pump, Heat Pump Brine: 0.1246; 
+Pellet: 0.081; 
+District Network, Local Network: 0.1075","Prices for 2025 from the open sources e.g. from `DEPV <https://www.depv.de/mediathek/d/winter-pelletpreis-auf-normalem-niveau/#:~:text=Derzeit%20zahlen%20Pelletnutzer%20f%C3%BCr%20eine,kostet%20demnach%206%2C13%20Cent.>`_"
+Emissions,:py:class:`~modules.Heating_systems.Heating_system`,Integer: gCO2eq/kWh,"Oil: 310; 
+Gas: 240; 
+Heat Pump,  Heat Pump Brine:  560; 
+Pellet: 40; 
+District Network, Local Network:  120 ","For general fuel see `BAFA <https://www.bafa.de/SharedDocs/Downloads/DE/Energie/eew_infoblatt_co2_faktoren_2025.pdf?__blob=publicationFile&v=4>`_, for grid based options see `Stadtwerke Kiel <https://www.stadtwerke-kiel.de/fileadmin/user_upload/Medien/Dokumente/Produkte/Fernwaerme/stadtwerke-kiel-co2-bescheingung-fernwaerme-verbundnetz.pdf>`_"
+Price,:py:class:`~modules.Heating_systems.Heating_system`,Float: EUR,"Oil: 1202.6; 
+Gas: 905.26; 
+Heat Pump, Pellet:  2314; 
+Heat Pump Brine:  5576.4; 
+Pellet:  4333.6; 
+District Network, Local Network:  694.4","Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Factor Area,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,"Oil: -0.536; 
+Gas: -0.518; 
+Heat Pump:  -0.58; 
+Heat Pump Brine:  -0.66; 
+Pellet:  -0.63; 
+District Network, Local Network:  -0.51","Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Installation Effort,:py:class:`~modules.Heating_systems.Heating_system`,Integer: Hours,"Oil: 24; 
+Gas: 30; 
+Heat Pump: 20; 
+Heat Pump Brine,  Pellet: 32; 
+District Network, Local Network:  16","Calculations based on data from `The Association of German Engineers (VDI) <https://www.vdi.de/mitgliedschaft/vdi-richtlinien/details/vdi-handbuch-waerme-heiztechnik>`_ , validated through Validation Workshop."
+Factor OPEX,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,"Oil: 0.035; 
+Gas, Pellet:  0.03; 
+Heat Pump:  0.025; 
+Heat Pump Brine,  District Network, Local Network:  0.02","Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Factor Energy,:py:class:`~modules.Heating_systems.Heating_system`,List (String): Abstract,Varies by system type (see CSV for specific lists),"Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Factor Oppendorf,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,"District Network, Local Network:  1; 
+All Others: 1.004",`To be added <https://example.com>`_
+Price Index,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,All systems: 1.613,`To be added <https://example.com>`_
+Sidecosts Index,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,All systems: 1.15,`To be added <https://example.com>`_
+Heat Load Price,:py:class:`~modules.Heating_systems.Heating_system`,Float: EUR,"Oil, Gas: 3304.8; 
+Heat Pump:  3891.5; 
+Heat Pump Brine:  4515.6; 
+Pellet:  4004.9; 
+District Network, Local Network:  2439.4","Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Heat Load Factor,:py:class:`~modules.Heating_systems.Heating_system`,Float: Abstract,"Oil, Gas: -0.673; 
+Heat Pump:  -0.475; 
+Heat Pump Brine:  -0.46; 
+Pellet:  -0.449; 
+District Network, Local Network:  -0.53","Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Heat Load Correction,:py:class:`~modules.Heating_systems.Heating_system`,Integer: Abstract,1 (for all systems),"Calculations for decentralized options from `EWI <https://www.ewi.uni-koeln.de/cms/wp-content/uploads/2023/02/Dokumentation_EWI_Waermegestehungskosten_Tool.pdf>`_, for district and local network see `KEA-BW (starting with Technikkatalog etc) <https://www.kea-bw.de/waermewende/angebote/downloads#c13217-content-8>`_"
+Age Min/Max/Mean/SD,:py:class:`~modules.Heating_systems.Heating_system`,Integer/Float: Year,"Oil: 1995/13.37; 
+Gas: 2007/10.74; 
+Heat Pump:  2014/5.24; 
+Heat Pump Brine:  2016/4.31; 
+Pellet:  2015/5.09; 
+District Network, Local Network:  2013/7.91",Survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).

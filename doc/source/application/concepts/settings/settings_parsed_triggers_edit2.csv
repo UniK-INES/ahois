@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+adoptive_trigger,None,string," ""Heating_system_heat_pump""",Triggers,"Specifies which heating system when installed might trigger an ""adoptive"" social influence on neighbours.",

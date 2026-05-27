@@ -1,0 +1,8 @@
+Variable Name,Type and unit,Scale,Meaning ,Name in code
+Distortion Factor,Float (unitless),Ratio,The base factor used for distorting a heating system's true parameters.,distortion
+Information Content,List of Strings,Nominal,A list of heating system names that this source can provide information on.,content
+Known Subsidies,Dictionary,Nominal,Stores information about subsidies for specific heating systems known by this source.,known_subsidies_by_hs
+Search Cost,Integer (cognitive points),Ratio,The cognitive resource cost for an agent to perform one search action.,cost
+System Skewedness,Dictionary,Interval,The inherent positive or negative bias of the source towards specific heating system types.,system_skewedness
+Uncertainty Lower Bound,Float (unitless),Ratio,The lower bound for the uncertainty range applied to parameters.,uncertainty_lower
+Uncertainty Upper Bound,Float (unitless),Ratio,The upper bound for the uncertainty range applied to parameters.,uncertainty_upper

@@ -1,0 +1,49 @@
+Variable Name,Type and unit,Scale,Meaning ,Name in code
+Active Trigger,Trigger (Object),Nominal,The event that initiated the current decision-making process.,active_trigger
+Aspiration Value,Integer (options),Ratio,The number of options an agent needs to feel satisfied with their information search.,aspiration_value
+Attribute Ratings,Dictionary,Interval,Accumulated satisfaction scores for each system parameter.,attribute_ratings
+Budget Limit,Float,Ratio,The maximum amount the agent is willing or able to invest in a heating system.,budget_limit
+Cognitive Overload Threshold,Float,Ratio,The threshold at which the agent experiences cognitive overload.,overload_value
+Cognitive Resource,Integer (points),Ratio,The amount of effort the agent can allocate to decision-making in a step.,cognitive_resource
+Comprehensive Metrics,Dictionary,Ratio,Attribute-wise evaluations of heating systems.,comprehensive_metrics
+Consultation Ordered,Boolean,Nominal,A flag indicating if a consultation has been ordered.,consultation_ordered
+Consulted by Advisor,Boolean,Nominal,A flag indicating if the agent has been consulted by an energy advisor.,consulted_by_energy_advisor
+CRS,String,Nominal,The coordinate reference system for the agent's geometry.,crs
+Current Breakpoint,String,Nominal,The specific point within a stage the agent is at.,current_breakpoint
+Current Stage,String,Nominal,"The agent's current stage in the decision-making process (e.g., ""Awareness"").",current_stage
+Desired Heating System,Heating system (Object),Nominal,The heating system the agent currently desires to install.,desired_hs
+Energy Advisor,EnergyAdvisor (Object),Nominal,A reference to the assigned energy advisor agent.,energy_advisor
+Geometry,Shapely Polygon,Spatial,"The geographic location of the agent, used for social network generation.",geometry
+Heating Preferences,Heating preferences (Object),Nominal,The agent's specific preferences for different heating system attributes.,heating_preferences
+Heating System Budget,Float,Ratio,The amount of money the houseowner has available to spend on a heating system.,hs_budget
+House,House (Object),Nominal,The House agent associated with the houseowner.,house
+Income,Integer,Ratio,"The amount of income the agent receives at each step, added to the budget.",income
+Infeasible Systems,List of Strings,Nominal,Heating systems that are technically not feasible for the agent's house.,infeasible
+Installation Ordered,Boolean,Nominal,A flag indicating if a system installation has been ordered.,installation_ordered
+Installed Once,Boolean,Nominal,A flag indicating if the agent has replaced their system at least once.,installed_once
+Known Heating Systems,List of Objects,Nominal,Heating systems the agent is aware of.,known_hs
+Known Subsidies,Dictionary,Nominal,Maps heating systems to subsidies the agent is aware of.,known_subsidies_by_hs
+Loan Taking Willingness,Boolean,Nominal,Indicates if the agent would consider taking a loan for a new system.,loan_taking
+Milieu,Milieu (Object),Nominal,"The agent's socio-cognitive profile, containing preferences and weights.",milieu_data
+Milieu Type,String,Nominal,"The name of the specific socio-cognitive profile (e.g., ""Mainstream"").",milieu_type
+Neighbours' Satisfaction,Dictionary,Interval,A dictionary mapping neighbours to their satisfaction with their heating systems.,neighbours_satisfaction
+Neighbours' Systems,Dictionary,Nominal,A dictionary of known heating systems installed by neighbours.,neighbours_systems
+Perceived Uncertainty,Dictionary,Ratio,The agent's perceived uncertainty for different heating system technologies.,perceived_uncertainty
+Personal Standard,Personal standard (Object),Nominal,Thresholds defining which heating systems are personally acceptable to the agent.,standard
+Plumber,Plumber (Object),Nominal,The identifier for the plumber agent assigned for consultation or installation.,plumber
+RA Exposure,Dictionary,Ratio,"Exposure values to other milieus, used for the relative agreement model.",ra_exposure
+Recommended Heating System,Heating system (Object),Nominal,A system recommended by an intermediary like a plumber or advisor.,recommended_hs
+Risk Tolerance,Float,Ratio,A value representing how risk-tolerant the agent is.,risk_tolerance
+Satisfaction,String,Nominal,The agent's satisfaction level with their current heating system.,satisfaction
+Source Preferences,Information source preferences (Object),Nominal,The agent's preferences for different types of information sources.,source_preferences
+Stage History,String,Nominal,A record of all decision-making stages the agent has passed through.,stage_history
+Subsidy Curiosity,Boolean,Nominal,Indicates if the agent is actively interested in learning about subsidies.,subsidy_curious
+Suitable Heating Systems,List of Objects,Nominal,A subset of known systems that meet the agent's personal standard.,suitable_hs
+TPB Evaluation Factors,Dictionary,Interval,Collects values related to TPB factors for data reporting.,evaluation_factors
+TPB Weights,Tuple of Floats,Interval,"Weights for Theory of Planned Behaviour components (attitude, social norm, PBC).",tpb_weights
+Trigger to Report,Trigger (Object),Nominal,The trigger instance that will be reported to the data collector.,trigger_to_report
+Unique ID,String,Nominal,A unique identifier for the agent.,unique_id
+Unqualified Plumbers,List of Strings,Nominal,A list of plumbers the agent will not contact again.,unqualified_plumbers
+Visited Neighbours,Set,Nominal,A set of neighbours the agent has already contacted for information.,visited_neighbours
+Waiting Time,Integer (steps),Ratio,A counter for how long the agent has been waiting for an installation.,waiting
+Weekly Expenses,Float,Ratio,The combined weekly operational and fuel costs.,weekly_expenses

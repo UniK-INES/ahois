@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath("../../src/"))
 
 autodoc_mock_imports = [
     'building_stock_model',
-    'tests.conftest',
+    """'tests.conftest',
     'server.Launch',
     'mesa_geo',
     'geopandas',
@@ -24,7 +24,7 @@ autodoc_mock_imports = [
     'plotly',
     'dill',
     'statsmodels',
-    'SALib',
+    'SALib',"""
     ]
 
 # -- Project information -----------------------------------------------------
@@ -33,7 +33,7 @@ autodoc_mock_imports = [
 project = 'AHOIS-pro'
 copyright = '2025, Ivan Digel, Sascha Holzhauer'
 author = 'Ivan Digel, Sascha Holzhauer'
-release = '0.5'
+release = '0.7'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -56,6 +56,7 @@ extensions = [
     "sphinxcontrib.excel_table",
     "sphinx_copybutton",
     "docxbuilder",
+    "sphinx_design",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

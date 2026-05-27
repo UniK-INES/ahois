@@ -1,0 +1,7 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+evaluate,Abstract,integer,1,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform the evaluate.,
+get_data,Abstract,integer,2,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform one get_data.,
+define_choice,Abstract,integer,1,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform the define_choice.,
+compare_hs,Abstract,integer,1,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform the compare_hs.,
+install,Abstract,integer,1,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform the install.,
+calculate_satisfaction,Abstract,integer,1,Houseowner behaviour,The cognitive resource cost for a Houseowner to perform the calculate_satisfaction.,

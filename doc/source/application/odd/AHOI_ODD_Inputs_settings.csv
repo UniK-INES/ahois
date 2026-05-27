@@ -1,0 +1,47 @@
+Input Name,Entity,Type: Unit,Default,Source
+aspiration,:py:class:`~agents.Houseowner.Houseowner`,Integer: -,1,Based on Aspiration Theory (e.g. see Stutzer et al. 2023 `Placeholder <https://doi.org/10.1007/978-3-031-17299-1_115>`_)
+budget_limit,:py:class:`~modules.Agent_properties.Milieu`,Integer: Weeks of Income,104,"Calculated as a savings multiplier, derived from the ratio between the median willingness-to-pay (WTP) and the average annual discretionary savings flow.  (see `Thermondo <https://www.thermondo.de/unternehmen/presse/pressemitteilungen/thermondo-teilt-umfrage-ergebnisse-und-bietet-waermepumpe-ab-76-euro-an/>`_ for WTP, `EUROSTAT <https://ec.europa.eu/eurostat/databrowser/view/nasq_10_ki__custom_18504382/default/table>`_ for savings rate, and `DESTATIS <https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Einkommen-Konsum-Lebensbedingungen/Lebensbedingungen-Armutsgefaehrdung/Tabellen/einkommen-einkommensarten-typ-2.html>`_ for net household income)"
+climate_speed,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.2,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+cognitive_resource,:py:class:`~agents.Houseowner.Houseowner`,Integer: Points/step,"Leadings: 5;
+Mainstream: 3;
+Traditionals: 4;
+Hedonists: 2",Calculation based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+district,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+efficiency,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.05,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+GP_Joule,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+heat_pump,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+heat_pump_brine,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+income,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+loan_taking_probability,:py:class:`~Model.Prototype_Model`,Float: Probability,0.32,Calculations based on `Brzeski et al. 2024 <https://think.ing.com/articles/carrot-and-stick-the-key-to-germanys-green-transition-of-the-housing-market/>`_
+mean_savings,:py:class:`~agents.Houseowner.Houseowner`,Integer: EUR/week,"Leadings: 178; 
+Mainstream: 142;
+Traditionals: 158; 
+Hedonists: 158",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+meeting_prob,:py:class:`~agents.Houseowner.Houseowner`,Float: Probability,0.57,Approximation of the share of Germans that report contacting people from their social network at least once a week based on the report of  `Drews 2019 <https://www.ipsos.com/sites/default/files/ct/news/documents/2019-08/nachbarschaft_report_germany.pdf>`_
+network_local_hot,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+number_of_energy_advisors,:py:class:`~Model.Prototype_Model`,Integer: -,5,Assumed value. Low sensitivity.
+number_of_plumbers,:py:class:`~Model.Prototype_Model`,Integer: -,5,Defined as a localized service cluster by aggregating the district's internal capacity with providers from adjacent industrial hubs obtained from `Lustfix <https://listflix.de/statistik/shk-unternehmen/>`_
+overload,:py:class:`~agents.Houseowner.Houseowner`,Integer: -,2,Assumed value. Low sensitivity.
+ownership_change_probability,:py:class:`~Model.Prototype_Model`,Float: Probability,1,Assumed value. Not used ATM.
+pellet,:py:class:`~interventions.Subsidy.Subsidy`,Float: Rate,0.3,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+risk_tolerance,:py:class:`~agents.Houseowner.Houseowner`,"Float: Abstract [0,1]","Leadings: 1.0;
+Mainstream: 0.7;
+Traditionals: 0.5;
+Hedonists: 0.6",Calculation based on general description of Milieu Groups (see `Barth et al. 2023 <https://doi.org/10.1007/978-3-658-42380-3>`_) 
+risk_tolerance_std,:py:class:`~modules.Agent_properties.Milieu`,Float: Abstract,0.19,Calculation based on `Sherman and Lindamood 2004 <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2255180>`_
+stdev_savings,:py:class:`~agents.Houseowner.Houseowner`,Integer: EUR/week,"Leadings: 66;
+Mainstream: 62;
+Traditionals: 69;
+Hedonists: 58",Calculated from the results of a survey in the district of interest (see `this paper <https://zenodo.org/records/17866768>`_).
+tpb_weights_std,:py:class:`~modules.Agent_properties.Milieu`,List: -,"[0.1, 0.1, 0.1]",Assumed value.
+income_lower_bound,:py:class:`~Model.Prototype_Model`,int,50,Assumed from Buergergeld minus food expenses
+income_higher_bound,:py:class:`~Model.Prototype_Model`,int,1000,Asssumed to be high enough to afford any possible system
+initial_meetings_share,:py:class:`~Model.Prototype_Model`,float,1.0,Assumed that agents contacted their neighbours at least once in the past.
+similarity_threshold,:py:class:`~agents.Houseowner.Houseowner`,float,1.1,Assumed value.
+availability_threshold,:py:class:`~agents.Houseowner.Houseowner`,int,104,Assumed value.
+transition_width,:py:class:`~agents.Houseowner.Houseowner`,float,0.3,"Compromise between `Bass Diffusion Model (0.1-0.2) <https://doi.org/10.1287/mnsc.15.5.215>`_, and estimations of `Lund P.  <https://doi.org/10.1016/j.enpol.2005.07.002 >`_"
+k_steep,:py:class:`~agents.Houseowner.Houseowner`,int,6,"Standard mathematical approximation of 5.89, which represents the exact difference in log-odds required for a logistic curve to transition from a 5% to a 95% activation threshold."
+x_mid,:py:class:`~agents.Houseowner.Houseowner`,float,0.25,Based on the work of `Centola et al. <https://doi.org/10.1126/science.aas8827>`_
+system_grace_period,:py:class:`~agents.Houseowner.Houseowner`,int,520,Value discussed during validation workshop.
+monetary_cap,:py:class:`~modules.Scenario.Scenario`,int,21000,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).
+percentage_cap,:py:class:`~modules.Scenario.Scenario`,float,0.7,Official data from Federal Office for Economic Affairs and Export Control (`BEG <https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html>`_).

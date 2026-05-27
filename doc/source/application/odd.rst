@@ -2,7 +2,7 @@
 ODD
 ********
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
 
 This section follows the ODD (Overview/Design principles/Details) protocol. See [1] for a motivation and further information.
 
@@ -14,367 +14,441 @@ Structural Realism'. Journal of Artificial Societies and Social Simulation 23 (2
 http://jasss.soc.surrey.ac.uk/23/2/7.html. doi: 10.18564/jasss.4259
 		
 
-Overview
-========
 
-Purpose
--------
+1. Purpose and Patterns
+=======================
 
-The purpose of the AHOIS (Agent-based Homeowner decisions on Heating System replacement) model is to simulate the decision-making processes of homeowners when replacing residential heating systems. The primary goal is to understand how the aggregation of these individual choices influences broader, system-wide outcomes such as technology diffusion rates, overall energy demand, and carbon emissions over time.
+AHOIS (Agent-based Homeowner decisions on Heating System replacement) model simulates the decision-making processes of homeowners when replacing residential heating systems. The primary purpose is to understand how the aggregation of these individual choices influences broader, system-wide outcomes such as technology diffusion rates, overall energy demand, and carbon emissions over time.
 
 To achieve this, the model investigates how homeowner decisions are driven by a combination of factors:
 
 * Personal financial situations, risk perceptions, and individual preferences of homeowners.
+* Building properties (e.g. area, energy demand, heat load).
 * External stimuli such as policy interventions, available information and infrastructure.
 * Social networks and peer influence.
 
 AHOIS serves as a virtual laboratory to explore the effects of different scenarios. It is designed to assess the effectiveness of various policy interventions and communication strategies aimed at accelerating the transition towards sustainable residential heating systems.
 
-Entities, state variables, scales
----------------------------------
+The model is expected to produce the following patterns:
 
-.. csv-table:: Building
-    :file: odd/AHOI_ODD_StateVariables.csv
-    :quote: "
-    :header-rows: 1
-    :stub-columns: 1
-    :align: left
-    :widths: 10, 15, 15, 10, 25, 25
-    :width: 100%
+1. An aggregate annual heating turnover rate observed in the German residential heating stock to match the tempo of technological replacement.
+
+2. A characteristic S-shaped diffusion curve of technology adoption.
+
+3. The emergence of spatial/network clusters representing the social influence.
+
+4. The time agents spend in each stage of the decision-making should match that found in the empirical works.
+
+2. Entities, state variables, scales
+=======================================
+The following tables contain state variables of the main entities in the ``Model``.
+
+:py:class:`~agents.Houseowner.Houseowner` agents represent the private house owners that use their houses for the living (i.e. they are not tenants or landlords).
+
+.. dropdown:: Click here to expand the full table of ``Houseowner`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Houseowner State Variables
+         :file: odd/AHOI_ODD_StateVariables_Houseowners.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
+
+:py:class:`~agents.Plumber.Plumber` agents represent the intermediaries whose main task is to install new systems. They can also provide some knowledge to Houseowners about heatign system attributes and existing subsidies.
+
+.. dropdown:: Click here to expand the full table of ``Plumber`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Plumber State Variables
+         :file: odd/AHOI_ODD_StateVariables_Plumbers.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
+
+:py:class:`~agents.EnergyAdvisor.EnergyAdvisor` agents main goal is to consult Houseowners and provide knowledge. They provide the most precise knowledge tailored to the parameters of the houses. They also share knowledge about and apply subsidies.
+
+.. dropdown:: Click here to expand the full table of ``EnergyAdvisor`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Energy Advisor State Variables
+         :file: odd/AHOI_ODD_StateVariables_EnergyAdvisors.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
+
+:py:class:`~agents.House.House` represent houses of Houseowners. They are treated like agents in the ``Model`` due to `MESA-GEO <https://mesa-geo.readthedocs.io/latest/tutorials/intro_tutorial.html>`_ limitations. They do not perform any active actions, but store coordinates, geometry, current owner, currently installed system, age of construction, living area, energy demand and heat load.
+
+.. dropdown:: Click here to expand the full table of ``House`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: House State Variables
+         :file: odd/AHOI_ODD_StateVariables_Houses.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
+
+:py:class:`~modules.Heating_systems.Heating_system` represent heating technologies circulating in the ``Model``. If it is in a house, then it represents an actual physical system installed, if it is stored in an agent's knowledge it represents their knowledge and expectations about this heating technology, i.e. its attributes might differ from those of an installed system.
+
+.. dropdown:: Click here to expand the full table of ``Heating_system`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Heating System State Variables
+         :file: odd/AHOI_ODD_StateVariables_HeatingSystems.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
+
+:py:class:`~modules.Information_sources.Information_source` represents various channels of information that agents might want to choose to obtain information about heating technologies. The specific type of information source defines which actions agents must perform to obtain knowledge. Information sources are not the same as agents, i.e. the define ``Houseowner`` actions, but they are not themselves ``Plumbers`` or ``Energy Advisors``.
+
+.. dropdown:: Click here to expand the full table of ``Information_source`` state variables.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Information Source State Variables
+         :file: odd/AHOI_ODD_StateVariables_InformationSources.csv
+         :header-rows: 1
+         :stub-columns: 1
+         :align: left
+         :widths: 10, 10, 10, 55, 10
+         :width: 100%
 
 
-Process Overview and Scheduling
--------------------------------
+3. Process Overview and Scheduling
+======================================
 
 Main processes
 ^^^^^^^^^^^^^^
 
-* **Triggers.** Houseowners may experience triggers, such as system breakdowns or neighbour influence, prompting them to initiate the decision-making process.
+1. **Triggering.** ``Houseowners`` may experience :ref:`application/odd:Triggers`, such as system breakdowns or neighbour influence, prompting them to initiate the decision-making process.
 
-* **Houseowner decision-making.** Houseowners follow a multi-stage decision-making process regarding their heating systems.
+2. **Houseowner decision-making.** ``Houseowners`` follow a multi-stage decision-making process regarding their heating systems. Fot the detailed description see the respective sections in :ref:`Submodels <application/odd:7. Submodels>`.
 
-  At the beginning of the simulation every agent is at the stage 0, i.e. is not participating in any decision-making.
+   * At the beginning of the simulation every ``Houseowner`` is at the :ref:`Stage 0 <application/odd:Stage 0: Inactive State>`, i.e. is not participating in any decision-making, but can still occasionally meet other agents for a brief talk.
+   * If they are triggered, they enter the :ref:`Stage 1 <application/odd:Stage 1: Predecisional>` of the decision-making. During this stage, ``Houseowners`` evaluate their satisfaction with their current heating system. 
+   * If they are satisfied, no further actions are taken. If dissatisfied, they enter :ref:`Stage 2 <application/odd:Stage 2: Preactional>`. This stage includes three subsequent actions:
 
-  If they are triggered, they enter the stage 1 of the decision-making - evaluation. During evaluation, houseowners evaluate their satisfaction with their current heating system. If they are satisfied, no further actions are taken.
+      * :ref:`Data gathering <application/odd:Information search>` adds more options to their knowledge
+      * :ref:`Filtering <application/odd:Formulating a list of suitable heating systems>` formulates a list of subjectively suitable options according to feasibility, affordability and riskiness
+      * :ref:`Comparison <application/odd:Heating system evaluation>` allows to choose the desired system via attribute-wise comparison.
 
-  If dissatisfied, they enter stage 2 - data gathering and choice. This stage includes three subsequent actions:
-  
- * **data gathering** adds more options to their knowledge
+   * If ``Houseowners`` are not overwhelmed by options and have at least one suitable system that they desire, they proceed to :ref:`Stage 3 <application/odd:Stage 3: Actional>`. They schedule a consultation with a ``Plumber`` about the installation of the chosen systems. The rest of this stage is performed by the ``Plumber``. The installation may fail for different reasons (see :ref:`application/odd:Heating system installation`), and then the ``Houseowners`` try to choose an alternative or leave the decision-making.
+   * If the desired system is installed, the ``Houseonwers`` enter the :ref:`Stage 4 <application/odd:Stage 4: Postactional>` - assessment. They compare the actual performance of their new ``Heating System`` and check, whether the system is still the best among those known to them. If it is, they become satisfied, if not - they become dissatisfied. Satisfaction defines whether ``Houseowners`` would try to propagate their decision to other ``Houseowners``, in case this system type is relatively new to the district.
 
- * **filtering** formulates a list of subjectively suitable options according to feasibility, affordability and riskiness
- 
- * **comparison** allows to choose the desired system via attribute-wise comparison.
+3. **Intermediary consultation.** Both classes of intermediaries can consult ``Houseowners``.
 
+   * ``Plumbers`` can :ref:`advise <application/odd:Plumber consultation>` ``Houseowners`` on two matters:
 
-  If houseowners are not overwhelmed by options and have at least one suitable system that they desire, they proceed to stage 3 - planning and installation. They schedule a consultation with a plumber about the installation of the chosen systems. The rest of this stage is performed by the plumber. The installation may fail for different reasons, and then the houseowners try to choose an alternative or leaves the decision-making.
+      * First, ``Plumbers`` offer consultations regarding the available ``Heating systems``, their attributes, and ``Subsidies``. They can recommend ``Heating systems`` based on the evaluation of these systems, and their feasibility. Their consultations are based on heating attribute values averaged across the entire district, and recommendations consider their own preferences.
+      * Second, ``Plumbers`` evaluate the feasibility of installation of the desired ``Heating systems`` and the final installation price. If the desired systems are not feasible or the final installation costs more than the ``Houseowners`` can afford, the ``Houseowners`` are forced to reconsider.
 
-  If the desired system is installed, the houseonwers enter the last stage - assessment. They compare the actual performance of their new HS and check, whether the system is still the best among those known to them. If it is, they become satisfied, if not - they become dissatisfied. Satisfaction defines whether houseowners would try to propagate their decision to other houseowners, in case this system type is relatively new to the district.
+   * ``EnergyAdvisors`` provide one type of :ref:`consultations <application/odd:Energy Advisor Consultation>` - about heating system options and subsidies, but their consultations are tailored to the characteristics of the houses and preferences of ``Houseowners``, i.e. they are much more precise. ``EnergyAdvisors`` make recommendations, but also define the list of suitable options for ``Houseowners`` such that they do not have to do it on their own.
 
-* **Intermediary consultation.** Plumbers can advise Houseowners on two matters.
+4. **Heating system installation.** ``Houseowners`` order an installation of the desired ``Heating system`` from their ``Plumbers``. The ``Plumbers`` generate new instances of the desired ``Heating systems`` and replace the existing systems in the ``Houses`` with the newly generated ones. After that they subtract the installation price from the budget of the ``Houseowners``, and adjust their weekly expenses according to the attributes of the new ``Heating systems``.
 
- * First, plumbers offer consultations regarding the available heating systems, their characteristics, and subsidies. They can recommend heating systems. Their consultations are based on averaged values for attributes, and recommendations consider their own preferences.
- 
- * Second, they evaluate the feasibility of installation of the desired heating systems and the final installation price. If the systems are not feasible or the final installation costs more than the Houseowners can afford, the Houseowners are forced to reconsider.
+5. **Houseonwer interactions.** ``Houseowners`` interact with each other either when they are not in the decision-making, or when they are gathering information. Both types of interactions lead to information and opinion exchange. The difference is the amount of contacts - for the former it is one contact per week maximum, for the latter it depends on the cognitive resources of Houseowners.
 
-  Energy advisors provide one type of consultations - about heating system options and subsidies, but their consultations are tailored to the characteristics of the houses and preferences of Houseowners, i.e. they are much more precise. They make recommendations, but also define the list of suitable options for Houseowners such that they do not have to do it on their own.
+6. **Scenario-defined impacts.** ``Scenarios`` may have specific impacts affecting the entire ``Model`` or only some agents during model runs. Several examples:
 
-* **Heating system installation.** Houseowners order an installation of the desired heating system from their plumber. The plumber generate new instances of the desired heating and replace the existing system in the houses with the newly generated ones. After that they subtract the installation price from the budget of the Houseowners, and adjust their weekly expences according to the attributes of the new heating system.
-
-* **Houseonwer interactions.** Houseowners interact with each other either when they are not in the decision-making, or when they are gathering information. Both types of interactions lead to information and opinion exchange. The difference is the amount of contacts - for the former it is one contact per week maximum, for the latter it depends on the cognitive resources of Houseowners.
-
-* **Scenario-defined impacts.** Scenarios may have specific impacts affecting the entire model or only some agents. Several examples: 
- 
- * Information campaign that spreads knowledge about systems among agents;
- 
- * Changes in availability of heating technologies
- 
- * Energy price increase.
+   * Information campaign that spreads knowledge about systems among agents;
+   * Changes in availability of heating technologies;
+   * Energy price increase.
 
 Scheduling
 ^^^^^^^^^^
 
-* The time is discrete, each step represents one week in real life.
-* State variables can be separated into two groups - those that are updated at the beginning of the step, and those that are updated during the step.
-* Actions on fixed schedule - scenario and model related actions, i.e. updates in model-level variables, global events that represent changes in the environment. These update state variables at the beginning of the step.
-* Actions on random schedule - agents' actions, i.e. agents being activated randomly represent real-life uncertainty and simultaneity of human actions. These update state variables during the step. The exact time depends on the order of actions of agents at that step.
-* Each step starts with the model updating global variables (HS and subsidies availability, heat delivery contract terms, emissions from HS, energy prices). Then scenario-defined impacts happen. After that agents are activated. The RandomActivationByType scheduler divides the agents into groups (e.g., houseowners, plumbers, energy advisors) and activates them in a random order within their group during each time step. The order of activation for groups is - Houseowners, Plumbers, Energy Advisors. Then the model collects data.
+* The time is **discrete**, each step represents **one week** in real life.
+* State variables can be separated into **two groups** by how they are updated - those that are updated at the beginning of the step, and those that are updated during the step.
+* Actions on **fixed schedule** are the following - ``Scenario`` and ``Model`` related actions, i.e. updates in model-level variables, global events that represent changes in the environment. These update state variables at the beginning of the step.
+* Actions on **random schedule** are the agents' actions representing real-life uncertainty and simultaneity of human actions. These update state variables during the step. The exact time depends on the order of actions of agents at that step.
+* Each step starts with the ``Model`` updating global variables (``Heating System`` and ``Subsidies`` availability, heat delivery contract terms, emissions from ``Heating Systems``, energy prices). Then scenario-defined impacts happen. After that agents are activated. The ``RandomActivationByType`` scheduler divides the agents into groups and activates them in a random order **within** their group during each time step. The order of activation for groups is pre-defined - ``Houseowners``, ``Plumbers``, ``Energy Advisors``. Then the ``Model`` collects data.
+
+.. figure:: images/model_scheduling.png
+   :width: 329px
+   :align: center
+   :alt: UML Activity Diagram of the model schedule
+
+   Figure 1: The scheduling of agent activation and model processes.
 
 The simulation ends when the amount of steps reaches a pre-defined threshold.
 
 
-Design Concepts
-===============
+4. Design Concepts
+==================
 
 
 Basic Principles
-----------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-* **Bamberg's stage model of self-regulated behavioural change.**
-  The model frames the decision-making of Houseowners. The process consists of four stages. Each stage has its unique aims, sub-processes and conditions of transfer to other stages or of abandoning the decision-making entirely. Houseowners start at the stage 1 after they encounter a trigger, and then try to sequentially move to the next stages. However, it is possible for them to go backwards or leave the decision-making entirely. The outcome depends on the events happening during the decision-making.
+* **Bamberg's stage model of self-regulated behavioural change (SSBC).**
+  The SSBC (https://doi.org/10.1016/j.jenvp.2013.01.002) frames the decision-making of ``Houseowners``. According to SSBC, the decision-making process consists of four stages. Each stage has its unique aims, sub-processes and conditions of transfer to other stages or of abandoning the decision-making entirely. The implementation in ``AHOIS`` is an adaptation of the theory in an effort to map the same decision-making patterns to a new context. The author has already used it for the adoption of electric vehicles to prove the usability of SSBC (https://doi.org/10.1016/j.jenvp.2012.10.001). ``Houseowners`` start at the Stage 1 after they encounter a trigger, and then try to sequentially move to the next stages. However, it is possible for them to go backwards, leave the decision-making entirely, and then re-enter it, both starting completely anew or at a later stage. The outcome depends on the events happening during the decision-making.
 
-  1. **Stage 1 (predecisional)** aims to define whether Houseowners are still satisfied with their current heating system.
-  2. **Stage 2 (preactional)** is dedicated to the data gathering, option filtering and the choice of a single desired option.
-  3. **Stage 3 (actional)** revolves around the planning and installation of the desired heating system.
-  4. **Stage 4 (postactional)** has a goal to evaluate satisfaction with the newly installed system and propagate its technology among peers.
+  1. :ref:`application/odd:Stage 1: Predecisional` aims to define whether ``Houseowners`` are still satisfied with their current ``Heating system``.
+  2. :ref:`application/odd:Stage 2: Preactional` is dedicated to the data gathering, option filtering and the choice of a single desired option.
+  3. :ref:`application/odd:Stage 3: Actional` revolves around the planning and installation of the desired heating system.
+  4. :ref:`application/odd:Stage 4: Postactional` has a goal to evaluate satisfaction with the newly installed ``Heating system`` and propagate its technology among peers.
 
-* **Triggers.**
-  Decision-making is triggered by events with different requirements to occur.
+* **Triggering.**
+  Decision-making is triggered by :ref:`events <application/odd:Triggers>` with different requirements to occur.
 
-* **Ajzen’s Theory of Planned Behaviour.**
-  The three factors of the Theory of Planned Behaviour are used by agents to evaluate options and make a choice.
+* **Ajzen’s Theory of Planned Behaviour (TPB).**
+  The three factors of the Theory of Planned Behaviour (https://doi.org/10.1016/0749-5978(91)90020-T) are used by agents to :ref:`evaluate <application/odd:Heating system evaluation>` options and make a choice.
 
   * **Attitude** corresponds to the individual preferences of agents tied to the characteristics of heating systems.
   * **Subjective norm** corresponds to the opinions of contacted agents about heting systems and the popularity of a certain heating technology among houseowners.
   * **Perceived behavioural control** corresponds to the perceptions of financial burden laid by the installation and maintenance of each option.
   
-  The theory is integrated into the second stage of Bamberg's SSRB to represent reasoning behind the system evaluations.
+  The theory is integrated into the second stage of Bamberg's SSBC to represent reasoning behind the system evaluations.
 
 * **Sinus Milieus.**
-  Each Houseowner has one of the four lifestyles attached to it (so called Sinus Milieus) - Leading, Mainstream, Traditionals, Hedonists. The Milieus define all socio-economic and psychological variables of Houseowners; the structure of the network, to which they belong; and some of their behaviour during the decision-making.
+  Each Houseowner is assigned to one of four **Milieu Groups** (Leading, Mainstream, Traditionals, Hedonists), which aggregate the Sinus Milieus (https://doi.org/10.1007/978-3-658-42380-3). The **Milieu Groups** define all socio-economic and psychological variables of ``Houseowners``; the structure of the network, to which they belong; and some of their behaviour during the decision-making.
 
-* **Social networks and neighbourhood.**
-  Each Houseowner is a part of a social network that consists of its immediate geographic neighbours and of Houseowners with the same lifestyle regardless of their location. The network links can be uni- and bi-directional. The character of the link is defined by the milieus of the linked agents. The links define the direction of information exchange between agents during agent interactions.
-
-* **Social influence.**
-  Houseowners' decisions are affected by the information they know from and about their neighbours. They store information about the opinions of their neighbours about different heating systems, about the systems installed into their neighbours' houses, and whether their neighbours are satisfied with their current heating system. This information affects the decision-making during the information gathering, filtering and choice. Social interaction can also cause triggers - when one agent finds out that their interlocutor has installed a new heating or when one agent decides to propagate a newly obtained technology among its peers.
-
-* **Cognitive effort.**
-  Each Houseowner has a limited stock of abstract cognitive resource for each step, which they must spend on actions during decision-making. The stock size depends on the milieu group	. The action cost depends on the action.
+* **Satisficing, cognitive overload and decision fatigue.** Each ``Houseowner`` has a limited stock of abstract ``cognitive resource`` for each step (rouglhy representing the amount of time they can spend on the decision-making), which they must spend on actions during decision-making. The stock size depends on the milieu group. The action cost depends on the action. ``Houseowners`` try to gather information untill they either reach the ``aspiration`` level or the ``overload`` threshold. The ``aspiration`` level is reached when they find options during the information search that are better than their current ``Heating systems``. The ``overload`` happens when the ``Houseowners`` find systems that are the same or worse according to their estimations than their current heating systems. Each such system adds to the ``overload`` level. When a certain level is reached, they drop the decision-making. The decision fatigue happens when ``Houseowners`` have to choose among two ``Heating systems`` that are too similar according to their estimations. When this happens, they have to spend additional ``cognitive resource`` to make the choice, and the best system will be defined randomly among these two.
 
 * **Imperfect information.**
-  Houseowners do not posess precise values of heating systems' characteristics. They have expected values formed by informations sources (Internet shifts values, neighbours share their knowledge, plumbers share averaged values). These values have uncertainty boundaries, which are defined and changed during data gathering, information exchange and installation. Moreover, Houseowners have to contact other Houseowners in order to obtain information about their installed heating systems, how satisfied they are with them, and also their opinions about all known heating systems. This knowledge is only updated if the same Houseowners are contacted again.
+  ``Houseowners`` do not posess precise values of ``Heating systems'`` characteristics. They have expected values formed by ``Informations sources`` (Internet and Magazine sources provide information with a random bias (distortion), neighbours share their knowledge, ``Plumbers`` share averaged values). These values have uncertainty boundaries, which are defined and changed during data gathering, information exchange and installation. Moreover, ``Houseowners`` have to contact other ``Houseowners`` in order to obtain information about their installed heating systems, how satisfied they are with them, and also their opinions about all known heating systems. This knowledge is only updated if the same Houseowners are contacted again.
   
-  Plumbers also posess imperfect information, but theirs cannot be changed. Its imperfection is represented via averaged values of heating systems' characteristics to represent broader expertise, with lack of tailored consultation. The only characteristic that they always know precisely tailored to the installation case is the installation price.
+  ``Plumbers`` also posess imperfect information, but theirs cannot be changed. Its imperfection is represented via averaged values of ``Heating systems'`` characteristics to represent broader expertise, with lack of tailored consultation. The only characteristic that they always know precisely tailored to the installation case is the installation price.
   
-  Energy Advisors are the only agents that always have perfect knowledge tailored to the specific consultation case.
+  ``EnergyAdvisors`` are the only agents that always have perfect knowledge tailored to the specific consultation case.
 
 * **Bounded rationality.**
-  Houweowners cannot have and analyse all the knowledge to make the best possible decision. They are intended to choose the best system to their estimation, but this estimation is limited by incomplete and distorted knowledge, limited cognitive resource, aspiration, cognitive overload, risk tolerance, and decision fatigue.
-
-* **Satisficing, cognitive overload and decision fatigue.**
-  These concepts represent the obstacles related to the information search and the choice. Houseowners try to gather information untill they either reach the aspiration level or the overload threshold. The aspiration level is reached when they find options during the information search that are better than their current heating systems. The overload happens when the Houseowners find systems that are the same or worse according to their estimations than their current heating systems. Each such system adds to the overload level. When a certain level is reached, they drop the decision-making.
-  
-  The decision fatigue happens when Houseowners have to choose among two systems that are too similar according to their estimations. When this happens, they have to spend additional cognitive resource on the choice, and the nest system will be defined randomly among these two.
+  AHOIS incorporate bounded rationality proposed by Herbert A. Simon (https://doi.org/10.1007/978-1-349-20568-4_5). ``Houweowners`` cannot have and analyse all the knowledge to make the best possible decision. They are intended to choose the best system to their estimation, but this estimation is limited by incomplete and distorted knowledge, limited ``cognitive resource``, ``aspiration``, cognitive ``overload``, ``risk tolerance``, and decision fatigue.
 
 * **Risk tolerance.**
-  Each Houseonwer has its unique value of risk tolerance, which they use to filter out options before they make the final choice.
+  Each ``Houseonwer`` has its unique value of ``risk tolerance``, which they use to :ref:`filter out <application/odd:Filtering>` options before they make the final choice.
 
 * **Budget constraints and loans.**
-  Each Houseonwer has its unique budget, which is defined by a certain amount of their weekly net income. They consider their budget during decision-making and filter out options that are not affordable before making the choice. They can take loans to cover the difference between the budget and the price of installation. Depending on their milieu group, some Houseowners are loan avoidant and do not take loans if not absolutely necessary (e.g. the current heating is broken).
-
-* **Relative agreement.**
-  The knowledge exchange is implemented as an adaptation of the Relative Agreement algorithm. Houseowners posess knowledge about heating system characteristics with uncertainty ranges attached. Whenever two Houseowners interact and both have their own knowledge about the same heating technology, this two piece of knowledge interact. Depending on the distance between values of the same characteristic and the uncertainty range, each piece of knowledge may change.
+  Each ``Houseonwer`` has its unique ``budget``, which is defined by a multiplier of their weekly ``savings`` (e.g. 2 years of savings). They consider their ``budget`` during decision-making and :ref:`filter out <application/odd:Filtering>` options that are not affordable before making the choice. They can take :ref:`loans <application/odd:Loans>` to cover the difference between the ``budget`` and the price of installation. Some ``Houseowners`` are loan avoidant and do not take loans if not absolutely necessary (e.g. the current ``Heating system`` is broken).
 
 * **Priority of empirical grounding.**
-  For each model variable and parameter, there was an effort to find a representation in empirical literature, own surveys, workshops or technical data. For those without such justification, values were defined based on theories or sensitivity analysis. For each variable, there is a note stating the validation source.
+  For each model variable and parameter, there was an effort to find a representation in empirical literature, own surveys, workshops or technical data. For those without such justification, values were defined based on theories or sensitivity analysis. For each variable, a note stating the validation source is provided in the Input Data table :ref:`Input Data table <application/odd:Input Data>`.
 
 
 Emergence
----------
+^^^^^^^^^^^^^^^^^^^^^^
 
-Emergent phenomena arise from the individual decisions and interactions of houseowners, plumbers, and energy advisors within the model.
+Emergent phenomena arise from the individual decisions and interactions of ``Houseowners``, ``Plumbers``, and ``EnergyAdvisors`` within the ``Model``.
 
-* The adoption pattern of different heating systems within the population emerge as a result of individual decisions of Houseowners.
-* The interactions between houseowners contribute to emergent localised clusters of heating systems. If a houseowner observes a neighbour adopting a new heating system, this may trigger social pressure, motivating other houseowners to consider replacement.
-* Over time, the model may show the emergence of technology lock-in, where certain heating systems dominate the market due to early adoption patterns, social influence, or economic incentives. This can lead to market saturation, where alternative technologies struggle to gain traction even if they offer superior performance.
+* The adoption pattern of different heating systems within the population emerge as a result of individual decisions of ``Houseowners``.
+* The interactions between ``Houseowners`` contribute to emergent localised clusters of adopted ``Heating systems``. If a ``Houseowner`` observes a neighbour adopting a new ``Heating system``, this may :ref:`trigger <application/odd:Triggers>` social pressure, motivating the ``Houseowner`` to consider replacement.
+* Over time, the ``Model`` may show the emergence of technology lock-in, where certain ``Heating systems`` dominate the market due to early adoption patterns, social influence, or economic incentives. This can lead to market saturation, where alternative technologies struggle to gain traction even if they offer superior performance.
 
 
 Adaptation
-----------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Adaptation refers to how agents modify their behaviour and decision-making processes in response to changes in their environment, internal states, or interactions with other agents.
 
-* **Houseowner Adaptation.**
-  Houseowners adapt their decision-making based on several factors. External triggers cause houseowners to reassess their situation and adapt their behaviour by speeding up or delaying their decision-making.
+* **Houseowner Adaptation.** ``Houseowners`` adapt their decision-making based on several factors. External :ref:`triggers <application/odd:Triggers>` cause ``Houseowners`` to reassess their situation and adapt their behaviour by speeding up or delaying their decision-making.
 
-  * Houseowners adapt to new information they receive. Their perception of heating systems evolves as they gather more data, which influences their choice of suitable and desired systems.
-  * Houseowners adapt their actions based on their cognitive resources, which limit the number of decisions they can make in each time step.
-  * Houseowners learn from their neighbours’ experiences and opinions. Through interactions with nearby houseowners, they gather information about the performance and satisfaction associated with different heating systems.
+  * ``Houseowners`` adapt to new information they receive. Their perception of heating systems evolves as they gather more data, which influences their choice of suitable and desired systems.
+  * ``Houseowners`` adapt their actions based on their ``cognitive resources``, which limit the number of decisions they can make in each time step.
+  * ``Houseowners`` learn from their neighbours’ experiences and opinions. Through interactions with nearby ``Houseowners``, they gather information about the performance and satisfaction associated with different ``Heating systems``.
 
 * **Plumber Adaptation.**
-  Plumbers adapt their knowledge base over time, learning about new heating systems through training. They expand their service offerings as they acquire expertise in installing and consulting on new heating technologies.
+  ``Plumbers`` adapt their knowledge base over time, learning about new ``Heating systems`` through :ref:`training <application/odd:Plumber training>`. They expand their service offerings as they acquire expertise in installing and consulting on new heating technologies.
 
 * **Energy Advisor Adaptation.**
-  Based on houseowner preferences and financial situations, energy advisors adapt their recommendations to align with the suitability and feasibility of different heating systems.
+  Based on ``Houseowner`` preferences and financial situations, ``EnergzAdvisors`` adapt their recommendations to align with the suitability and feasibility of different ``Heating systems``.
 
 
 Objectives
-----------
+^^^^^^^^^^^^^^^^^^^^^^
 
-* Houseowner Objectives:
-   * The primary objective of houseowners is to ensure that their heating system satisfies them. When houseowners become dissatisfied, their objective shifts toward identifying and installing a satisfactory replacement system.
-   * Houseowners aim to stay under their financial constraints. This involves seeking systems that are within their budget, considering subsidies or loans.
-   * Houseowners differ in their degree of risks aversion. They may filter out systems they deem to risky during options consideration.
-   * Houseowners prioritize systems that have the best score according to their preferences. 
-   * Houseowners consider the opinions and decisions of their social peers.
+* ``Houseowner`` Objectives:
+
+   * The primary objective of ``Houseowners`` is to ensure that their ``Heating system`` satisfies them. When ``Houseowners`` become dissatisfied, their objective shifts toward identifying and installing a satisfactory replacement system.
+   * ``Houseowners`` aim to stay under their financial constraints. This involves seeking systems that are within their ``budget``, considering ``Subsidies`` or ``Loans``.
+   * ``Houseowners`` differ in their degree of ``risk tolerance``. They may filter out systems they deem to risky during options consideration.
+   * ``Houseowners`` prioritize systems that have the best score according to their preferences. 
+   * ``Houseowners`` consider the opinions and decisions of their social peers.
 
 
-* Plumber Objectives:
-   * Plumbers aim to provide consultation and installation services to houseowners.  Their objective is to successfully complete consultations and installations within the constraints of their workload.
-   * Plumbers seek to expand their knowledge of different heating systems through training, enabling them to offer a wider range of services.
+* ``Plumber`` Objectives:
 
-* Energy Advisor Objectives:
-   * Energy advisors aim to recommend heating systems that align with houseowners' preferences, budgets, and the latest available subsidies. 
-   * Energy advisors seek to share their expertise on heating systems. Their objective is to help houseowners understand the long-term advantages of different systems.
+   * ``Plumbers`` aim to provide consultation and installation services to ``Houseowners``.  Their objective is to successfully complete consultations and installations within the constraints of their workload.
+   * ``Plumbers`` seek to expand their knowledge of different ``Heating systems`` through training, enabling them to offer a wider range of services.
+
+* ``EnergyAdvisor`` Objectives:
+
+   * ``EnergyAdvisors`` aim to recommend ``Heating systems`` that align with ``Houseowners'`` preferences, budgets, and the latest available subsidies. 
+   * ``EnergyAdvisors`` seek to share their expertise on ``Heating systems``. Their objective is to help ``Houseowners`` understand the long-term advantages of different systems.
 
 
 Learning
---------
+^^^^^^^^^^^^^^^^^^^^^^
 
 There is no learning in AHOIS at the moment.
 
 
 Prediction
-----------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Agents make decisions based on limited information and cognitive resources, which means their ability to predict future outcomes is constrained. 
 
-* Agents attempt to predict the long-term financial impacts of their heating system choices. When evaluating different systems, they estimate future operational expenses and potential savings from more energy-efficient technologies. These predictions are based on information provided by information sources, though they are subject to imperfect information.
+* ``Houseowners`` attempt to predict the financial impacts of their heating system choices. When :ref:`evaluating <application/odd:Heating system evaluation>` different systems, they estimate future operating expenses and potential savings from more energy-efficient technologies. These predictions are based on information provided by ``Information sources``, though they are subject to imperfect information. Specifically, ``Houseowners`` predict their yearly expenses based on the current prices, and they try to calculate how this change will affect their savings, i.e. whether they would increase or decrease, and by how much, considering the abovementioned predictions and their limitations.
 
 
 Sensing
--------
+^^^^^^^^^^^^^^^^^^^^^^
 
-The information agents can sense or perceive is limited by their cognitive capacities and the availability of information sources.
+The information agents can sense or perceive is limited by their cognitive capacities, the availability of ``Information sources``, and their choices of ``Information sources``. Specifically, to sense anything about a neighbour, a ``Houseowner`` must contact that neighbour. The knowledge about this neighbour will not be updated untill the next meeting. ``Houseowners`` cannot conctact every ``Information sources`` at once, so they make choices based on their preferences, and obtain as much information as their ``cognitive resource`` allows.
 
-* Houseowner Sensing:
+* ``Houseowner`` Sensing:
 
-  * Houseowners are aware of their neighbours within their social network.
-  * Houseowners are fully aware of the attributes of their current heating system.
-  * Houseowners have complete information about their own income and budget.
-  * Houseowners can sense external triggers, such as heating system breakdowns or price shocks.
-  * Houseowners can sense and gather information from various information sources. This includes the technical feasibility of installing different heating systems, system characteristics, and the availability of subsidies. The amount of this sensed information is limited by the houseowner's cognitive resources and the extent of the advice they seek.
-  * Houseowners can sense the heating systems adopted by their social network partners through social interactions. They can also observe their neighbours' satisfaction with these systems, their opinion about them.
+  * ``Houseowners`` are aware of their neighbours within their social network.
+  * ``Houseowners`` are fully aware of the attributes of their current ``Heating system``.
+  * ``Houseowners`` have complete information about their own ``savings`` and ``budget``.
+  * ``Houseowners`` can sense external :ref:`triggers <application/odd:Triggers>`, such as heating system breakdowns or price shocks.
+  * ``Houseowners`` can sense and gather information from various ``Information sources``. This includes the technical feasibility of installing different ``Heating systems``, system characteristics, and the availability of ``Subsidies``. The amount of this sensed information is limited by the ``Houseowner's`` cognitive resources and the extent of the advice they seek.
+  * ``Houseowners`` can sense the ``Heating systems`` adopted by their social network partners through :ref:`social interactions <application/odd:Houseowner interactions>`. They can also observe their neighbours' satisfaction with these systems, and their opinion about them.
 
-* Plumber Sensing:
+* ``Plumber`` Sensing:
 
-  * Plumbers are aware of the technical feasibility of installing various heating systems in different house types. 
-  * Plumbers sense their current workload, including the length of their consultation and installation queues.
+  * ``Plumbers`` are aware of the technical feasibility of installing various ``Heating systems`` in different ``Houses``. 
+  * ``Plumbers`` sense their current workload, including the length of their consultation and installation queues.
 
-* Energy Advisor Sensing:
+* ``EnergyAdvisor`` Sensing:
 
-  * Energy advisors are fully aware of the current financial incentives available for different heating systems. 
-  * Energy advisors can sense the financial constraints and preferences of houseowners during consultations. This information enables them to recommend systems that align with houseowner budgets while maximizing potential cost savings through subsidies.
-  * Energy advisors are aware of the technical specifications and performance of different heating systems, allowing them to evaluate which systems are most suitable for houseowners based the properties of their houses.
+  * ``EnergyAdvisor`` are fully aware of the current ``Subsidies`` available for different ``Heating systems``. 
+  * ``EnergyAdvisor`` can sense the financial constraints and preferences of ``Houseowners`` during consultations. This information enables them to recommend systems that align with ``Houseowner`` ``budgets`` while maximizing potential cost savings through ``Subsidies``.
+  * ``EnergyAdvisor`` are aware of the technical specifications and performance of different ``Heating systems``, allowing them to evaluate which systems are most suitable for ``Houseowners`` based the properties of their ``Houses``.
 
 
 Interaction
------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Agents interact through consultations and service provisions, and through social influence and information exchange.
 
-1.	Houseowner-Plumber Interaction:
-   * Houseowners interact with plumbers through consultations. When a houseowner requires advice on replacing their heating system, they can consult a plumber.  During the consultation, the plumber provides information about available heating systems,  assesses the technical feasibility of installing specific systems, and offers recommendations based on their general experience.
-   * Once a houseowner decides on a heating system, plumbers provide installation services. The interaction involves scheduling the installation, and completing the work.  Plumbers manage their workload and can interact with multiple houseowners simultaneously, prioritizing installations based on their queues.
-2.	Houseowner-Energy Advisor Interaction:
-   * Houseowners consult energy advisors to learn about available subsidies and financial incentives for heating system replacements. Energy advisors provide advice on which systems qualify for subsidies. 
-   * Energy advisors share their knowledge of system performance, energy efficiency, and environmental benefits with houseowners. 
-3.	Houseowner-Houseowner Interaction:
-   * Houseowners interact socially with their neighbours, exchanging opinions, satisfaction and knowledge regarding heating systems. 
-4.	Houseowner-Environment Interaction:
-   * Houseowners interact with their environment through external triggers, such as heating system breakdowns or price shocks. 
+**Social Interaction and Networks**
+
+* **Social Networks:** Each ``Houseowner`` is part of a social network consisting of directed links representing information and influence flow. Partners are initialised based on milieu-specific affiliation preferences and spatial proximity, e.g. some Milieu groups prefer more local connections and vice versa.
+* **Social Influence:** ``Houseowners`` store information about their neighbours' opinions, installed systems, and satisfaction. This affects decision-making during :ref:`filtering <application/odd:Filtering>` and :ref:`evaluation <application/odd:Heating system evaluation>`. Social interaction can also cause :ref:`triggers <application/odd:Triggers>` - when one ``Houseowner`` finds out that their interlocutor has installed a new ``Heating system`` or when one ``Houseowner`` decides to propagate a newly obtained technology among its peers.
+* **Relative Agreement:** Knowledge exchange is implemented via the Relative Agreement algorithm (https://jasss.soc.surrey.ac.uk/5/4/1.html). ``Houseowners`` posess knowledge about heating system characteristics with uncertainty ranges attached. Whenever two ``Houseowners`` interact and both have their own knowledge about the same heating technology, this two piece of knowledge interact. Depending on the distance between values of the same characteristic and the uncertainty range, each piece of knowledge may change.
+* **Houseowner-Houseowner:** Interactions occur weekly (passive) or during active search (see :ref:`application/odd:Houseowner interactions`). Weekly meeting is stochastic and based on the researched probability to meet neighbours. Active search meetings depend on the individual preferences of agent towards neighbours as a source of knowledge.
+* **Houseowner-Environment:** ``Houseowners`` can interact with external :ref:`triggers <application/odd:Triggers>` like price shocks. ``Houseowners`` can interact with their ``Houses`` to sense the attribute values of the currently installed ``Heating systems``.
+
+**Service Interaction**
+
+1. **Houseowner-Plumber:**
+
+   * ``Houseowners`` interact with ``Plumbers`` through :ref:`consultations <application/odd:Plumber consultation>`. When a ``Houseowner`` requires advice on replacing their ``Heating system``, they can consult a ``Plumber``.  During the consultation, the ``Plumber`` provides information about available ``Heating systems``,  assesses the technical feasibility of installing specific systems, and offers recommendations based on their general experience.
+   * Once a ``Houseowner`` decides on a ``Heating system``, ``Plumbers`` provide :ref:`installation services <application/odd:Heating system installation>`. The interaction involves scheduling the installation, and completing the work.  ``Plumbers`` manage their workload and can interact with multiple ``Houseowners`` simultaneously, prioritizing installations based on their queues.
+
+2. **Houseowner-Energy Advisor:**
+
+   * Houseowners :ref:`consult with energy advisors <application/odd:Energy Advisor consultation>` to learn about available ``Subsidies`` for ``Heating system`` replacements. ``EnergyAdvisors`` provide advice on which systems qualify for ``Subsidies``. 
+   * ``EnergyAdvisors`` share their knowledge of system performance, energy efficiency, and environmental benefits with ``Houseowners``.
 
 
 Stochasticity
--------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-
-Stochasticity is incorporated into various aspects of model initialization, agent behaviour, interactions, 
+Stochasticity is incorporated into various aspects of ``Model`` initialization, agent behaviour, interactions, 
 and environmental events to simulate the unpredictable nature of human choices, external triggers, and market conditions. 
-There are two main stochastic parts in the model – one related to the model initialisation, 
+There are two main stochastic parts in the ``Model`` – one related to the model initialisation, 
 and the one related to the processes happening during a model run.
+The most influential random processes are:
 
-.. excel-table::
-	:file: concepts/AHOISpro_RandomProcesses.xlsx
-	:colwidths: 20, 20, 30, 30
-	:row_header: true
-	:col_header: true
+* **Model Initialisation:**
+
+  * **Heating system distribution:** Distributes heating systems from a list of possible systems with a given probability for each and milieu-specific limitations for newer technologies.
+  * **Heating system lifetime generation:** Draws the lifetime of a heating system whenever it is generated from a Weibull distribution, truncated from the bottom.
+  * **Generation of preferences towards heating system attributes:** Draws preferences from a Beta distribution parameterized by our own survey.
+
+* **Run-time Dynamics:**
+
+  * **Found heating technology during search:** Defines which heating technology will be found during information search in the Internet or Magazine.
+  * **Partner choice:** Defines which neighbours will be contacted during information search.
+  * **Information bias:** Defines the size and the direction of the bias introduced into heating system parameters during the search in Internet or Magazine.
+
+For the full list of random processes see the table below.
+
+.. dropdown:: Click here to expand the full table of stochastic processes.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Stochastic Processes Overview
+          :file: concepts/AHOISpro_RandomProcesses.csv
+          :header-rows: 1
+          :stub-columns: 1
+          :align: left
+          :width: 100%
+
 
 Collectives
------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-Each Houseowner is a part of its own social network.
+The ``Model`` does not represent explicit collective agents.
 
 
-Initialisation
-==============
+Observation
+^^^^^^^^^^^^^^^^^^^^^^
+
+The ``Model`` collects data at every time step using the MESA framework's `DataCollector module <https://mesa.readthedocs.io/latest/apis/datacollection.html>`_. Data collection is split into model-level aggregates, agent-level states, and specific interaction logs.
+
+* **Model-level data:**
+    The ``Model`` tracks the aggregate state of the system to analyse technology diffusion and environmental impact. Key metrics include:
+
+    * **Environmental & Economic:** total ``Emissions``, mean ``Energy demand``, and mean ``Total expenses`` (LCOH).
+    * **Technology Diffusion:** the ``Heating distribution`` across all system types, counts of ``Replacements`` and technology ``Changes``, and the number of ``Subsidised houses``.
+    * **Decision-Making Process:** counters for ``Triggers`` (total and by type), ``Information source calls``, and ``Drop-outs``.
+    * **Financial flows:** total volume of ``Subsidies`` paid and ``Loans`` taken, and total ``Houseowner spending``.
+    * **Intervention tracking:** ``Scenario fulfilment`` (progress towards targets) and ``Known subsidies``/``Known heating systems`` (knowledge diffusion).
+    * **Process Dynamics:** ``Stage flows`` (movement of agents between decision stages), ``Obstacles`` encountered per technology, and ``Cognitive resource`` usage.
+
+* **Agent-level data:**
+    For each agent (primarily ``Houseowners``), the model records detailed attributes to reconstruct individual trajectories:
+
+    * **State & Identity:** agent ``Class``, ``Milieu``, ``House area``, and current ``Heating system``.
+    * **Psychological:** current ``Satisfaction``, ``Preferences``, ``Attribute ratings``, and ``Satisfied_ratio``.
+    * **Decision Status:** current ``Stage``, ``Decision History``, active ``Trigger``, and remaining ``Cognitive resource``.
+    * **Financial:** ``Budget``, ``Weekly expenses``, ``Opex``, and computed ``Suboptimality`` of their choice.
+
+* **Interaction Logs:**
+    Specific tables are maintained to track the intermediary market:
+
+    * **Completed Intermediary Jobs:** Logs every completed services by ``Plumbers`` and ``EnergyAdvisors``.
+    * **Intermediary Queue Length:** Tracks the workload and bottlenecks of ``Plumbers`` and ``Energy Advisors``.
+
+* **Output:**
+    At the end of a simulation run, the collected data is exported to **Pickle** (`.pkl`) and **CSV** (`.csv`) files. Optionally, the spatial state of agents can be exported as a **Shapefile** (`.shp`) for geospatial analysis.
+
+
+5. Initialisation
+==================
 
 Model Initialisation
---------------------
-* The model initialises the spatial environment by reading a geoJSON file that contains geospatial data about the houses. 
+^^^^^^^^^^^^^^^^^^^^^^
+* The model initialises information sources as a list of available sources - Internet, Magazine, Neighbours, Plumbers, Energy Advisors. The latter three are not the actual agents, but rather abstractly represent options of data gathering, from which Houseowners will be able to choose.
+* The model initialises the spatial environment by reading a geoJSON file that contains geospatial data about the houses.
 * Houses are created using the MESA-GEO framework's AgentCreator tool, which generates house agents from the geospatial data. 
 * Each house is assigned geospatial coordinates, along with attributes of area, year of construction, energy demand, Milieu code, heat load. 
 * Each house is assigned to a specific milieu group, using a mapping function based on Milieu codes. 
 * The model distributes different heating systems among the houses based on a probabilistic approach. Each house is assigned a heating system according to a custom distribution defined by the model’s parameters.
 * For each house, the model initialises a Houseowner agent.
-* After all Houseowners are initialised, they are added to the social network. Their network connections depend on the spatial proximity and milieus.
+* After all Houseowners are initialised, they are added to the social network. Their network connections depend on the spatial proximity and milieus. The model uses `SHoBNetPy <https://shobnetpy.readthedocs.io/en/latest/description.html>`_ as a network generator.
 * The model initialises the intermediaries - Plumbers and Energy Advisors.
 * The model initialises the selected scenario and performs its set-up.
 * The model’s DataCollector is initialised to track key metrics throughout the simulation.
 
-
-Houseowners Initialisation
---------------------------
-* Each agent is initialised with a unique set of state variables that define its identity, socio-demographic context,  psychological profile, and initial state within the decision-making process.
-* Each agent is assigned a unique_id and linked to a specific house object, which provides its geographical geometry and coordinate reference system (crs). The latter are used by the network generator. 
-* A crucial part of the agent's identity is its milieu group, a composite object that encapsulates a cluster of socio-psychological attributes,  including income, preferences and behavioral tendencies based on empirical data. The following is derived form the milieu group:
-   * Preferences: heating system preferences (the importance placed on attributes like cost, environmental impact, etc.) and information source preferences (preferability of different information sources) are derived directly from the agent's assigned milieu.
-   * Cognitive Resources: each agent starts with an initial_cognitive_resource, representing the mental effort available for decision-making tasks, an aspiration_value, which sets the threshold for how much information is needed to feel satisfied, and an overload_value, which defines maximum information overload.
-   * Behavioral Theories: Weights for the Theory of Planned Behavior (tpb_weights)  and exposure levels for the Relative Agreement model (ra_exposure) are also initialized from the milieu.
-   * Perceptions: The perceived_uncertainty associated with different heating technologies is initialized to a set of fixed, default values for all agents.
-* Agents can be initialized at different points in their decision-making.  The current_stage and current_breakpoint are set to "Stage 0" and "None" by default. 
-* The agent’s knowledge base, including known_hs (known heating systems), suitable_hs (systems considered acceptable), and a desired_hs (the single desired system) can be initialised from an empty list or with pre-existing knowledge depending on the model setup.
-* All other state variables are initialized to a neutral or "zero" state.  Lists tracking interactions (e.g., visited_neighbours, unqualified_plumbers) are empty.  Boolean flags indicating process steps (e.g., consultation_ordered, installation_ordered) are set to False. Counters like waiting time and stage_counter are set to 0.
-* Agent data collection attributes are set up last.
-
-
-Plumbers Initialisation
------------------------
-* Each Plumber agent is initialized as a non-spatial intermediary with a distinct knowledge base, service capacity, and job management system.
-* Each agent is assigned a unique_id and is registered with the main model instance.
-* Their knowledge base is initialized with a list of known_hs (heating systems) and known_subsidies.
-* Upon creation, the Plumber immediately performs two key actions to establish their baseline knowledge:
-   * They calculate the performance attributes for each known system based on a standardized "average house" configuration to formulate their general expertise.
-   * They evaluate all known_hs against their personal heating_preferences to form an initial professional opinion on each system.
-* The Plumber's operational capacity is set. Consultation_power and installation_power define how many tasks they can process per step.  Their job management system (active_jobs, completed_jobs, max_concurrent_jobs) is initialized to a neutral state, ready to accept work from Houseowners.
-* Key functionalities are established by creating ConsultationService and InstallationService objects, which manage the agent's interaction queues.
-* Other attributes are inherited from a parent class. These are not used in the Plumber's logic but are included for compatibility with the model's data collector.
-
-
-Energy Advisors Initialisation
-------------------------------
-* Each EnergyAdvisor agent is initialized as a non-spatial intermediary focused on providing expert information to Houseowners.
-* Each agent is assigned a unique_id and registered with the main model instance.
-* The agent's knowledge base is its primary attribute and is defined at creation. This includes:
-	* A comprehensive list of known_hs (heating systems) and known_subsidies (financial incentives).
-	* A set of heating_preferences used to evaluate and compare different technologies from an expert standpoint.
-* Immediately upon initialization, the agent processes its list of subsidies using an _organize_subsidies function.  This creates a structured dictionary that maps each known heating system to all of its applicable subsidies, allowing for rapid information retrieval during consultations.
-* The agent's core function is established by creating a ConsultationServiceEnergyAdvisor object, which manages its queue of consultation requests from Houseowners.
-* Other attributes are inherited from a parent class. These are not used in the Energy Advisors's logic but are included for compatibility with the model's data collector.
-
-
-Input Data
-==========
-
-The model relies on various external data inputs to initialize agents, houses, and the environment. 
-These data sources provide the parameters necessary for agent decision-making, heating system evaluation, 
-and the simulation of social dynamics and energy use.
-
-
-.. csv-table:: Inputs
-    :file: odd/AHOI_ODD_Inputs.csv
-    :header-rows: 1
-    :stub-columns: 1
-    :align: left
-    :widths: 20, 15, 20, 30, 15
-    :width: 100%
-
-
-Submodels
-=========
-
 Scenarios
----------
+^^^^^^^^^^^^^^^^^^^^^^
 A Scenario is a set of additional rules applied to the default model state. These rules are separated into 3 groups:
 
 * Target state defines the desired heating technologies and their market shares (e.g. 100% of heat pumps). These are used to analyse the achievement of the district planning goal.
@@ -383,21 +457,131 @@ A Scenario is a set of additional rules applied to the default model state. Thes
 
 A Scenario might contain only some of the rules, i.e. only alter the set-up.
 
+
+Houseowners Initialisation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Each agent is initialised with a unique set of state variables that define its identity, socio-demographic context,  psychological profile, and initial state within the decision-making process.
+* Each agent is assigned a unique_id and linked to a specific house object, which provides its geographical geometry and coordinate reference system (crs). The latter are used by the network generator. 
+* A crucial part of the agent's identity is its milieu group, a composite object that encapsulates a cluster of socio-psychological attributes,  including income, preferences and behavioral tendencies based on empirical data. The following is derived form the milieu group:
+
+   * Preferences: heating system preferences (installation cost, fuel cost, operating expenses, installation effort, operational effort, emissions) and information source preferences (Internet, magazine, neighbours, plumbers, energy advisors) are derived directly from the agent's assigned milieu.
+   * Cognitive Resources: each agent starts with an initial_cognitive_resource, representing the mental effort available for decision-making tasks, an aspiration_value, which sets the threshold for how much information is needed to feel satisfied, and an overload_value, which defines how many options that are inferior to the currently installed technology an agent must find before they feel overloaded.
+
+   * Behavioral Theories: Weights for the Theory of Planned Behavior (tpb_weights)  and exposure levels for the Relative Agreement model (ra_exposure) are also initialized from the milieu.
+   * Perceptions: The perceived_uncertainty associated with different heating technologies is initialized to a set of fixed, default values for all agents.
+
+* Agents can be initialized at different points in their decision-making. The current_stage and current_breakpoint are set to "Stage 0" and "None" by default. 
+* The agent’s knowledge base, including known_hs (known heating systems), suitable_hs (systems considered acceptable), and a desired_hs (the single desired system) can be initialised from an empty list or with pre-existing knowledge depending on the model setup.
+* All other state variables are initialized to a neutral or "zero" state.  Lists tracking interactions (e.g., visited_neighbours, unqualified_plumbers) are empty.  Boolean flags indicating process steps (e.g., consultation_ordered, installation_ordered) are set to False. Counters like waiting time and stage_counter are set to 0.
+* Agent data collection attributes are set up last.
+
+
+Plumbers Initialisation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Each Plumber agent is initialized as a non-spatial intermediary with a distinct knowledge base, service capacity, and job management system.
+* Each agent is assigned a unique_id and is registered with the main model instance.
+* Their knowledge base is initialized with a list of known_hs (heating systems) and known_subsidies.
+* Upon creation, the Plumber immediately performs two key actions to establish their baseline knowledge:
+
+   * They calculate the performance attributes for each known system based on a standardized "average house" configuration to formulate their general expertise.
+   * They evaluate all known_hs against their personal heating_preferences to form an initial professional opinion on each system.
+
+* The Plumber's operational capacity is set. Consultation_power and installation_power define how many tasks they can process per step.  Their job management system (active_jobs, completed_jobs, max_concurrent_jobs) is initialized to a neutral state, ready to accept work from Houseowners.
+* Key functionalities are established by creating ConsultationService and InstallationService objects, which manage the agent's interaction queues.
+
+Energy Advisors Initialisation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Each EnergyAdvisor agent is initialized as a non-spatial intermediary focused on providing expert information to Houseowners.
+* Each agent is assigned a unique_id and registered with the main model instance.
+* The agent's knowledge base is its primary attribute and is defined at creation. This includes:
+
+	* A comprehensive list of known_hs (heating systems) and known_subsidies (financial incentives).
+	* A set of heating_preferences used to evaluate and compare different technologies from an expert standpoint.
+
+* Immediately upon initialization, the agent processes its list of subsidies using an _organize_subsidies function.  This creates a structured dictionary that maps each known heating system to all of its applicable subsidies, allowing for rapid information retrieval during consultations.
+* The agent's core function is established by creating a ConsultationServiceEnergyAdvisor object, which manages its queue of consultation requests from Houseowners.
+
+
+6. Input Data
+==============
+
+The model relies on various external data inputs to initialize agents, houses, and the environment. 
+These data sources provide the parameters necessary for agent decision-making, heating system evaluation, 
+and the simulation of social dynamics and energy use.
+The inputs are described and grouped to mirror their allocation in the files of the model, one table for a file. 
+
+``settings.toml`` contains the biggest share of inputs of the ``Model``. Purely tehcnical ones are omitted in the table below, which contains only those relevant for the model parameterisation.
+
+.. dropdown:: Click here to expand the full table of input data for settings.toml.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Settings Inputs
+          :file: odd/AHOI_ODD_Inputs_settings.csv
+          :header-rows: 1
+          :stub-columns: 1
+          :align: left
+          :width: 100%
+
+``milieu_parameters.csv`` contains inputs related to the psychological aspects of the decision-making of ``Houseowners``. The inputs are divided into Milieu-groups, with "Generalized" being a placeholder Milieu group used for testing and thus no agent is attached to this group by default.
+
+.. dropdown:: Click here to expand the full table of input data for milieu_parameters.csv.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Milieu Parameters Inputs
+          :file: odd/AHOI_ODD_Inputs_milieu_parameters.csv
+          :header-rows: 1
+          :stub-columns: 1
+          :align: left
+          :width: 100%
+
+``heating_parameters.csv`` contains inputs related to the technical characteristics of heating technologies. They are all used for the attribtue calculations during model runs.
+
+.. dropdown:: Click here to expand the full table of input data for heating_parameters.csv.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Heating Parameters Inputs
+          :file: odd/AHOI_ODD_Inputs_heating_parameters.csv
+          :header-rows: 1
+          :stub-columns: 1
+          :align: left
+          :width: 100%
+
+``heating_params_dynamics.csv`` contains time series of values that have to be changed during model runs, like fuel price, emissions, etc.
+
+.. dropdown:: Click here to expand the full table of input data for heating_params_dynamics.csv.
+
+   .. container:: scrollable-box
+
+      .. csv-table:: Heating Parameter Dynamics Inputs
+          :file: odd/AHOI_ODD_Inputs_heating_params_dynamics.csv
+          :header-rows: 1
+          :stub-columns: 1
+          :align: left
+          :width: 100%
+
+
+7. Submodels
+==============
+
 Houseowner decision-making
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 This submodel describes the core behavioral logic of the :py:class:`agents.Houseowner.Houseowner` agent. It follows a structured, multi-stage process for evaluating, choosing, and installing a new heating system. An agent can be in one of two primary modes: an "inactive" state characterized by passive social interaction, or an "active" decision-making state. The transition between stages in the active state is governed by the agent's ``cognitive_resource`` and a series of breakpoints that mark the completion of key milestones.
-The entire active decision-making process occurs within a loop that persists as long as the agent has ``cognitive_resource`` remaining for the current time step. This means an agent can progress through multiple stages or actions in a single step if the tasks are not cognitively demanding. If resources are depleted, the process is paused at its current breakpoint and will resume in the next time step.
+The entire active decision-making process occurs within a loop that persists as long as the agent has ``cognitive_resource`` remaining for the current time step. This means an agent can progress through multiple stages or actions in a single step if the tasks are not cognitively demanding. The loop also persists across time steps, i.e. whenever an agent's cognitive resource is depleted, they pause the decision-making for the current step and wait for the next step to continue.
 
 Stage 0: Inactive State
-^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 This is the default state for agents who are not actively considering a change to their heating system.
 
-* **Condition for State:** An agent is in this state if its ``current_stage`` is "None", which occurs either at the start of the simulation or after successfully completing (or abandoning) the full decision-making cycle.
-* **Behavior:** Instead of evaluating their heating system, agents in the inactive state may engage in social behavior. With a 57% probability each time step, the agent will initiate a meeting with another agent (:py:mod:`agents.Houseowner.Houseowner.meet_agent`) to exchange information and opinions. Otherwise, the agent takes no action.
+* **Condition for State:** An agent is in this state if its ``current_stage`` is "None", which occurs either at the start of the simulation or after successfully completing (or abandoning) the decision-making cycle.
+* **Behavior:** Agents in the inactive state may engage in social behavior. With a certain probability each time step, the agent will initiate a meeting with another agent (:py:mod:`agents.Houseowner.Houseowner.meet_agent`) to exchange information and opinions. Otherwise, the agent takes no action.
 
 Stage 1: Predecisional
-^^^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 This is the entry point into the active decision-making process, where the agent assesses its current situation.
 
@@ -408,7 +592,7 @@ This is the entry point into the active decision-making process, where the agent
     * **Dissatisfied:** If the agent is dissatisfied, it forms the intention to change its situation. The model sets the ``current_breakpoint`` to "Goal", advancing the agent to the next stage.
 
 Stage 2: Preactional
-^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 Triggered by dissatisfaction, this stage involves a sequence of information processing and deliberation to select a preferred heating system.
 
@@ -422,7 +606,7 @@ Triggered by dissatisfaction, this stage involves a sequence of information proc
     * **Failure or Pause:** If the agent runs out of cognitive resources, the process pauses and will resume from the same point in the next time step. If the process fails (e.g., no suitable options are found, or no option is clearly superior), the agent may exit the decision cycle and return to the inactive state.
 
 Stage 3: Actional
-^^^^^^^^^^^^^^^^^
+-------------------------
 
 In this stage, the agent acts on its decision by arranging the installation of its chosen heating system.
 
@@ -434,7 +618,7 @@ In this stage, the agent acts on its decision by arranging the installation of i
     * **Failure:** If the installation fails at any point (e.g., the plumber deems it infeasible, the final price is unaffordable), the agent may revert to Stage 2 to select an alternative from its ``suitable_hs`` list, or abandon the process entirely.
 
 Stage 4: Postactional
-^^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 After the new system is installed, the agent assesses the outcome of its decision.
 
@@ -442,8 +626,20 @@ After the new system is installed, the agent assesses the outcome of its decisio
 * **Action:** The agent executes the ``calculate_satisfaction()`` submodel. This involves comparing the real-world performance and costs of the new system against the expectations the agent had formed during Stage 2.
 * **Outcomes:** The agent's ``satisfaction`` attribute is updated to "Satisfied" or "Dissatisfied". This new state influences its willingness to recommend its choice to peers in future social interactions. After this final assessment, the active decision-making cycle is complete, and the agent's ``current_stage`` is reset, returning it to the inactive state (Stage 0).
 
+
+The entire decision-making process is represented in the Figure 2 below. 
+
+.. figure:: images/decision_making.png
+   :width: 100 %
+   :align: center
+   :alt: UML Activity Diagram of the Houseowner decision-making
+
+   Figure 2: The decision-making scheme of Houseowners.
+
+
 Houseowner interactions
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Houseowners interact in two distinct ways:
 
 * **Passive Interaction:** This occurs when a Houseowner is not actively in the decision-making process. They may randomly choose to contact **one** of the other Houseowners in their network and exchange information.
@@ -502,19 +698,13 @@ The information exchange process consists of the following steps:
     Finally, the contacted neighbour shares its satisfaction level with its currently installed system. The asking Houseowner stores this, associating the neighbour's ID and technology type with the satisfaction state.
 
 Triggers
---------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A trigger is a distinct event that happens to a ``Houseowner`` and activates their decision-making process, moving them from an inactive state (Stage 0) into an active evaluation. Different triggers represent different real-world events, have unique conditions to occur, and can have different impacts on the ``Houseowner``'s knowledge and state.
+A trigger is a distinct event that happens to a ``Houseowner`` and activates their decision-making process, moving them from Stage 0 into Stage 1 or Stage 2, depending on the Trigger type. Different triggers represent different real-world events, have unique conditions to occur, and can have different impacts on the ``Houseowner``'s knowledge and state.
 
-A trigger can only affect an agent who is not already in an active decision-making cycle (i.e., their ``current_stage`` must be "None").
+A trigger can only affect an agent who is not already in an active decision-making cycle.
 
 The following triggers are implemented in the model:
-
-* **Blanc (None)**
-
-  * **Description:** A null trigger that has no effect.  
-  * **Impact:** It serves as a marker indicating no triggers at a step.
-  * **Decision Stage:** The agent remains in the inactive state.
 
 * **Breakdown**
 
@@ -528,10 +718,10 @@ The following triggers are implemented in the model:
   * **Impact:** Prompts a non-urgent re-evaluation of the system.
   * **Decision Stage:** Sends the agent to **Stage 1** (Evaluation).
 
-* **Availability**
+* **Unavailability**
 
   * **Description:** The agent learns that their current heating system technology will soon become unavailable for new installations or repairs, prompting them to consider a replacement before being forced to switch.
-  * **Impact:** Creates a sense of urgency to evaluate the current system.
+  * **Impact:** Prompts decision-making if an agent's current system is old according to their preferences (2 years before the guaranteed lifespan expires).
   * **Decision Stage:** Sends the agent to **Stage 1** (Evaluation).
 
 * **Price shock**
@@ -590,23 +780,24 @@ The following triggers are implemented in the model:
 
 
 Current heating system evaluation
----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 This submodel corresponds to Stage 1 of the ``Houseowner`` decision-making process. It is the critical first step that determines whether an agent is content with their current situation or is triggered to actively seek a new heating system. The evaluation is performed by comparing the agent's ``current_heating`` system against a set of personal and milieu-specific standards.
 
 The process unfolds as follows:
 
 Initiation and Pre-condition
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 
-The evaluation begins when an agent enters Stage 1 of the decision cycle. The process requires a small amount of ``cognitive_resource``; if the agent is "tired" (has insufficient resources), the evaluation is skipped for the current time step.
+The evaluation begins when an agent enters Stage 1 of the decision cycle. The process requires some amount of ``cognitive_resource``; if the agent is "tired" (has insufficient resources), the evaluation is skipped for the current time step.
 
 The Standard Check
-^^^^^^^^^^^^^^^^^^
+--------------------
 
 The core of the evaluation is a call to the :py:mod:`agents.Houseowner.Houseowner.check_standard` function, which assesses the agent's current heating system against a list of criteria. For the system to be considered satisfactory, it must pass **all** applicable criteria. If even one criterion fails, the entire check fails.
 
 Evaluation Criteria
-^^^^^^^^^^^^^^^^^^^
+------------------------
 
 The criteria are composed of a universal standard that applies to all agents, plus a specific standard that is determined by the agent's milieu group.
 
@@ -622,7 +813,7 @@ The criteria are composed of a universal standard that applies to all agents, pl
        * **Hedonist milieu group (Pragmatism):** This group has a more pragmatic approach. They do not apply any additional, specific criteria. As long as their system passes the universal remaining lifetime check, they remain satisfied.
 
 Outcome and State Transition
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------
 
 The result of the standard check determines the agent's next action:
 
@@ -631,7 +822,7 @@ The result of the standard check determines the agent's next action:
 
 
 Information search
-------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This submodel describes the process by which a ``Houseowner`` agent actively gathers information about alternative heating systems. It corresponds to the initial part of Stage 2 in the decision-making cycle. The goal is to expand the agent's knowledge base (``known_hs``) and form (imperfect) expectations about the attributes of different options.
 
@@ -650,10 +841,10 @@ The search process is governed by the agent's cognitive resources and personal p
 
 Once a source is chosen, the agent executes that source's specific ``data_search()`` method. The mechanism of the search depends on the type of source selected.
 
-Information Sources and Mechanisms
+Information sources and mechanisms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are two primary categories of information sources, each with a distinct search mechanism: impersonal sources that provide distorted information, and intermediary sources that trigger direct agent-to-agent consultations.
+There are two primary categories of information sources, each with a distinct search mechanism: impersonal sources that provide distorted information, and intermediary sources that trigger direct agent-to-agent contacts - Houseowner-Houseowner, Houseowner-Plumber, Houseowner-Energy Advisor.
 
 Impersonal Sources (Internet, Magazines)
 """"""""""""""""""""""""""""""""""""""""
@@ -671,7 +862,7 @@ These sources represent channels that provide generic, non-personalized informat
 4.  **Knowledge Integration:**
   
   * **New System:** If the agent learns of a system for the first time, the new perceived version is added to its ``known_hs`` list. The agent then evaluates if this new option is better than their current system. If it is, their ``aspiration_value`` decreases (getting closer to their goal). If not, their ``overload_value`` decreases (effort spent for little gain).
-  * **Known System:** If the agent already knew about the system, the new perceived information is integrated with their existing beliefs using a relative agreement mechanism.
+  * **Known System:** If the agent already knew about the system, the new perceived information is integrated with their existing beliefs using a relative agreement mechanism (:ref:`application/odd:Updating Knowledge of Known Technologies`).
 
 5.  **Search Termination:** The iterative search loop terminates under one of three conditions:
 
@@ -690,17 +881,17 @@ These sources represent direct interactions with other agents in the model. Thei
 
 
 Formulating a list of suitable heating systems
-----------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This submodel describes the process by which a Houseowner agent filters its list of *known* heating systems (``known_hs``) to produce a shorter *choice set* of options (``suitable_hs``) that are deemed suitable for further consideration.
 
 Pre-condition check
-^^^^^^^^^^^^^^^^^^^	
+----------------------	
 
 * **Prior Consultation Check:** If the agent has already consulted an energy advisor and has a pre-existing list of suitable systems, this filtering process is skipped to avoid re-evaluating the options.
 
 Filtering
-^^^^^^^^^
+---------------
 
 If this check passes, the agent iterates through every heating system in its ``known_hs`` list and subjects each one to a sequential filtering process. A system must pass all of the following checks in order to be considered suitable:
 
@@ -730,7 +921,7 @@ If this check passes, the agent iterates through every heating system in its ``k
     c. The agent iteratively removes the most risky system from the list until all remaining options have a risk score at or below the agent's personal ``risk_tolerance`` threshold.
 
 Submodel Outcome and Special Conditions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------
 
 After the filtering process is complete, one of the following outcomes occurs:
 
@@ -742,7 +933,7 @@ After the filtering process is complete, one of the following outcomes occurs:
 
 
 Heating system evaluation
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Once an agent has formulated a choice set of suitable heating systems (``suitable_hs``), this submodel evaluates each option to produce a final utility score, referred to as the "integral rating". This evaluation is based on the **Theory of Planned Behavior (TPB)**, which combines three key components to determine behavioural intention: the agent's personal attitude, the perceived social norm, and the perceived behavioural control.
 
@@ -782,13 +973,14 @@ The evaluation proceeds in the following steps for each system in the ``suitable
     c. **Summation:** The three weighted, normalized scores are summed to produce the final ``integral_rating`` for each system.
 
 Submodel Outcome
-^^^^^^^^^^^^^^^^
+-------------------
 
 The output of this submodel is a dictionary mapping each ``Heating_system`` instance in the choice set to its final integral rating. This ranked list is then passed to the next submodel to make the final installation decision.
 
 
 Heating system installation
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 This submodel describes the installation phase of the decision-making process, where a ``Houseowner`` agent, having already selected a ``desired_hs``, proceeds to have it installed. This process is a multi-step interaction between the ``Houseowner`` and a ``Plumber`` agent.
 
 The process is initiated by the ``Houseowner`` agent and unfolds through a series of sequential checks and actions:
@@ -797,32 +989,53 @@ The process is initiated by the ``Houseowner`` agent and unfolds through a serie
     Before taking any action, the agent first evaluates its current state. This step determines whether the agent needs to act, wait, or has already completed the process.
 
     * **Installation Already Complete:** The agent checks if the ``desired_hs`` is already installed by verifying that its age is 0. If so, the process is considered complete. The agent's state is set to "Stage 4: Implementation", its ``waiting`` counter is reset, and relevant model-level obstacle trackers are updated to reflect the successful installation.
-    * **Agent is Waiting:** If the agent has already ordered a consultation (``consultation_ordered == True``) or an installation (``installation_ordered == True``), it takes no new action. Instead, it enters a passive waiting state, depleting its ``cognitive_resource`` for the timestep and incrementing its ``waiting`` counter.
+    * **Agent is Waiting:** If the agent has already ordered a consultation (``consultation_ordered == True``) or an installation (``installation_ordered == True``), it takes no new action. Instead, it enters a passive waiting state, incrementing its ``waiting`` counter.
     * **Insufficient Cognitive Resources:** The agent must have a minimum amount of ``cognitive_resource`` to proceed with planning the installation. If its resources are below this threshold, it does nothing in the current timestep.
 
 2.  **Internal Feasibility and Plumber Search:**
+    This step might happen several times depending on the outcomes of the next steps.
     If the agent is not waiting and has sufficient resources, it proceeds with the active planning steps.
 
-    * **Check for Known Infeasibility:** The agent first checks if the ``desired_hs`` is on its personal list of infeasible systems (``infeasible``). This list may have been changed by a prior consultation. If it is infeasible:
-        * The system is removed from the list of ``suitable_hs``, and the ``desired_hs`` is reset.
-        * If other options remain in the ``suitable_hs`` list, the agent replenishes its cognitive resources and re-runs the comparison submodel (``compare_hs()``) to select a new desired system.
-        * If no other suitable options exist, the agent abandons the implementation stage and reverts to "Stage 2: Goal" to search for new information.
-    * **Finding a Qualified Plumber:** If the system is still considered feasible, the agent searches for a ``Plumber`` agent who is qualified to install the ``desired_hs``. It may be the same plumber from the previous consultation. If no such plumber can be found in the model, the agent's decision-making process fails for this cycle. It resets its ``suitable_hs`` and ``desired_hs``, and its decision stage is set to "None".
-    * **Timeline Feasibility Check:** After successfully finding a plumber, the agent estimates the total time until installation is complete. This is the sum of the plumber's current queue time and the installation duration itself. If this total time exceeds 52 weeks (one year), the agent considers the delay unacceptable, unless the system was specifically recommended. In case of an unacceptable delay, the current ``desired_hs`` is removed from the ``suitable_hs`` list, and the agent attempts to re-evaluate and choose an alternative from the remaining suitable options. If none are left, the agent exits the decision-making process for the time being.
+    * **Check for Known Infeasibility:** The agent first checks if the ``desired_hs`` is on its personal list of infeasible systems (``infeasible``). This might happen if an agent receives additional information about the system feasibility from their plumber. If the desired system is infeasible:
+        * The ``desired_hs`` is reset to "None".
+        * The ``desired_hs`` is removed from the list of ``suitable_hs``.
+        * If other options remain in the ``suitable_hs`` list, the agent returns to "Stage 2" to re-evaluate options.
+        * If no other suitable options exist, the agent abandons the implementation stage and reverts to "Stage 2" to search for new information.
+    * **Finding a Qualified Plumber:** If the system is feasible, and the agent has no plumber yet, the agent tries to find a plumber that is able to install their desired system. If the agent already has a plumber, this plumber might not be qualified, and the check will happen later, in the step 3. If no qualified plumber is found:
+        * The ``desired_hs`` is reset to "None".
+        * The ``desired_hs`` is removed from the ``suitable_hs`` list.
+        * If other suitable options remain, the agent returns to "Stage 2" to choose an alternative.
+        * If no options remain, the decision-making process fails for this cycle, and the stage is reset to "Stage 0".
+    * **Timeline Feasibility Check:** After successfully finding a plumber, the agent estimates the total time until installation (queue time + installation duration). If this exceeds (``unacceptable_waitingtime``) weeks, the agent considers the delay unacceptable, unless the system was specifically recommended.
+        * In case of an unacceptable delay, the ``desired_hs`` is reset.
+        * The ``desired_hs`` is removed from the ``suitable_hs`` list.
+        * If other suitable options remain, the agent returns to "Stage 2" to choose an alternative.
+        * If no options remain, the decision-making process fails for this cycle, and the stage is reset to "Stage 0".
+    * **Final Pre-Order Budget Check:** Finally, the agent performs a check of their financial capacity.
+        * If the agent's disposable budget (including any existing loan) is insufficient to cover the price, they attempt to secure a new loan (``find_loan()``), explicitly bypassing their usual loan avoidance preference.
+        * If the system remains unaffordable after this search, the process fails. The agent resets their state to "None" and abandons the decision entirely (without re-evaluating other suitable options).
 
 3.  **Plumber Consultation and Final Verification:**
+    If an agent was already consulted by an energy advisor, they go directly to the next step.
     Once a plumber has been selected and the timeline is acceptable, the ``Houseowner`` orders a consultation. The ``Plumber`` agent then performs its own set of checks.
 
     * **Plumber Qualification Check:** The plumber verifies that the requested system is one they are familiar with and can install. If not, they reject the job, and the ``Houseowner`` adds them to a list of ``unqualified_plumbers`` and must restart the planning, potentially trying to find a qualified plumber.
-    * **Technical Feasibility Assessment:** The plumber conducts a technical check. For certain heating systems (e.g., heat pumps), this involves verifying that the house's energy demand is below a specific threshold (i.e., the house is sufficiently insulated). If the house fails this check, the system is declared infeasible. The ``Houseowner`` is notified, adds the system to their ``infeasible`` list, and the installation is cancelled.
-    * **Precise Cost Calculation:** If the system is deemed feasible, the plumber calculates the precise, house-specific installation (``price``) and operational (``opex``) costs. These calculated costs replace the agent's initial, potentially uncertain estimates. The plumber may also apply available ``subsidies`` at this stage.
-    * **Final Affordability Check:** With the precise costs known, the ``Houseowner`` agent performs a final, definitive affordability check. If the new price is higher than anticipated, the agent will attempt to secure a new or larger loan (``find_loan()``) to cover the difference, bypassing its usual loan avoidance rules if necessary.
+    * **Technical Feasibility Assessment:** The plumber conducts a technical check. For certain heating systems (e.g., heat pumps), this involves verifying that the house's energy demand is below a specific threshold stored in (``insulation_threshold``) variable. If the house fails this check, the system is declared infeasible. The ``Houseowner`` is notified, adds the system to their ``infeasible`` list. They will reconsider their choice during their next step, when they try to plan installation again.
+    * **Precise Cost Calculation:** If the system is deemed feasible, the plumber calculates the precise, house-specific installation (``price``) and operational (``opex``) costs. These calculated costs replace the agent's initial, potentially uncertain estimates. The plumber may also apply available ``subsidies`` at this stage, if there are any known to them.
+    * **Affordability Check:** With the precise costs known, the ``Houseowner`` agent performs an affordability check. If the new price is higher than anticipated, and the agent already tried to cover a part of the price woth a loan, the agent will attempt to secure a larger loan (``find_loan()``) to cover the difference. After that, if the agent can still afford the desired system (with or without a loan) they pass the check sucessfully. If they cannot afford the desired system anymore:
+        * The ``desired_hs`` is reset to "None".
+        * The ``desired_hs`` is removed from the ``suitable_hs`` list.
+        * If other suitable options remain, the agent returns to "Stage 2" to choose an alternative.
+        * If no options remain, the decision-making process fails for this cycle, and the stage is reset to "Stage 0".
+    If the price is equal or lower than that estimated by an agent, they order installation. For the lower price, the agent also adjusts their loan (if there is any).
+
 
 4.  **Ordering and Queuing the Installation:**
     This is the final step before the physical installation.
 
     * **Successful Order:** If the final affordability check passes, the consultation is considered successful. The ``Plumber`` adds the installation job to their work queue. The ``Houseowner``'s state is updated to reflect that an installation has been ordered (``installation_ordered = True``), and they enter the passive waiting state described in step 1.
     * **Failed Order:** If the final affordability check fails even after attempting to secure a loan, the installation cannot proceed. The agent abandons the choice, resets its ``desired_hs`` and ``suitable_hs``, and reverts to "Stage 2: Goal" to reconsider its options from an earlier point.
+    * **Direct Installation Order:** If the agent has previously consulted an ``Energy Advisor`` (and thus already has precise information), they bypass the general consultation from the plumber and directly order the installation (``order_installation``). The ``Plumber`` adds the job to their work queue, and the agent enters the passive waiting state.
 
 5.  **Physical Installation and State Update:**
     When the ``Houseowner``'s job reaches the front of the ``Plumber``'s queue, the ``installation`` is executed by the ``Plumber``.
@@ -833,13 +1046,14 @@ The process is initiated by the ``Houseowner`` agent and unfolds through a serie
     * **Final State Change:** The ``Houseowner``'s ``installation_ordered`` flag is set to ``False``, and they are marked as having ``installed_once``. They have now successfully completed the installation process.
 
 Post-installation assessment
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 This submodel represents the final stage of the ``Houseowner``'s decision-making process, executed after a new heating system has been successfully installed. The primary purpose is for the agent to reflect on the outcome of its decision by comparing the actual performance of the new system against its prior expectations and other known alternatives. This assessment determines the agent's new ``satisfaction`` state, which in turn influences its future social interactions.
 
 The process is executed as follows:
 
 1.  **Pre-condition Check**
-    The agent must have a sufficient amount of ``cognitive_resource`` to perform the assessment. If its resources are below the required threshold, the process is paused and deferred to the next time step.
+    The agent must have a sufficient amount of (``cognitive_resource``) to perform the assessment. If its resources are below the required threshold, the process is paused and deferred to the next time step.
 
 2.  **Knowledge Update: Replacing Expectations with Reality**
     To perform a fair assessment, the agent first updates its internal knowledge base. This is a critical step:
@@ -870,16 +1084,16 @@ The process is executed as follows:
 
     * Clearing all temporary decision-making lists (``suitable_hs``).
     * Resetting choice variables (``desired_hs``, ``recommended_hs``).
-    * Clearing its memory of interactions from the completed cycle (e.g., ``visited_neighbours``, ``unqualified_plumbers``).
+    * Clearing its memory of interactions from the completed decision-making cycle (e.g., ``visited_neighbours``, ``unqualified_plumbers``). This means that when this agents enters the decision-making again (presumable in several years), they will be able to visit the same neighbours they have visited during this cycle, and they will be able to contact the same plumbers they consulted. This assumes that in several years agents might decide that even unqualified plumbers could become qualified, and that neighbours they visited might have some changes in their knowledge, opinions, and currently installed systems.
     * Resetting its list of ``infeasible`` systems to the global default.
 
 After this cleanup, the agent's ``current_stage`` and ``current_breakpoint`` are reset to "None", returning it to the inactive state (Stage 0).
 
 Intermediary consultation
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Plumber consultation
-^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 When a ``Houseowner`` consults a ``Plumber`` for general advice, the ``Plumber`` executes a sequence of actions designed to expand and refine the ``Houseowner``'s knowledge base, ultimately providing a concrete recommendation.
 
@@ -909,12 +1123,11 @@ The consultation process consists of the following steps:
 
 
 Plumber Consultation Outcome
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After all information has been shared and the recommendation has been made, the consultation concludes. The ``Houseowner``'s ``consultation_ordered`` flag is set to ``False``, and their ``aspiration_value`` is reset to 0. This reset prompts the agent to re-evaluate their goals and options in light of the new, expert information they have just received.
 
-Energy Advisor Consultation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Energy Advisor consultation
+-----------------------------
 
 The consultation with an ``Energy Advisor`` provides the ``Houseowner`` with a comprehensive and financially-focused analysis of heating options. The primary goal of this submodel is to transform the advisor's general knowledge into a concrete, curated list of technically feasible and financially affordable heating systems (``suitable_hs``) for the agent, completed	 with a formal recommendation.
 
@@ -927,7 +1140,7 @@ The consultation process unfolds as follows:
     * **Detailed Subsidy Application:** It then meticulously applies all known subsidies for which the system or ``Houseowner`` is eligible. This involves:
         * Checking any specific conditions attached to a subsidy.
         * Calculating the subsidy amount, typically as a percentage of the installation cost.
-        * Applying a cap to the total subsidy (the lower of 70% of the price or 21,000 currency units).
+        * Applying a cap to the total subsidy (depends on the the lower of 70% of the price or 21,000 currency units).
         * Adding a small additional premium (5% of the original price) to the total subsidy amount.
         * The final, aggregated subsidy is deducted from the system's installation cost, and the system is marked as ``subsidised``.
 
@@ -952,26 +1165,25 @@ The consultation process unfolds as follows:
     To ensure the ``Houseowner``'s internal knowledge is up-to-date, the advisor shares its detailed, house-specific attributes and professional ratings for all systems, not just the suitable ones. It also shares the specific subsidy information relevant to the systems in the final ``suitable_hs`` list.
 
 Energy Advisor Consultation Outcome
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The consultation concludes by updating the ``Houseowner``'s state. The agent now possesses a curated list of ``suitable_hs`` and a formal ``recommended_hs``. Their ``aspiration_value`` is reset to 0 to trigger a re-evaluation based on this new information, and their ``consultation_ordered`` and ``subsidy_curious`` flags are set to ``False``.
 
 
 Heating system attribute calculations
--------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This submodel details the set of procedures used to calculate the primary cost and performance attributes of all heating systems in the model. These are not agent-level behaviors but are foundational calculations performed at the beginning of the simulation for each existing system and dynamically during a simulation whenever an intermediary agent (a ``Plumber`` or ``Energy Advisor``) provides a house-specific consultation.
 
-The calculations are dependent on the characteristics of the ``House`` for which the system is being evaluated, specifically its area :math:`A_{house}` (in :math:`m^2`), specific energy demand :math:`E_{specific}`(in :math:`kWh/m^2a`), and heat load :math:`L_{heat}` (in :math:`kW`). The master function ``calculate_all_attributes`` orchestrates the following sequence of calculations:
+The calculations are dependent on the characteristics of the ``House`` for which the system is being evaluated, specifically its area :math:`A_{house}` (in :math:`m^2`), specific energy demand :math:`E_{specific}`(in :math: `kWh/m^2a`), and heat load :math:`L_{heat}` (in :math:`kW`). The master function ``calculate_all_attributes`` orchestrates the following sequence of calculations:
 
 1. Final Energy Demand Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 Before costs can be determined, the system's total final energy demand is calculated based on the house's specific energy demand and the system's efficiency.
 
 * **Inputs:** House area (:math:`A_{house}`), house specific energy demand (:math:`E_{specific}`).
 * **Process:**
     1. A system-specific efficiency factor (:math:`F_{efficiency}`) is determined. The model uses five predefined energy demand classes (50, 100, 150, 200, 250 :math:`kWh/m^2a`) each with a corresponding efficiency factor for the given heating system. The factor corresponding to the class closest to the house's :math:`E_{specific}` is selected.
-    2. A ``processed_area`` is calculated using a fixed scaling formula to represent the building's heat-transferring surface area:
+    2. A ``processed_area`` is calculated using a fixed scaling formula to represent that the building's heat-transferring surface area depends on the amount of levels of this building:
        
        .. math::
        
@@ -986,7 +1198,7 @@ Before costs can be determined, the system's total final energy demand is calcul
 * **Output:** Total final energy demand in :math:`kWh` per year.
 
 2. Installation Cost Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 The initial installation cost (``price``) is calculated based on the system type and house characteristics.
 
 * **Inputs:** House area (:math:`A_{house}`), house heat load (:math:`L_{heat}`).
@@ -1010,7 +1222,7 @@ The initial installation cost (``price``) is calculated based on the system type
        Where the parameters are system-specific values from a lookup table representing base price, area scaling factor, and various indices. A special case, ``Heating_system_electricity``, uses a similar area-based formula but without the final correction factor.
 
 3. Operating Cost (OPEX) Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 The annual operating and maintenance costs (``opex``) - excluding fuel costs - are calculated as a fraction of the installation cost.
 
 * **Inputs:** House area (:math:`A_{house}`), house heat load (:math:`L_{heat}`).
@@ -1031,7 +1243,7 @@ The annual operating and maintenance costs (``opex``) - excluding fuel costs - a
           OPEX = (C_{install} \times F_{opex}) + (52 \times \frac{C_{install}}{T_{lifetime}})
 
 4. Fuel Cost Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 The annual fuel cost (``fuel_cost``) is calculated based on the final energy demand.
 
 * **Input:** Total final energy demand (:math:`E_{final}`).
@@ -1044,7 +1256,7 @@ The annual fuel cost (``fuel_cost``) is calculated based on the final energy dem
     Where :math:`P_{fuel}` is the system-specific price of fuel per :math:`kWh`.
 
 5. Emissions Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 The annual CO2-equivalent emissions (``emissions``) are also calculated from the final energy demand.
 
 * **Input:** Total final energy demand (:math:`E_{final}`).
@@ -1056,12 +1268,12 @@ The annual CO2-equivalent emissions (``emissions``) are also calculated from the
 
     Where :math:`F_{emissions}` is the system-specific emission factor in grams of CO2-equivalent per :math:`kWh`.
 
-Integration and Financial Metrics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+6. Integration and Financial Metrics
+------------------------------------
 Once these core attributes are calculated, they are used to define key financial metrics for the heating system object:
 
 * **Investment:** The initial investment is set equal to the calculated installation cost (:math:`C_{install}`).
-* **Annual Payback:** The amount of the investment that is paid back each year over the system's lifetime is calculated as:
+* **Annual Payback:** The amount of the investment that is paid back each year over the system's lifetime (:math:`T_{lifetime}`) is calculated as:
 
     .. math::
     
@@ -1075,12 +1287,12 @@ Once these core attributes are calculated, they are used to define key financial
 
 
 Subsidies and Loans
--------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This submodel describes the financial instruments available to ``Houseowner`` agents to reduce the cost burden of a new heating system. It covers the structure and application of subsidies, which lower the initial installation cost, and the process by which agents secure loans to cover remaining costs.
 
 Subsidies
-^^^^^^^^^
+------------
 
 Subsidies are financial grants that directly reduce the installation price of a heating system. They are defined by a flexible structure that allows for a variety of subsidy types, including unconditional grants for specific technologies and conditional bonuses based on agent or system characteristics.
 
@@ -1115,7 +1327,7 @@ Subsidies are calculated and applied by intermediary agents (primarily the ``Ene
 6.  **Price Reduction:** This final, total subsidy amount is subtracted directly from the heating system's installation ``price``.
 
 Loans
-^^^^^
+------------
 
 Loans provide a mechanism for ``Houseowner`` agents to finance an installation when their available budget (``hs_budget``) is insufficient to cover the post-subsidy price.
 
@@ -1164,3 +1376,28 @@ When a ``Houseowner`` has insufficient funds to finance a system, they execute t
 
    * **Success:** If an affordable weekly payment is found, the resulting ``Loan`` object, with its optimized term, is successfully attached to the heating system being considered.
    * **Failure:** The search for a loan fails if the optimization loop terminates before finding an affordable payment. This occurs if the required loan term exceeds the heating system's technical lifetime, in which case no viable loan is found.
+
+Plumber training
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The :py:meth:`~agents.Plumber.Plumber.training` submodel expands a ``Plumbers'`` knowledge by allowing them to learn about new heating technologies. 
+
+**Trigger Conditions:**
+Training is triggered dynamically during the simulation run. A plumber will initiate the training process only if two conditions are met simultaneously:
+* They have not undergone training for more than 52 time steps (e.g., representing one year).
+* They currently have no active jobs to fulfill. 
+
+Upon successfully starting the training and after updating their attributes, their time-since-training counter is reset to zero.
+
+**The Process:**
+When the training is executed, the ``Plumber`` follows this sequence:
+
+1. **Knowledge Gap Identification:** The ``Plumber`` compares their internal list of known heating technologies with the global list of all available heating technologies in the model.
+2. **System Selection:** If there are technologies the plumber does not yet know, one is selected to be learned. While a specific system can be forced, the model defaults to choosing one at random from the pool of unknown systems.
+3. **Attribute Calculation:** The ``Plumber`` learns the technical details of the new system by simulating its specifications against a standardized, average building profile.
+4. **Information Uncertainty:** For each calculated attribute of the new system, an associated uncertainty bound is generated. This is done by multiplying the base attribute value by a random factor drawn from a uniform distribution (bounded by :py:attr:`~settings.information_source.uncertainty_lower` and :py:attr:`~settings.information_source.uncertainty_upper`). This uncertainty value is stored for later use in the relative agreement algorithm during consultations, where it determines the extent to which agents can influence each other's knowledge.
+5. **Knowledge Integration:** The new ``Heating system``, complete with its biased parameters, is added to the ``Plumber's`` memory.
+6. **Re-evaluation:** Finally, the ``Plumber`` re-evaluates all the ``Heating systems`` they know (both old and newly learned) to update their internal rankings and recommendations.
+
+If the ``Plumber`` already knows all available heating technologies on the market, the training process is bypassed and no new knowledge is added.
+

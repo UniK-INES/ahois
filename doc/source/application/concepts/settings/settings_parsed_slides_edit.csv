@@ -1,0 +1,8 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+config,None,string," ""AHOI_SlideGeneration.xlsx""",Slide creation,The path to an Excel file that contains the configuration and content for slide generation.,
+template,None,string," ""/plotting/DT2_Slides_Template_Interventions.pptx""",Slide creation,The path to a PowerPoint (.pptx) template file that defines the base design for the slides.,
+sections,None,boolean, true,Slide creation,If true the script will automatically generate section divider slides in the presentation.,
+section_title_variants,None,boolean, false,Slide creation,If true allows for different styles or variants for the section title slides.,
+font,None,string," ""Frutiger LT 45 Light""",Slide creation,The name of the default font to be used in the generated slides.,
+fontface_bold,None,boolean, true,Slide creation,If true applies a bold face to the specified font.,
+fontsize_pt,Abstract,integer,6,Slide creation,The font size in points likely for main titles on the slides.,

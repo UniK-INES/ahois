@@ -1,0 +1,7 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+dynamic,None,boolean, true,Heating parameters,If true enables dynamic changes to some heating parameters during the simulation based on the heat_sys_params_dynamics file.,
+heat_demand,None,string," ""eqcity""",House initialization,Specifies the dataset and method used for determining the heat demand of houses.,
+milieu_params,None,string," ""milieu_parameters.csv""",Houseowner initialization,The filename for the CSV file containing parameters for different milieus.,
+heat_sys_params,None,string," ""heating_parameters.csv""",Heating initialization,The filename for the CSV file containing the parameters for all heating systems.,
+heat_sys_params_dynamics,None,string," ""heating_params_dynamics.csv""",Heating parameters change,The filename for the CSV file that defines time-series changes for heating system parameters.,
+plt_settings,None,string," ""plotting/config_plt_unik.yaml""",Data processing,The path to the YAML configuration file for post-simulation plotting settings.,

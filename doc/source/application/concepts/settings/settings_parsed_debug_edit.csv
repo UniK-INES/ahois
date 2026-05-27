@@ -1,0 +1,4 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+output_detailed_warnings,None,boolean, false,Debugging,If true shows detailed warnings that include the source code origin.,
+output_warnings_as_errors,None,boolean, false,Debugging,If true treats all warnings as exceptions causing the program to stop.,
+warningsforerrors,None,string," ""Warning""",Debugging,Specifies the category of warnings to be treated as errors when output_warnings_as_errors is true.,

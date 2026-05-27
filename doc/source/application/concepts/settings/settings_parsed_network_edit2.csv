@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+scenario_id,Abstract,integer,0,Network generation,An ID passed to the shobnetpy library to select a specific social network structure for the agents.,

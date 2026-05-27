@@ -1,0 +1,2 @@
+Setting,Unit,Type,Default,Scope,Description,Annotations
+configfile,None,string," ""../settings/config_logging.conf""",Logging,The path to the configuration file for Pythons logging module which sets up log formats and outputs.,
